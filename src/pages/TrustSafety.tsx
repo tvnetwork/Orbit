@@ -1,8 +1,18 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { ShieldCheck, Lock, Eye, AlertTriangle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function TrustSafety() {
+  const { t } = useTranslation();
+  
+  const pillars = [
+    { icon: Lock, title: t('trust.pillars.payment'), desc: t('trust.pillars.paymentDesc'), bg: 'bg-blue-50', text: 'text-blue-600' },
+    { icon: Eye, title: t('trust.pillars.identity'), desc: t('trust.pillars.identityDesc'), bg: 'bg-purple-50', text: 'text-purple-600' },
+    { icon: AlertTriangle, title: t('trust.pillars.dispute'), desc: t('trust.pillars.disputeDesc'), bg: 'bg-orange-50', text: 'text-orange-600' },
+    { icon: ShieldCheck, title: t('trust.pillars.privacy'), desc: t('trust.pillars.privacyDesc'), bg: 'bg-emerald-50', text: 'text-emerald-600' }
+  ];
+
   return (
     <div className="bg-white min-h-screen">
       <div className="max-w-4xl mx-auto px-4 py-24">
@@ -14,59 +24,46 @@ export default function TrustSafety() {
           <div className="inline-flex p-4 bg-indigo-600 rounded-3xl text-white shadow-xl shadow-indigo-200">
             <ShieldCheck className="h-10 w-10" />
           </div>
-          <h1 className="text-5xl font-bold tracking-tight">Trust & Safety</h1>
+          <h1 className="text-5xl font-bold tracking-tight">{t('trust.title')}</h1>
           <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-            Your security is our highest priority. We use industry-leading systems to protect every transaction and interaction on Orbit.
+            {t('trust.subtitle')}
           </p>
         </motion.div>
 
         <div className="mt-20 space-y-16">
-          <section className="space-y-8">
-            <div className="flex items-start gap-6">
-              <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl flex-shrink-0">
-                <Lock className="h-6 w-6" />
+          <section className="grid grid-cols-1 gap-12">
+            {pillars.map((pillar, i) => (
+              <div key={i} className="flex items-start gap-6 group">
+                <div className={`p-4 ${pillar.bg} ${pillar.text} rounded-3xl flex-shrink-0 transition-transform group-hover:scale-110`}>
+                  <pillar.icon className="h-8 w-8" />
+                </div>
+                <div className="space-y-4 pt-1">
+                  <h3 className="text-2xl font-bold">{pillar.title}</h3>
+                  <p className="text-gray-600 text-lg leading-relaxed">
+                    {pillar.desc}
+                  </p>
+                </div>
               </div>
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold">Secure Payments</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Every payment on Orbit is handled via our encrypted escrow system. Funds are securely held and only released when you authorize release after milestone completion.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-6">
-              <div className="p-3 bg-purple-50 text-purple-600 rounded-2xl flex-shrink-0">
-                <Eye className="h-6 w-6" />
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold">Identity Verification</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  We verify the identity of every user on Orbit to maintain a professional and safe environment for collaboration. Verified profiles are marked with a badge.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-6">
-              <div className="p-3 bg-orange-50 text-orange-600 rounded-2xl flex-shrink-0">
-                <AlertTriangle className="h-6 w-6" />
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold">Dispute Resolution</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  In the rare case of a disagreement, our dedicated support team is here to mediate and ensure a fair outcome based on contract terms and work evidence.
-                </p>
-              </div>
-            </div>
+            ))}
           </section>
 
           <footer className="p-10 bg-gray-50 rounded-[2.5rem] border border-gray-100">
-            <h4 className="font-bold mb-4">How to stay safe:</h4>
-            <ul className="space-y-3 text-gray-600">
-              <li className="flex gap-2">• Never share passwords or private keys.</li>
-              <li className="flex gap-2">• Keep communication and payments on the platform.</li>
-              <li className="flex gap-2">• Use strong, unique passwords and enable 2FA.</li>
-              <li className="flex gap-2">• Report any suspicious behavior immediately.</li>
-            </ul>
+            <h4 className="font-bold text-xl mb-6">{t('trust.tipsTitle')}</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                t('trust.tips.t1'),
+                t('trust.tips.t2'),
+                t('trust.tips.t3'),
+                t('trust.tips.t4')
+              ].map((tip, i) => (
+                <div key={i} className="flex gap-3 text-gray-600 font-medium">
+                  <div className="h-6 w-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                    {i + 1}
+                  </div>
+                  {tip}
+                </div>
+              ))}
+            </div>
           </footer>
         </div>
       </div>

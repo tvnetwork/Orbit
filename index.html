@@ -3,7 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
+    <title>VyntaJobs | Elite Global Marketplace</title>
+    <script>
+      // Fix for "TypeError: Cannot set property fetch of #<Window> which has only a getter"
+      // Some libraries try to polyfill fetch by assignment. In this environment, fetch is a getter.
+      (function() {
+        try {
+          var desc = Object.getOwnPropertyDescriptor(window, 'fetch') || 
+                     Object.getOwnPropertyDescriptor(Object.getPrototypeOf(window), 'fetch');
+          if (desc && desc.get && !desc.set && desc.configurable) {
+            Object.defineProperty(window, 'fetch', {
+              value: window.fetch,
+              writable: true,
+              configurable: true,
+              enumerable: true
+            });
+          }
+        } catch (e) {
+          console.warn('VyntaJobs: Could not thaw fetch property', e);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

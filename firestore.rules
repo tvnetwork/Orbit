@@ -37,11 +37,23 @@ service cloud.firestore {
     // 1. User Validation
     function isValidUser(data) {
       return data.keys().hasAll(['uid', 'email', 'role', 'createdAt']) &&
-             data.keys().size() <= 12 &&
+             data.keys().size() <= 20 &&
              data.uid == request.auth.uid &&
              data.email is string && data.email.size() <= 256 &&
              data.role in ['freelancer', 'client', 'admin'] &&
-             (data.displayName == null || (data.displayName is string && data.displayName.size() <= 100));
+             (data.displayName == null || (data.displayName is string && data.displayName.size() <= 100)) &&
+             (!data.keys().contains('professionalTitle') || (data.professionalTitle is string && data.professionalTitle.size() <= 100)) &&
+             (!data.keys().contains('bio') || (data.bio is string && data.bio.size() <= 5000)) &&
+             (!data.keys().contains('skills') || (data.skills is list && data.skills.size() <= 50)) &&
+             (!data.keys().contains('location') || (data.location is string && data.location.size() <= 100)) &&
+             (!data.keys().contains('portfolio') || (data.portfolio is list && data.portfolio.size() <= 30)) &&
+             (!data.keys().contains('verificationStatus') || data.verificationStatus in ['none', 'pending', 'verified']) &&
+             (!data.keys().contains('completedJobs') || (data.completedJobs is number && data.completedJobs >= 0)) &&
+             (!data.keys().contains('rating') || (data.rating is number && data.rating >= 0 && data.rating <= 5)) &&
+             (!data.keys().contains('hourlyRate') || (data.hourlyRate is number && data.hourlyRate >= 0)) &&
+             (!data.keys().contains('timezone') || (data.timezone is string)) &&
+             (!data.keys().contains('githubUrl') || (data.githubUrl is string)) &&
+             (!data.keys().contains('languages') || (data.languages is list));
     }
 
     match /users/{userId} {
@@ -51,7 +63,18 @@ service cloud.firestore {
       allow update: if (isSignedIn() && isOwner(userId) && isValidUser(incoming()) && 
                         incoming().uid == existing().uid && 
                         incoming().createdAt == existing().createdAt &&
-                        (incoming().role == existing().role || isAdmin())) || isAdmin();
+                        (incoming().role == existing().role || isAdmin()) &&
+                        (
+                          // Regular fields update
+                          (incoming().verificationStatus == existing().verificationStatus && 
+                           incoming().completedJobs == existing().completedJobs && 
+                           incoming().rating == existing().rating) ||
+                          // Request verification action
+                          (incoming().verificationStatus == 'pending' && existing().verificationStatus == 'none' &&
+                           incoming().completedJobs == existing().completedJobs && 
+                           incoming().rating == existing().rating) ||
+                          isAdmin()
+                        )) || isAdmin();
     }
 
     // 2. Job Validation
@@ -63,7 +86,11 @@ service cloud.firestore {
              data.budget is number && data.budget > 0 &&
              data.type in ['fixed', 'hourly'] &&
              data.status in ['open', 'in_progress', 'completed', 'cancelled'] &&
-             data.createdAt == request.time;
+             (data.createdAt == request.time || data.createdAt is timestamp) &&
+             (!data.keys().contains('assignedFreelancerId') || data.assignedFreelancerId is string) &&
+             (!data.keys().contains('acceptedProposalId') || data.acceptedProposalId is string) &&
+             (!data.keys().contains('deadline') || data.deadline == null || data.deadline is string) &&
+             (!data.keys().contains('duration') || data.duration == null || data.duration is string);
     }
 
     match /jobs/{jobId} {
@@ -83,22 +110,30 @@ service cloud.firestore {
              data.jobId is string &&
              data.coverLetter is string && data.coverLetter.size() <= 5000 &&
              data.bidAmount is number && data.bidAmount > 0 &&
-             data.status in ['pending', 'accepted', 'rejected', 'withdrawn'] &&
-             data.createdAt is timestamp;
+             data.status in ['unread', 'shortlisted', 'interviewing', 'hired', 'rejected', 'withdrawn'] &&
+             (data.createdAt == request.time || data.createdAt is timestamp);
+    }
+
+    match /proposals/{proposalId} {
+      allow read: if isSignedIn() && (
+        isOwner(existing().freelancerId) || 
+        isOwner(get(/databases/$(database)/documents/jobs/$(existing().jobId)).data.clientId) || 
+        isAdmin()
+      );
+      allow create: if isSignedIn() && isValidProposal(incoming()) && 
+                      incoming().freelancerId == request.auth.uid &&
+                      (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'freelancer' || isAdmin()) &&
+                      get(/databases/$(database)/documents/jobs/$(incoming().jobId)).data.status == 'open' &&
+                      (get(/databases/$(database)/documents/jobs/$(incoming().jobId)).data.deadline == null || 
+                       duration.value(request.time - timestamp.value(get(/databases/$(database)/documents/jobs/$(incoming().jobId)).data.deadline)).seconds() < 0);
+      allow update: if (isSignedIn() && (
+        (isOwner(existing().freelancerId) && incoming().diff(existing()).affectedKeys().hasOnly(['coverLetter', 'bidAmount', 'status']) && incoming().status == 'withdrawn') ||
+        (isOwner(get(/databases/$(database)/documents/jobs/$(existing().jobId)).data.clientId) && incoming().diff(existing()).affectedKeys().hasOnly(['status']))
+      ) && isValidProposal(incoming())) || isAdmin();
     }
 
     match /jobs/{jobId}/proposals/{proposalId} {
-      allow read: if isSignedIn() && (isOwner(existing().freelancerId) || isOwner(get(/databases/$(database)/documents/jobs/$(jobId)).data.clientId) || isAdmin());
-      allow create: if isSignedIn() && isValidProposal(incoming()) && 
-                      incoming().jobId == jobId &&
-                      incoming().freelancerId == request.auth.uid &&
-                      (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'freelancer' || isAdmin()) &&
-                      get(/databases/$(database)/documents/jobs/$(jobId)).data.status == 'open';
-      allow update: if (isSignedIn() && (
-        (isOwner(existing().freelancerId) && incoming().diff(existing()).affectedKeys().hasOnly(['coverLetter', 'bidAmount', 'status']) && incoming().status == 'withdrawn') ||
-        (isOwner(get(/databases/$(database)/documents/jobs/$(jobId)).data.clientId) && incoming().diff(existing()).affectedKeys().hasOnly(['status']))
-      ) && isValidProposal(incoming())) || isAdmin();
-      allow delete: if isAdmin();
+      allow read, write: if false; // Migrated to root collection
     }
 
     // 4. Chat & Messages
@@ -116,6 +151,70 @@ service cloud.firestore {
                       (request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantIds || isAdmin()) &&
                       incoming().chatId == chatId &&
                       incoming().createdAt == request.time;
+    }
+
+    // 5. Community Messages
+    function isValidCommunityMessage(data) {
+      return data.keys().hasAll(['senderId', 'senderName', 'text', 'createdAt']) &&
+             data.senderId == request.auth.uid &&
+             data.text is string && data.text.size() <= 2000 &&
+             data.createdAt == request.time &&
+             (data.senderPhoto == null || data.senderPhoto is string);
+    }
+
+    match /community_messages/{messageId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidCommunityMessage(incoming());
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. Cohort Validation
+    function isValidCohort(data) {
+      return data.keys().hasAll(['name', 'description', 'creatorId', 'createdAt']) &&
+             data.name is string && data.name.size() <= 100 &&
+             data.description is string && data.description.size() <= 1000 &&
+             data.creatorId is string &&
+             (data.createdAt == request.time || data.createdAt is timestamp);
+    }
+
+    match /cohorts/{cohortId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidCohort(incoming()) && incoming().creatorId == request.auth.uid;
+      allow update: if isSignedIn() && (isAdmin() || (isOwner(existing().creatorId) && isValidCohort(incoming())));
+      allow delete: if isSignedIn() && (isOwner(existing().creatorId) || isAdmin());
+    }
+
+    match /cohorts/{cohortId}/members/{userId} {
+      allow read: if isSignedIn();
+      allow create, delete: if isSignedIn() && isOwner(userId);
+    }
+
+    // 7. Contracts & Milestones
+    function isContractParticipant(contractData) {
+      return isSignedIn() && (request.auth.uid == contractData.clientId || request.auth.uid == contractData.freelancerId);
+    }
+
+    match /contracts/{contractId} {
+      allow read: if isContractParticipant(existing()) || isAdmin();
+      allow create: if isSignedIn() && (isOwner(incoming().clientId) || isAdmin());
+      allow update: if (isContractParticipant(existing()) && incoming().clientId == existing().clientId && incoming().freelancerId == existing().freelancerId) || isAdmin();
+    }
+
+    match /contracts/{contractId}/milestones/{milestoneId} {
+      allow read: if isContractParticipant(get(/databases/$(database)/documents/contracts/$(contractId)).data) || isAdmin();
+      allow write: if (isContractParticipant(get(/databases/$(database)/documents/contracts/$(contractId)).data) || isAdmin());
+    }
+
+    // 8. Financials & KYC
+    match /transactions/{transactionId} {
+      allow read: if isOwner(existing().userId) || isAdmin();
+      allow create: if isAdmin(); // Transactions should be authoritative
+    }
+
+    match /kyc/{kycId} {
+      allow read: if isOwner(existing().userId) || isAdmin();
+      allow create: if isSignedIn() && isOwner(incoming().userId);
+      allow update: if isAdmin();
     }
   }
 }

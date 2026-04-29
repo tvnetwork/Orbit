@@ -1,32 +1,46 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { Search, Book, MessageCircle, FileText, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Search, Book, MessageCircle, FileText, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function HelpCenter() {
+  const { t } = useTranslation();
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  
   const categories = [
-    { title: 'Getting Started', desc: 'New here? Learn the basics of Orbit.', icon: Book },
-    { title: 'Payments & Fees', desc: 'Everything you need to know about money.', icon: FileText },
-    { title: 'Safety & Privacy', desc: 'Protecting you and your data.', icon: Search },
-    { title: 'Work & Collaboration', desc: 'Tips for successful projects.', icon: MessageCircle },
+    { title: t('help.gettingStarted'), desc: t('help.gettingStartedDesc'), icon: Book },
+    { title: t('help.paymentsFees'), desc: t('help.paymentsFeesDesc'), icon: FileText },
+    { title: t('help.safetyPrivacy'), desc: t('help.safetyPrivacyDesc'), icon: Search },
+    { title: t('help.collaboration'), desc: t('help.collaborationDesc'), icon: MessageCircle },
+  ];
+
+  const faqs = [
+    { q: t('help.faqs.q1'), a: t('help.faqs.a1') },
+    { q: t('help.faqs.q2'), a: t('help.faqs.a2') },
+    { q: t('help.faqs.q3'), a: t('help.faqs.a3') },
+    { q: t('help.faqs.q4'), a: t('help.faqs.a4') },
+    { q: t('help.faqs.q5'), a: t('help.faqs.a5') },
+    { q: t('help.faqs.q6'), a: t('help.faqs.a6') }
   ];
 
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Hero Search */}
-      <div className="bg-indigo-600 pt-32 pb-24 px-4 text-center text-white">
-        <div className="max-w-3xl mx-auto space-y-8">
+      <div className="bg-indigo-600 pt-32 pb-24 px-4 text-center text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl" />
+        <div className="max-w-3xl mx-auto space-y-8 relative z-10">
           <motion.h1 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="text-5xl font-bold"
           >
-            How can we help?
+            {t('help.title')}
           </motion.h1>
           <div className="relative group max-w-2xl mx-auto">
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400 group-focus-within:text-indigo-600 transition-colors" />
             <input 
               type="text"
-              placeholder="Search for articles, guides, and tutorials..."
+              placeholder={t('help.searchPlaceholder')}
               className="w-full pl-16 pr-8 py-6 rounded-3xl bg-white text-gray-900 border-none focus:ring-4 focus:ring-indigo-300 transition-all text-lg shadow-xl"
             />
           </div>
@@ -41,25 +55,40 @@ export default function HelpCenter() {
                 <cat.icon className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-bold mt-6 mb-2">{cat.title}</h3>
-              <p className="text-gray-500 text-sm">{cat.desc}</p>
+              <p className="text-gray-500 text-sm leading-relaxed">{cat.desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="space-y-8">
-          <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              'How long does verification take?',
-              'What payment methods do you support?',
-              'How are disputes handled?',
-              'Can I hire multiple freelancers for one project?',
-              'What are the platform fees?',
-              'How do I cancel my subscription?'
-            ].map((q, i) => (
-              <div key={i} className="p-6 bg-white rounded-2xl border border-gray-100 flex items-center justify-between hover:border-indigo-200 transition-all cursor-pointer group">
-                <span className="font-medium text-gray-700 group-hover:text-indigo-600">{q}</span>
-                <ExternalLink className="h-4 w-4 text-gray-300" />
+        <div className="space-y-8 max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-12">{t('help.faqTitle')}</h2>
+          <div className="space-y-4">
+            {faqs.map((faq, i) => (
+              <div 
+                key={i} 
+                className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all"
+              >
+                <button 
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full p-6 text-left flex items-center justify-between group"
+                >
+                  <span className="font-bold text-gray-800 text-lg group-hover:text-indigo-600 transition-colors">{faq.q}</span>
+                  <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${openFaq === i ? 'rotate-180 text-indigo-600' : ''}`} />
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className="px-6 pb-6 text-gray-600 leading-relaxed border-t border-gray-50 pt-4">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ))}
           </div>

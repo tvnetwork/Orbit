@@ -10,8 +10,30 @@
         "displayName": { "type": "string" },
         "photoURL": { "type": "string" },
         "role": { "type": "string", "enum": ["freelancer", "client", "admin"] },
+        "professionalTitle": { "type": "string" },
         "bio": { "type": "string" },
         "skills": { "type": "array", "items": { "type": "string" } },
+        "location": { "type": "string" },
+        "hourlyRate": { "type": "number" },
+        "timezone": { "type": "string" },
+        "languages": { "type": "array", "items": { "type": "string" } },
+        "githubUrl": { "type": "string" },
+        "portfolio": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" },
+              "imageUrl": { "type": "string" },
+              "projectUrl": { "type": "string" }
+            }
+          }
+        },
+        "verificationStatus": { "type": "string", "enum": ["none", "pending", "verified"] },
+        "completedJobs": { "type": "number" },
+        "rating": { "type": "number" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["uid", "email", "role", "createdAt"]
@@ -44,7 +66,7 @@
         "freelancerId": { "type": "string" },
         "coverLetter": { "type": "string" },
         "bidAmount": { "type": "number" },
-        "status": { "type": "string", "enum": ["pending", "accepted", "rejected", "withdrawn"] },
+        "status": { "type": "string", "enum": ["unread", "shortlisted", "interviewing", "hired", "rejected", "withdrawn"] },
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["jobId", "freelancerId", "coverLetter", "bidAmount", "status", "createdAt"]
@@ -74,6 +96,101 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["chatId", "senderId", "text", "createdAt"]
+    },
+    "CommunityMessage": {
+      "title": "Community Message",
+      "description": "A message sent to the global community chat",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "senderPhoto": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["senderId", "senderName", "text", "createdAt"]
+    },
+    "Cohort": {
+      "title": "Cohort",
+      "description": "A specialized group or cohort of professionals",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "membersCount": { "type": "number" },
+        "icon": { "type": "string" },
+        "color": { "type": "string" },
+        "creatorId": { "type": "string" },
+        "featured": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "description", "creatorId", "createdAt"]
+    },
+    "Contract": {
+      "title": "Contract",
+      "description": "An active engagement between a client and freelancer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "jobId": { "type": "string" },
+        "clientId": { "type": "string" },
+        "freelancerId": { "type": "string" },
+        "proposalId": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "paused", "completed", "disputed", "cancelled"] },
+        "escrowBalance": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["jobId", "clientId", "freelancerId", "totalAmount", "status", "createdAt"]
+    },
+    "Milestone": {
+      "title": "Milestone",
+      "description": "A specific deliverable and payment within a contract",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "contractId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "funded", "review", "released"] },
+        "dueDate": { "type": "string", "format": "date" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["contractId", "title", "amount", "status", "createdAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "A financial record of money moving in or out of a wallet",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["deposit", "withdrawal", "payment_received", "payment_sent", "escrow_hold"] },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed"] },
+        "referenceId": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "amount", "type", "status", "createdAt"]
+    },
+    "KYCDoc": {
+      "title": "KYC Document",
+      "description": "Identity verification document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "imageUrl": { "type": "string" },
+        "submittedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "type", "status", "submittedAt"]
     }
   },
   "firestore": {
@@ -89,6 +206,22 @@
       "schema": "Proposal",
       "description": "Proposals for a job"
     },
+    "contracts/{contractId}": {
+      "schema": "Contract",
+      "description": "Active contracts"
+    },
+    "contracts/{contractId}/milestones/{milestoneId}": {
+      "schema": "Milestone",
+      "description": "Milestones within a contract"
+    },
+    "transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Financial records"
+    },
+    "kyc/{kycId}": {
+      "schema": "KYCDoc",
+      "description": "Identity verification records"
+    },
     "chats/{chatId}": {
       "schema": "Chat",
       "description": "Chat metadata"
@@ -96,6 +229,18 @@
     "chats/{chatId}/messages/{messageId}": {
       "schema": "Message",
       "description": "Messages within a chat"
+    },
+    "community_messages/{messageId}": {
+      "schema": "CommunityMessage",
+      "description": "Global community chat messages"
+    },
+    "cohorts/{cohortId}": {
+      "schema": "Cohort",
+      "description": "Specialized community cohorts"
+    },
+    "cohorts/{cohortId}/members/{userId}": {
+      "schema": "object",
+      "description": "Members of a cohort"
     }
   }
 }

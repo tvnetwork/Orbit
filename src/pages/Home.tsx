@@ -9,16 +9,18 @@ import {
   ShieldCheck, 
   Zap,
   Star,
-  Orbit,
+  Orbit as BrandIcon,
   Palette,
   Terminal,
   Code,
   Target,
 } from 'lucide-react';
 import { useAuth } from '../App';
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
   const { user, login } = useAuth();
+  const { t } = useTranslation();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -41,7 +43,7 @@ export default function Home() {
       className="overflow-hidden"
     >
       {/* Hero Section */}
-      <section className="relative pt-20 pb-32 lg:pt-32 lg:pb-48">
+      <section className="relative pt-12 pb-20 md:pt-20 md:pb-32 lg:pt-32 lg:pb-48">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10">
           <div className="absolute top-[10%] left-[5%] w-72 h-72 bg-indigo-200/40 rounded-full blur-3xl" />
           <div className="absolute bottom-[20%] right-[10%] w-96 h-96 bg-purple-200/30 rounded-full blur-3xl" />
@@ -52,19 +54,19 @@ export default function Home() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="text-center max-w-4xl mx-auto space-y-8"
+            className="text-center max-w-4xl mx-auto space-y-6 md:space-y-8"
           >
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full text-indigo-700 text-sm font-semibold">
-              <Zap className="h-4 w-4" fill="currentColor" />
-              <span>Matching top 1% talent with global industry leaders</span>
+            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full text-indigo-700 text-[10px] md:text-sm font-semibold uppercase tracking-wider">
+              <Zap className="h-3 w-3 md:h-4 md:w-4" fill="currentColor" />
+              <span>{t('home.heroTagline')}</span>
             </motion.div>
 
-            <motion.h1 variants={itemVariants} className="text-5xl lg:text-7xl font-sans font-bold tracking-tight text-gray-900">
-              The universe of <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">work</span> is expanding.
+            <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl lg:text-7xl font-sans font-bold tracking-tight text-gray-900 leading-[1.1]">
+              {t('home.heroTitleBefore')}<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">{t('home.universeWord')}</span>{t('home.heroTitleAfter')}
             </motion.h1>
             
-            <motion.p variants={itemVariants} className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              Orbit is the professional freelancing ecosystem designed for high-impact teams and elite creators.
+            <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed px-4">
+              {t('home.heroSubtitle')}
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -73,30 +75,59 @@ export default function Home() {
                   onClick={login}
                   className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center justify-center gap-2"
                 >
-                  Get Started <ArrowRight className="h-5 w-5" />
+                  {t('common.getStarted')} <ArrowRight className="h-5 w-5" />
                 </button>
               ) : (
                 <Link 
                   to="/jobs"
                   className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center justify-center gap-2"
                 >
-                  View Market <ArrowRight className="h-5 w-5" />
+                  {t('common.viewMarket')} <ArrowRight className="h-5 w-5" />
                 </Link>
               )}
               <Link 
                 to="/jobs"
                 className="w-full sm:w-auto bg-white text-gray-900 border-2 border-gray-100 px-8 py-4 rounded-2xl font-bold text-lg hover:border-gray-300 transition-all"
               >
-                Browse Projects
+                {t('common.browseProjects')}
               </Link>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="pt-16 flex flex-wrap justify-center items-center gap-8 opacity-50 grayscale">
-              <div className="text-2xl font-bold font-sans">Loom</div>
-              <div className="text-2xl font-bold font-sans">Vercel</div>
-              <div className="text-2xl font-bold font-sans">Miro</div>
-              <div className="text-2xl font-bold font-sans">Linear</div>
-              <div className="text-2xl font-bold font-sans">Notion</div>
+            <motion.div 
+              variants={itemVariants} 
+              className="pt-24 relative overflow-hidden group"
+            >
+              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
+              <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+              
+              <motion.div 
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{ 
+                  duration: 30, 
+                  repeat: Infinity, 
+                  ease: "linear" 
+                }}
+                className="flex w-fit items-center gap-16 grayscale opacity-30 group-hover:opacity-70 group-hover:grayscale-0 transition-all duration-700 cursor-default"
+              >
+                {[
+                  "Google", "Amazon", "Microsoft", "Netflix", "Meta", "Apple", 
+                  "Stripe", "Airbnb", "Uber", "Coinbase", "Spotify", "Tesla",
+                  // Doubled for seamless loop
+                  "Google", "Amazon", "Microsoft", "Netflix", "Meta", "Apple", 
+                  "Stripe", "Airbnb", "Uber", "Coinbase", "Spotify", "Tesla"
+                ].map((brand, i) => (
+                  <div 
+                    key={i} 
+                    className="text-2xl md:text-3xl font-black font-sans tracking-tighter whitespace-nowrap"
+                  >
+                    {brand}
+                  </div>
+                ))}
+              </motion.div>
+              
+              <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mt-12 text-center">
+                Trusted by elite teams worldwide
+              </p>
             </motion.div>
           </motion.div>
         </div>
@@ -112,11 +143,11 @@ export default function Home() {
             className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16"
           >
             <div className="space-y-4">
-              <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Explore the Ecosystem</h2>
-              <p className="text-gray-500 max-w-xl text-lg">Browse high-impact projects across core technical and creative domains.</p>
+              <h2 className="text-4xl font-bold text-gray-900 tracking-tight">{t('home.exploreTitle')}</h2>
+              <p className="text-gray-500 max-w-xl text-lg">{t('home.exploreSubtitle')}</p>
             </div>
             <Link to="/jobs" className="group flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-700 transition-colors py-2">
-              Browse all categories <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              {t('home.browseAll')} <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
 
@@ -128,12 +159,12 @@ export default function Home() {
             className="grid grid-cols-1 md:grid-cols-4 gap-6"
           >
             {[
-              { icon: Code, title: 'Development', count: '1.2k+ jobs', color: 'bg-blue-50 text-blue-600', span: 'md:col-span-2' },
-              { icon: Palette, title: 'Design', count: '850+ jobs', color: 'bg-purple-50 text-purple-600', span: 'md:col-span-1' },
-              { icon: Zap, title: 'AI & Data', count: '420+ jobs', color: 'bg-amber-50 text-amber-600', span: 'md:col-span-1' },
-              { icon: Terminal, title: 'Cybersecurity', count: '150+ jobs', color: 'bg-rose-50 text-rose-600', span: 'md:col-span-1' },
-              { icon: Globe, title: 'Web3', count: '280+ jobs', color: 'bg-emerald-50 text-emerald-600', span: 'md:col-span-2' },
-              { icon: Target, title: 'Marketing', count: '640+ jobs', color: 'bg-indigo-50 text-indigo-600', span: 'md:col-span-1' },
+              { icon: Code, title: t('home.categories.development'), count: t('home.categories.jobsCount', { count: '1.2k+' }), color: 'bg-blue-50 text-blue-600', span: 'md:col-span-2' },
+              { icon: Palette, title: t('home.categories.design'), count: t('home.categories.jobsCount', { count: '850+' }), color: 'bg-purple-50 text-purple-600', span: 'md:col-span-1' },
+              { icon: Zap, title: t('home.categories.ai'), count: t('home.categories.jobsCount', { count: '420+' }), color: 'bg-amber-50 text-amber-600', span: 'md:col-span-1' },
+              { icon: Terminal, title: t('home.categories.cyber'), count: t('home.categories.jobsCount', { count: '150+' }), color: 'bg-rose-50 text-rose-600', span: 'md:col-span-1' },
+              { icon: Globe, title: t('home.categories.web3'), count: t('home.categories.jobsCount', { count: '280+' }), color: 'bg-emerald-50 text-emerald-600', span: 'md:col-span-2' },
+              { icon: Target, title: t('home.categories.marketing'), count: t('home.categories.jobsCount', { count: '640+' }), color: 'bg-indigo-50 text-indigo-600', span: 'md:col-span-1' },
             ].map((cat, i) => (
               <motion.div
                 key={i}
@@ -172,9 +203,9 @@ export default function Home() {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             {[
-              { label: 'Total Volume', value: '$120M+' },
-              { label: 'Active Talent', value: '45,000+' },
-              { label: 'Avg Rating', value: '4.9/5' }
+              { label: t('home.statsVolume'), value: '$120M+' },
+              { label: t('home.statsTalent'), value: '45,000+' },
+              { label: t('home.statsRating'), value: '4.9/5' }
             ].map((stat, idx) => (
               <motion.div 
                 key={idx} 
@@ -199,8 +230,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center space-y-4 mb-20"
           >
-            <h2 className="text-4xl font-bold text-gray-900">Why the world works on Orbit</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">Traditional platforms prioritize volume. We prioritize trust, speed, and precision.</p>
+            <h2 className="text-4xl font-bold text-gray-900">{t('home.whyTitle')}</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">{t('home.whySubtitle')}</p>
           </motion.div>
 
           <motion.div 
@@ -211,9 +242,9 @@ export default function Home() {
             className="grid grid-cols-1 md:grid-cols-3 gap-12"
           >
             {[
-              { icon: ShieldCheck, title: "Secure Escrow", desc: "Funds are held securely and released only when milestones are approved.", color: "blue" },
-              { icon: Globe, title: "Global Reach", desc: "Access talent and projects from 190+ countries with local currency support.", color: "purple" },
-              { icon: CheckCircle2, title: "Verified Skills", desc: "Our AI-driven assessment engine ensures you hire the right fit, every time.", color: "emerald" }
+              { icon: ShieldCheck, title: t('home.feature1Title'), desc: t('home.feature1Desc'), color: "blue" },
+              { icon: Globe, title: t('home.feature2Title'), desc: t('home.feature2Desc'), color: "purple" },
+              { icon: CheckCircle2, title: t('home.feature3Title'), desc: t('home.feature3Desc'), color: "emerald" }
             ].map((feat, i) => (
               <motion.div 
                 key={i}
@@ -252,17 +283,23 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="space-y-4"
               >
-                <h2 className="text-4xl lg:text-5xl font-bold tracking-tight">Your mission, <br /><span className="text-indigo-400">accelerated.</span></h2>
+                <h2 className="text-4xl lg:text-5xl font-bold tracking-tight">
+                  {t('home.missionTitle').split(',').map((part, i) => (
+                    <React.Fragment key={i}>
+                      {i === 0 ? part + ',' : <span className="text-indigo-400 block">{part}</span>}
+                    </React.Fragment>
+                  ))}
+                </h2>
                 <p className="text-gray-400 text-lg max-w-md leading-relaxed">
-                  We've streamlined every step of the collaboration process, from matching to final delivery.
+                  {t('home.missionSubtitle')}
                 </p>
               </motion.div>
 
               <div className="space-y-8">
                 {[
-                  { step: '01', title: 'Connect your orbit', desc: 'Auth with Google and set up your distinct professional profile.' },
-                  { step: '02', title: 'Launch projects', desc: 'As a client, post high-impact projects. As talent, submit elite proposals.' },
-                  { step: '03', title: 'Synchronized work', desc: 'Manage milestones and payments securely through our dedicated workspace.' }
+                  { step: '01', title: t('home.steps.s1Title'), desc: t('home.steps.s1Desc') },
+                  { step: '02', title: t('home.steps.s2Title'), desc: t('home.steps.s2Desc') },
+                  { step: '03', title: t('home.steps.s3Title'), desc: t('home.steps.s3Desc') }
                 ].map((s, idx) => (
                   <motion.div 
                     key={idx}
@@ -289,14 +326,14 @@ export default function Home() {
               className="relative"
             >
               <div className="aspect-square bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-[4rem] border border-white/10 backdrop-blur-xl flex items-center justify-center p-12 overflow-hidden shadow-2xl">
-                <Orbit className="h-64 w-64 text-indigo-500/20 animate-spin absolute opacity-20" style={{ animationDuration: '20s' }} />
+                <BrandIcon className="h-64 w-64 text-indigo-500/20 animate-spin absolute opacity-20" style={{ animationDuration: '20s' }} />
                 <div className="relative text-center space-y-6">
                   <div className="h-20 w-20 bg-indigo-600 rounded-3xl flex items-center justify-center mx-auto shadow-2xl shadow-indigo-600/40">
                     <CheckCircle2 className="h-10 w-10 text-white" />
                   </div>
                   <div className="space-y-2">
-                    <p className="text-sm font-bold text-indigo-400 uppercase tracking-widest leading-none">Milestone Reached</p>
-                    <h3 className="text-3xl font-bold leading-none">Deploy v1.0</h3>
+                    <p className="text-sm font-bold text-indigo-400 uppercase tracking-widest leading-none">{t('home.milestoneReached')}</p>
+                    <h3 className="text-3xl font-bold leading-none">{t('home.deployV1')}</h3>
                   </div>
                 </div>
               </div>
@@ -316,8 +353,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <h2 className="text-5xl font-bold tracking-tight">Ready to enter the Orbit?</h2>
-            <p className="text-xl text-gray-500">Join 45,000+ top professionals and teams scaling their vision today.</p>
+            <h2 className="text-5xl font-bold tracking-tight">{t('home.readyTitle')}</h2>
+            <p className="text-xl text-gray-500">{t('home.readySubtitle')}</p>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -326,16 +363,17 @@ export default function Home() {
             className="flex flex-col sm:flex-row justify-center gap-4"
           >
             <Link to="/jobs" className="bg-indigo-600 text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200">
-              Start Exploring
+              {t('home.startExploring')}
             </Link>
             {!user && (
               <button onClick={login} className="bg-white text-gray-900 border-2 border-gray-100 px-10 py-5 rounded-2xl font-bold text-xl hover:border-gray-300 transition-all">
-                Join Network
+                {t('home.joinNetwork')}
               </button>
             )}
           </motion.div>
         </div>
       </section>
+
 
     </motion.div>
   );
