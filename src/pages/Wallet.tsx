@@ -19,7 +19,9 @@ import { db, auth } from '../lib/firebase';
 import { collection, query, where, onSnapshot, orderBy, limit } from 'firebase/firestore';
 import { useAuth } from '../App';
 import { cn } from '../lib/utils';
+import { useTranslation } from 'react-i18next';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import ComingSoonOverlay from '../components/ComingSoonOverlay';
 
 const CASH_FLOW_DATA = [
   { name: 'Jan', in: 4000, out: 2400 },
@@ -31,8 +33,11 @@ const CASH_FLOW_DATA = [
 ];
 
 export default function Wallet() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [balance, setBalance] = useState(0);
+  const [escrow, setEscrow] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,12 +50,48 @@ export default function Wallet() {
       limit(20)
     );
 
-    const unsubscribe = onSnapshot(q, (snap) => {
-      setTransactions(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    const txUnsubscribe = onSnapshot(q, (snap) => {
+      const txs = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setTransactions(txs);
+      
+      // Calculate balance from ALL user transactions
+      const fullQ = query(collection(db, 'transactions'), where('userId', '==', user.uid));
+      onSnapshot(fullQ, (fullSnap) => {
+        const total = fullSnap.docs.reduce((acc, doc) => {
+            const data = doc.data();
+            if (data.type === 'deposit' || data.type === 'payment_received') return acc + (data.amount || 0);
+            if (data.type === 'withdrawal' || data.type === 'payment_sent') return acc - (data.amount || 0);
+            return acc;
+        }, 0);
+        setBalance(total);
+      });
+      
       setLoading(false);
     });
 
-    return unsubscribe;
+    // Calculate Escrow from contracts
+    const contractsQ = query(
+        collection(db, 'contracts'),
+        where('status', '==', 'active')
+    );
+    // Note: We need to filter by user being either client or freelancer
+    // For simplicity, we'll check both
+    const escrowUnsubscribe = onSnapshot(contractsQ, (snap) => {
+        const totalEscrow = snap.docs.reduce((acc, doc) => {
+            const data = doc.data();
+            if (data.clientId === user.uid || data.freelancerId === user.uid) {
+                const remaining = (data.totalAmount || 0) - (data.amountPaid || 0);
+                return acc + remaining;
+            }
+            return acc;
+        }, 0);
+        setEscrow(totalEscrow);
+    });
+
+    return () => {
+        txUnsubscribe();
+        escrowUnsubscribe();
+    }
   }, [user]);
 
   if (loading) return (
@@ -60,16 +101,16 @@ export default function Wallet() {
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-20 pt-16">
+    <div className="bg-gray-50 min-h-screen pb-20 pt-16 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">Financial Treasury</h1>
-            <p className="text-gray-500 mt-1 font-medium italic">Manage your capital, taxes, and elite withdrawals.</p>
+            <h1 className="text-4xl font-black text-gray-900 tracking-tight">{t('wallet.title')}</h1>
+            <p className="text-gray-500 mt-1 font-medium italic">{t('wallet.subtitle')}</p>
           </div>
           <div className="flex items-center gap-4">
              <button className="bg-gray-900 text-white px-8 py-4 rounded-2xl font-black text-sm shadow-xl shadow-gray-200 hover:bg-black transition-all flex items-center gap-2">
-               <ArrowUpRight className="h-4 w-4" /> Withdraw Funds
+               <ArrowUpRight className="h-4 w-4" /> {t('wallet.withdrawFunds')}
              </button>
              <button className="bg-white border border-gray-100 p-4 rounded-2xl hover:bg-gray-50 transition-all">
                <Download className="h-5 w-5 text-gray-400" />
@@ -91,16 +132,16 @@ export default function Wallet() {
                      <div className="h-14 w-14 bg-white/10 rounded-2xl flex items-center justify-center">
                        <WalletIcon className="h-7 w-7 text-white" />
                      </div>
-                     <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-white/20 px-3 py-1 rounded-full">Primary Wallet</span>
+                     <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-white/20 px-3 py-1 rounded-full">{t('wallet.primaryWallet')}</span>
                    </div>
                    <div>
-                     <p className="text-sm font-black text-white/60 mb-1 uppercase tracking-widest">Available Balance</p>
-                     <h3 className="text-5xl font-black tracking-tight">$12,450.80</h3>
+                     <p className="text-sm font-black text-white/60 mb-1 uppercase tracking-widest">{t('wallet.availableBalance')}</p>
+                     <h3 className="text-5xl font-black tracking-tight">${balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
                    </div>
                    <div className="flex items-center justify-between pt-8 border-t border-white/10">
                       <div className="flex items-center gap-2 text-indigo-100 font-bold text-xs">
                         <ShieldCheck className="h-4 w-4" />
-                        Fully Insured by Vynta
+                        {t('wallet.insuredNote')}
                       </div>
                       <div className="h-8 w-12 bg-white/10 rounded-lg flex items-center justify-center italic font-black text-[8px] tracking-widest">VISA</div>
                    </div>
@@ -109,17 +150,17 @@ export default function Wallet() {
 
               <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-10">
                  <div className="flex items-center justify-between">
-                   <h3 className="text-xl font-black text-gray-900 tracking-tight">Active Escrow</h3>
+                   <h3 className="text-xl font-black text-gray-900 tracking-tight">{t('wallet.activeEscrow')}</h3>
                    <div className="h-10 w-10 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600">
                      <Clock className="h-6 w-6" />
                    </div>
                  </div>
                  <div>
-                   <p className="text-sm font-black text-gray-400 mb-1 uppercase tracking-widest">Held in Protection</p>
-                   <h3 className="text-4xl font-black text-gray-900 tracking-tight">$8,200.00</h3>
+                   <p className="text-sm font-black text-gray-400 mb-1 uppercase tracking-widest">{t('wallet.heldInProtection')}</p>
+                   <h3 className="text-4xl font-black text-gray-900 tracking-tight">${escrow.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
                  </div>
                  <div className="bg-gray-50 p-4 rounded-2xl flex items-center justify-center gap-2">
-                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Releasing in 4-6 Days</span>
+                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{t('wallet.releasingNote')}</span>
                  </div>
               </div>
             </div>
@@ -127,10 +168,10 @@ export default function Wallet() {
             {/* Cash Flow Chart */}
             <div className="bg-white p-12 rounded-[3.5rem] border border-gray-100 shadow-sm">
                <div className="flex items-center justify-between mb-12">
-                 <h3 className="text-2xl font-black text-gray-900 tracking-tight">Cash Velocity</h3>
+                 <h3 className="text-2xl font-black text-gray-900 tracking-tight">{t('wallet.cashVelocity')}</h3>
                  <div className="flex gap-2">
-                   <button className="px-4 py-2 bg-indigo-50 rounded-xl text-xs font-bold text-indigo-600">This Month</button>
-                   <button className="px-4 py-2 bg-gray-50 rounded-xl text-xs font-bold text-gray-400">Total Year</button>
+                   <button className="px-4 py-2 bg-indigo-50 rounded-xl text-xs font-bold text-indigo-600">{t('wallet.thisMonth')}</button>
+                   <button className="px-4 py-2 bg-gray-50 rounded-xl text-xs font-bold text-gray-400">{t('wallet.totalYear')}</button>
                  </div>
                </div>
                <div className="h-[300px] w-full">
@@ -153,18 +194,18 @@ export default function Wallet() {
                <div className="mt-8 flex justify-center gap-10">
                  <div className="flex items-center gap-3">
                    <div className="h-3 w-3 bg-emerald-500 rounded-full" />
-                   <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Inflow</span>
+                   <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{t('wallet.inflow')}</span>
                  </div>
                  <div className="flex items-center gap-3">
                    <div className="h-3 w-3 bg-red-400 rounded-full" />
-                   <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Outflow</span>
+                   <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{t('wallet.outflow')}</span>
                  </div>
                </div>
             </div>
 
             {/* Transaction History */}
             <div className="space-y-6">
-               <h3 className="text-2xl font-black text-gray-900 tracking-tight px-4">Ledger History</h3>
+               <h3 className="text-2xl font-black text-gray-900 tracking-tight px-4">{t('wallet.ledgerHistory')}</h3>
                <div className="space-y-4">
                  {transactions.length > 0 ? transactions.map(tx => (
                    <div key={tx.id} className="bg-white p-6 rounded-[2.5rem] border border-gray-100 hover:shadow-lg hover:shadow-indigo-500/5 transition-all flex items-center justify-between group">
@@ -194,7 +235,7 @@ export default function Wallet() {
                    </div>
                  )) : (
                    <div className="bg-white p-12 text-center rounded-[3rem] border-2 border-dashed border-gray-100">
-                     <p className="text-sm font-bold text-gray-400 italic">No transactions recorded in the ledger yet.</p>
+                     <p className="text-sm font-bold text-gray-400 italic">{t('wallet.noTransactions')}</p>
                    </div>
                  )}
                </div>
@@ -206,7 +247,7 @@ export default function Wallet() {
              {/* Payment Methods */}
              <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
                 <div className="flex items-center justify-between mb-10">
-                  <h3 className="text-xl font-black text-gray-900 tracking-tight">Endpoints</h3>
+                  <h3 className="text-xl font-black text-gray-900 tracking-tight">{t('wallet.endpoints')}</h3>
                   <button className="text-indigo-600 hover:text-indigo-700">
                     <Plus className="h-5 w-5" />
                   </button>
@@ -240,13 +281,13 @@ export default function Wallet() {
                 <div className="h-12 w-12 bg-white/10 rounded-2xl flex items-center justify-center text-orange-400">
                   <AlertCircle className="h-6 w-6" />
                 </div>
-                <h3 className="text-xl font-black tracking-tight leading-tight">KYC Verification Required</h3>
-                <p className="text-sm font-medium text-white/60 leading-relaxed">To enable limitless withdrawals, please verify your identity in the settings portal.</p>
+                <h3 className="text-xl font-black tracking-tight leading-tight">{t('wallet.kycTitle')}</h3>
+                <p className="text-sm font-medium text-white/60 leading-relaxed">{t('wallet.kycDesc')}</p>
                 <Link 
                   to="/settings" 
                   className="w-full py-4 bg-orange-400 text-gray-900 rounded-2xl font-black text-center text-sm hover:bg-orange-500 transition-all block"
                 >
-                  Verify Now
+                  {t('wallet.verifyNow')}
                 </Link>
              </div>
 
@@ -256,7 +297,7 @@ export default function Wallet() {
                  <ShieldCheck className="h-5 w-5" />
                </div>
                <p className="text-xs font-bold text-indigo-700 leading-relaxed">
-                 Need a detailed VAT/Tax report? Export your entire transaction history to CSV or PDF from the dashboard tools.
+                 {t('wallet.taxReportNote')}
                </p>
              </div>
           </div>

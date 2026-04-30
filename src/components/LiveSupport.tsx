@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MessageCircle, X, Send, Minus, Bot, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../lib/utils';
+import { collection, addDoc, serverTimestamp, doc, updateDoc, setDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { auth } from '../lib/firebase';
 
 interface ChatMessage {
   id: string;
@@ -23,6 +26,7 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
   useEffect(() => {
     if (inline) {
@@ -46,18 +50,29 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
     if (isOpen && messages.length === 0) {
       setIsTyping(true);
       setTimeout(() => {
-        setMessages([
-          {
-            id: '1',
-            text: t('help.chatIntro'),
-            sender: 'bot',
-            timestamp: new Date()
-          }
-        ]);
+        const introMsg: ChatMessage = {
+          id: '1',
+          text: t('help.chatIntro'),
+          sender: 'bot',
+          timestamp: new Date()
+        };
+        setMessages([introMsg]);
         setIsTyping(false);
+        
+        // Log the start of a transcript
+        const user = auth.currentUser;
+        setDoc(doc(db, 'support_messages', sessionId), {
+          type: 'live_chat',
+          userId: user?.uid || 'anonymous',
+          userEmail: user?.email || 'N/A',
+          createdAt: serverTimestamp(),
+          status: 'active',
+          subject: 'Live Support Session',
+          messages: [{ ...introMsg, timestamp: new Date().toISOString() }]
+        });
       }, 1000);
     }
-  }, [isOpen, t]);
+  }, [isOpen, t, sessionId]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -65,7 +80,7 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
     }
   }, [messages, isTyping]);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -76,20 +91,44 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
+    const currentInput = input;
     setInput('');
+
+    // Update Firestore transcript
+    try {
+      await updateDoc(doc(db, 'support_messages', sessionId), {
+        messages: newMessages.map(m => ({ ...m, timestamp: m.timestamp.toISOString() })),
+        lastMessage: currentInput,
+        updatedAt: serverTimestamp()
+      });
+    } catch (err) {
+      console.error('Error updating transcript:', err);
+    }
 
     // Simulate bot response
     setIsTyping(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const botMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         text: "Thanks for your question! One of our support specialists will be with you shortly. In the meantime, feel free to check our Help Center for quick answers.",
         sender: 'bot',
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, botMsg]);
+      const updatedWithBot = [...newMessages, botMsg];
+      setMessages(updatedWithBot);
       setIsTyping(false);
+
+      // Update Firestore again with bot response
+      try {
+        await updateDoc(doc(db, 'support_messages', sessionId), {
+          messages: updatedWithBot.map(m => ({ ...m, timestamp: m.timestamp.toISOString() })),
+          updatedAt: serverTimestamp()
+        });
+      } catch (err) {
+        console.error('Error updating transcript with bot:', err);
+      }
     }, 2000);
   };
 

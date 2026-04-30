@@ -38,10 +38,11 @@ import {
   orderBy, 
   setDoc, 
   getDoc,
+  getDocs,
   limit,
   where
 } from 'firebase/firestore';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { useAuth } from '../App';
 
 const ICON_MAP: Record<string, any> = {
   Code, Brain, Palette, Target, Globe, Zap, Sparkles, Award
@@ -53,14 +54,29 @@ export default function Community() {
   const [searchParams] = useSearchParams();
   const selectedCohortId = searchParams.get('cohort');
   
-  const [user] = useAuthState(auth);
+  const { user, profile: authProfile } = useAuth();
   const [profile, setProfile] = useState<any>(null);
+  const [catCounts, setCatCounts] = useState<Record<string, number>>({});
   
   const [cohorts, setCohorts] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [forumLoading, setForumLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Real-time listener for cat counts
+    const jobsQ = query(collection(db, 'jobs'), where('status', '==', 'open'), limit(500));
+    const unsubJobs = onSnapshot(jobsQ, (snap) => {
+        const categories: Record<string, number> = {};
+        snap.forEach(d => {
+          const cat = d.data().category;
+          if (cat) categories[cat] = (categories[cat] || 0) + 1;
+        });
+        setCatCounts(categories);
+    });
+    return unsubJobs;
+  }, []);
 
   // Fetch User Profile
   useEffect(() => {
@@ -80,6 +96,22 @@ export default function Community() {
     return unsubscribe;
   }, []);
 
+  const [mentors, setMentors] = useState<any[]>([]);
+
+  // Fetch Mentors (just top rated freelancers)
+  useEffect(() => {
+    const q = query(
+      collection(db, 'users'),
+      where('role', '==', 'freelancer'),
+      where('verificationStatus', '==', 'verified'),
+      limit(3)
+    );
+    const unsubMentors = onSnapshot(q, (snap) => {
+      setMentors(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+    return unsubMentors;
+  }, []);
+
   // Fetch Forum Messages
   useEffect(() => {
     const collectionName = selectedCohortId ? `cohorts/${selectedCohortId}/messages` : 'community_messages';
@@ -97,10 +129,18 @@ export default function Community() {
     return unsubscribe;
   }, [selectedCohortId]);
 
-  // Scroll to bottom
+  const [onlineCount, setOnlineCount] = useState(0);
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    // Real-time listener for "online" users (active in last 10 mins)
+    const tenMinsAgo = new Date();
+    tenMinsAgo.setMinutes(tenMinsAgo.getMinutes() - 10);
+    const q = query(collection(db, 'users'), where('lastActive', '>=', tenMinsAgo), limit(100));
+    const unsubOnline = onSnapshot(q, (snap) => {
+      setOnlineCount(snap.size);
+    });
+    return unsubOnline;
+  }, []);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,15 +198,22 @@ export default function Community() {
                Elite Mentors
              </h3>
              <div className="space-y-4">
-                {[1,2,3].map(i => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="h-10 w-10 bg-white/20 rounded-xl" />
+                {mentors.map(mentor => (
+                  <Link key={mentor.id} to={`/freelancer/${mentor.id}`} className="flex items-center gap-3 group">
+                    <img 
+                      src={mentor.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(mentor.displayName || 'M')}`} 
+                      className="h-10 w-10 bg-white/20 rounded-xl object-cover grayscale group-hover:grayscale-0 transition-all shadow-sm" 
+                      alt=""
+                    />
                     <div>
-                      <p className="font-bold text-sm">Lead Architect</p>
-                      <p className="text-[10px] text-indigo-200 uppercase font-black tracking-widest">Active Now</p>
+                      <p className="font-bold text-sm truncate max-w-[120px]">{mentor.displayName}</p>
+                      <p className="text-[10px] text-indigo-200 uppercase font-black tracking-widest leading-none mt-0.5">{mentor.professionalTitle || 'Lead Expert'}</p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
+                {mentors.length === 0 && (
+                  <p className="text-xs text-indigo-200 opacity-60">Scanning for domain masters...</p>
+                )}
              </div>
           </div>
         </div>
@@ -188,8 +235,8 @@ export default function Community() {
                 </div>
              </div>
              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
-                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">42 Online</span>
+                <div className={cn("h-2 w-2 rounded-full", onlineCount > 0 ? "bg-emerald-500 animate-pulse" : "bg-gray-300")} />
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{onlineCount} Domain Masters Online</span>
              </div>
           </div>
 
@@ -262,19 +309,19 @@ export default function Community() {
         {/* Right Sidebar: Trends & Featured Cohorts */}
         <div className="hidden lg:block lg:col-span-3 space-y-8 sticky top-28 h-fit">
           <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm">
-             <h3 className="text-xl font-black text-gray-900 tracking-tight mb-8">Trending Topics</h3>
+             <h3 className="text-xl font-black text-gray-900 tracking-tight mb-8">Active Fields</h3>
              <div className="space-y-6">
                 {[
-                  { tag: 'nextjs-14', posts: '1.2k' },
-                  { tag: 'solidity-audits', posts: '850' },
-                  { tag: 'fintech-ui', posts: '2.4k' }
+                  { tag: 'nextjs', posts: catCounts['Development'] || '0' },
+                  { tag: 'design', posts: catCounts['Design'] || '0' },
+                  { tag: 'ai_data', posts: catCounts['AI & Data'] || '0' }
                 ].map(trend => (
                   <div key={trend.tag} className="flex items-center justify-between group cursor-pointer">
                     <div className="flex items-center gap-3">
                       <div className="h-2 w-2 rounded-full bg-indigo-600" />
                       <span className="text-sm font-black text-gray-900 group-hover:text-indigo-600 transition-colors">#{trend.tag}</span>
                     </div>
-                    <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">{trend.posts} INTEL</span>
+                    <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">{trend.posts} ACTIVE</span>
                   </div>
                 ))}
              </div>

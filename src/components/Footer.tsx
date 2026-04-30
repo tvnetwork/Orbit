@@ -39,7 +39,7 @@ export default function Footer() {
             </li>
             <li>
               <Link to="/about" className="hover:text-white transition-all flex items-center gap-2 group w-fit">
-                Enterprise
+                {t('common.enterprise')}
                 <span className="text-indigo-500 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                   →
                 </span>
@@ -56,7 +56,7 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="font-bold mb-6">Support</h4>
+          <h4 className="font-bold mb-6">{t('common.support')}</h4>
           <ul className="space-y-4 text-gray-400">
             <li><Link to="/help-center" className="hover:text-white transition-colors">{t('common.help')}</Link></li>
             <li><Link to="/community" className="hover:text-white transition-colors">{t('common.community')}</Link></li>

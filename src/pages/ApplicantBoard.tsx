@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -32,6 +32,8 @@ export default function ApplicantBoard() {
   const [proposals, setProposals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (jobId) {
@@ -64,6 +66,16 @@ export default function ApplicantBoard() {
       return unsubscribe;
     }
   }, [jobId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setActiveMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const updateProposalStatus = async (proposalId: string, newStatus: string) => {
     try {
@@ -128,9 +140,29 @@ export default function ApplicantBoard() {
                     {proposals.filter(p => p.status === column.id).length}
                   </span>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600 p-1">
-                  <MoreHorizontal className="h-5 w-5" />
-                </button>
+                <div className="relative">
+                  <button 
+                    onClick={() => setActiveMenuId(activeMenuId === column.id ? null : column.id)}
+                    className="text-gray-400 hover:text-gray-600 p-1"
+                  >
+                    <MoreHorizontal className="h-5 w-5" />
+                  </button>
+                  <AnimatePresence>
+                    {activeMenuId === column.id && (
+                      <motion.div 
+                        ref={menuRef}
+                        initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                        className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 overflow-hidden"
+                      >
+                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50">Sort by Rating</button>
+                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50">Sort by Budget</button>
+                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50">Bulk Actions</button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
 
               <div className="space-y-4 min-h-[500px]">

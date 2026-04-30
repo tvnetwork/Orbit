@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
+import TranslationPrompt from './components/TranslationPrompt';
+import LiveSupport from './components/LiveSupport';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, db, loginWithGoogle } from './lib/firebase';
 import { UserProfile, UserRole } from './types';
 import { motion, AnimatePresence } from 'motion/react';
@@ -52,6 +54,14 @@ const Navbar = () => {
   const location = useLocation();
   const { t } = useTranslation();
 
+  // Update lastActive on navigation
+  useEffect(() => {
+    if (user) {
+      const docRef = doc(db, 'users', user.uid);
+      updateDoc(docRef, { lastActive: serverTimestamp() }).catch(console.error);
+    }
+  }, [user, location.pathname]);
+
   const handleLogin = async () => {
     try {
       await login();
@@ -63,21 +73,21 @@ const Navbar = () => {
   const navLinks = [
     { to: "/jobs", label: t('nav.marketplace'), show: true, icon: Search },
     { to: "/freelancers", label: t('nav.talent'), show: true, icon: Users },
-    { to: "/groups", label: "Groups", show: true, icon: Users },
+    { to: "/groups", label: t('nav.groups'), show: true, icon: Users },
     { to: "/community", label: t('common.community'), show: true, icon: Globe },
-    { to: "/client/dashboard", label: "Client Hub", show: profile?.role === 'client', icon: LayoutDashboard },
-    { to: "/freelancer/dashboard", label: "Dashboard", show: profile?.role === 'freelancer', icon: LayoutDashboard },
+    { to: "/client/dashboard", label: t('nav.clientHub'), show: profile?.role === 'client', icon: LayoutDashboard },
+    { to: "/freelancer/dashboard", label: t('nav.dashboard'), show: profile?.role === 'freelancer', icon: LayoutDashboard },
     { to: "/admin", label: t('nav.admin'), show: profile?.role === 'admin' || user?.email === 'oladoyeheritage445@gmail.com', icon: Lock },
   ];
 
   const bottomLinks = [
-    { to: "/", icon: BrandIcon, label: 'Home' },
-    { to: "/jobs", icon: Search, label: 'Jobs' },
-    ...(profile?.role === 'client' ? [{ to: "/client/dashboard", icon: LayoutDashboard, label: 'Hub' }] : []),
-    ...(profile?.role === 'freelancer' ? [{ to: "/freelancer/dashboard", icon: LayoutDashboard, label: 'Dash' }] : []),
-    { to: "/messages", icon: MessageSquare, label: 'Inbox' },
-    { to: "/wallet", icon: DollarSign, label: 'Wallet' },
-    { to: user ? "/profile" : "/login", icon: user ? UserIcon : LogOut, label: user ? 'Profile' : 'Login' }
+    { to: "/", icon: BrandIcon, label: t('common.home') },
+    { to: "/jobs", icon: Search, label: t('common.jobs') },
+    ...(profile?.role === 'client' ? [{ to: "/client/dashboard", icon: LayoutDashboard, label: t('nav.clientHub') }] : []),
+    ...(profile?.role === 'freelancer' ? [{ to: "/freelancer/dashboard", icon: LayoutDashboard, label: t('nav.dashboard') }] : []),
+    { to: "/messages", icon: MessageSquare, label: t('common.messages') },
+    { to: "/wallet", icon: DollarSign, label: t('common.wallet') },
+    { to: user ? "/profile" : "/login", icon: user ? UserIcon : LogOut, label: user ? t('profile.title') : t('common.login') }
   ];
 
   return (
@@ -209,27 +219,28 @@ const Navbar = () => {
   );
 };
 
-// Pages (Stubs for now)
-const ApplicantBoard = React.lazy(() => import('./pages/ApplicantBoard'));
-const ClientDashboard = React.lazy(() => import('./pages/ClientDashboard'));
-const FreelancerDashboard = React.lazy(() => import('./pages/FreelancerDashboard'));
-const FreelancerProposals = React.lazy(() => import('./pages/FreelancerProposals'));
-const SubmitProposal = React.lazy(() => import('./pages/SubmitProposal'));
-const ContractRoom = React.lazy(() => import('./pages/ContractRoom'));
-const Wallet = React.lazy(() => import('./pages/Wallet'));
-const Settings = React.lazy(() => import('./pages/Settings'));
-const Groups = React.lazy(() => import('./pages/Groups'));
-const Freelancers = React.lazy(() => import('./pages/Freelancers'));
-const FreelancerProfile = React.lazy(() => import('./pages/FreelancerProfile'));
-const Home = React.lazy(() => import('./pages/Home'));
-const Jobs = React.lazy(() => import('./pages/Jobs'));
-const Dashboard = React.lazy(() => import('./pages/Dashboard'));
-const Profile = React.lazy(() => import('./pages/Profile'));
-const PublicProfile = React.lazy(() => import('./pages/PublicProfile'));
-const PostJob = React.lazy(() => import('./pages/PostJob'));
-const JobDetails = React.lazy(() => import('./pages/JobDetails'));
-const Messages = React.lazy(() => import('./pages/Messages'));
-const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
+// Pages
+import ApplicantBoard from './pages/ApplicantBoard';
+import ClientDashboard from './pages/ClientDashboard';
+import FreelancerDashboard from './pages/FreelancerDashboard';
+import FreelancerProposals from './pages/FreelancerProposals';
+import FreelancerContracts from './pages/FreelancerContracts';
+import SubmitProposal from './pages/SubmitProposal';
+import ContractRoom from './pages/ContractRoom';
+import Wallet from './pages/Wallet';
+import Settings from './pages/Settings';
+import Groups from './pages/Groups';
+import Freelancers from './pages/Freelancers';
+import FreelancerProfile from './pages/FreelancerProfile';
+import Home from './pages/Home';
+import Jobs from './pages/Jobs';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import PublicProfile from './pages/PublicProfile';
+import PostJob from './pages/PostJob';
+import JobDetails from './pages/JobDetails';
+import Messages from './pages/Messages';
+import AdminDashboard from './pages/AdminDashboard';
 const About = React.lazy(() => import('./pages/About'));
 const TrustSafety = React.lazy(() => import('./pages/TrustSafety'));
 const Careers = React.lazy(() => import('./pages/Careers'));
@@ -255,6 +266,7 @@ const AnimatedRoutes = () => {
           <Route path="/client/job/:id/applicants" element={<PageTransition><ApplicantBoard /></PageTransition>} />
           <Route path="/freelancer/dashboard" element={<PageTransition><FreelancerDashboard /></PageTransition>} />
           <Route path="/freelancer/proposals" element={<PageTransition><FreelancerProposals /></PageTransition>} />
+          <Route path="/freelancer/contracts" element={<PageTransition><FreelancerContracts /></PageTransition>} />
           <Route path="/jobs/:id/apply" element={<PageTransition><SubmitProposal /></PageTransition>} />
           <Route path="/contract/:id" element={<PageTransition><ContractRoom /></PageTransition>} />
           <Route path="/wallet" element={<PageTransition><Wallet /></PageTransition>} />
@@ -290,17 +302,28 @@ export default function App() {
       setUser(user);
       if (user) {
         const docRef = doc(db, 'users', user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setProfile(docSnap.data() as UserProfile);
-        } else {
-          // New user, but wait for them to pick a role
-          setProfile(null);
-        }
+        
+        // Update lastActive once on login
+        updateDoc(docRef, { lastActive: serverTimestamp() }).catch(console.error);
+
+        // Real-time listener for profile
+        const unsubProfile = onSnapshot(docRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setProfile(docSnap.data() as UserProfile);
+          } else {
+            setProfile(null);
+          }
+          setLoading(false);
+        }, (error) => {
+          console.error("Profile listen error:", error);
+          setLoading(false);
+        });
+
+        return () => unsubProfile();
       } else {
         setProfile(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
     return unsubscribe;
   }, []);
@@ -329,6 +352,8 @@ export default function App() {
         photoURL: user.photoURL || undefined,
         role,
         verificationStatus: 'none',
+        rating: 5.0,
+        completedJobs: 0,
         createdAt: serverTimestamp(),
       };
       await setDoc(docRef, newProfile);
@@ -368,6 +393,8 @@ export default function App() {
           <React.Suspense fallback={null}>
             <Footer />
           </React.Suspense>
+          <LiveSupport />
+          <TranslationPrompt />
           {/* Role Selection Modal for new users */}
           {user && !profile && !loading && (
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">

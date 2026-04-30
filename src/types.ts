@@ -21,6 +21,10 @@ export interface UserProfile {
   hourlyRate?: number;
   timezone?: string;
   languages?: string[];
+  githubUrl?: string;
+  linkedinUrl?: string;
+  twitterUrl?: string;
+  websiteUrl?: string;
   portfolio?: PortfolioItem[];
   verificationStatus?: 'none' | 'pending' | 'verified';
   completedJobs?: number;

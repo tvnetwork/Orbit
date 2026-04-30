@@ -39,7 +39,9 @@ export default function ContractRoom() {
   const [milestones, setMilestones] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showMenu, setShowMenu] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!contractId) return;
@@ -79,6 +81,17 @@ export default function ContractRoom() {
       milestonesUnsub();
     };
   }, [contractId, user]);
+
+  // Close menu on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -154,9 +167,72 @@ export default function ContractRoom() {
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Contract Value</p>
             <p className="text-xl font-black text-gray-900 leading-none tracking-tight">${contract?.totalAmount}</p>
           </div>
-          <button className="p-3 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors">
-            <MoreVertical className="h-6 w-6 text-gray-400" />
-          </button>
+          {profile?.role === 'freelancer' && !contract?.reviewRequested && (
+            <button 
+              onClick={async () => {
+                 if (!contractId) return;
+                 await updateDoc(doc(db, 'contracts', contractId), { reviewRequested: true });
+                 await addDoc(collection(db, 'contracts', contractId, 'messages'), {
+                   senderId: user!.uid,
+                   text: "🔴 [SYSTEM] Freelancer has requested a review for this project.",
+                   isSystem: true,
+                   createdAt: serverTimestamp()
+                 });
+              }}
+              className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-bold hover:bg-indigo-100 transition-colors"
+            >
+              Request Review
+            </button>
+          )}
+          <div className="relative">
+            <button 
+              onClick={() => setShowMenu(!showMenu)}
+              className="p-3 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors"
+            >
+              <MoreVertical className="h-6 w-6 text-gray-400" />
+            </button>
+            <AnimatePresence>
+              {showMenu && (
+                <motion.div 
+                  ref={menuRef}
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 overflow-hidden"
+                >
+                  <button 
+                    onClick={() => {
+                      if (contract?.jobId) window.location.href = `/jobs/${contract.jobId}`;
+                      setShowMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-3 transition-colors"
+                  >
+                    <FileText className="h-4 w-4 text-gray-400" /> View Job Original
+                  </button>
+                  <button 
+                    onClick={() => {
+                      const otherId = contract?.clientId === user?.uid ? contract?.freelancerId : contract?.clientId;
+                      if (otherId) window.location.href = `/profile/${otherId}`;
+                      setShowMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-3 transition-colors"
+                  >
+                    <ShieldCheck className="h-4 w-4 text-gray-400" /> Partner Certificate
+                  </button>
+                  <div className="h-px bg-gray-50 my-1" />
+                  <button 
+                    onClick={() => {
+                      // Logic for cancel
+                      setShowMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors"
+                  >
+                    <AlertCircle className="h-4 w-4" /> Raise Dispute / Help
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </header>
 

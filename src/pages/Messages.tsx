@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../App';
 import { 
   collection, 
@@ -7,6 +8,8 @@ import {
   orderBy, 
   onSnapshot, 
   addDoc, 
+  getDocs,
+  getDoc,
   serverTimestamp,
   doc,
   updateDoc,
@@ -35,11 +38,18 @@ import ReactMarkdown from 'react-markdown';
 export default function Messages() {
   const { user, profile } = useAuth();
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const targetUserId = searchParams.get('user');
+  
   const [chats, setChats] = useState<Chat[]>([]);
+  const [resolvedProfiles, setResolvedProfiles] = useState<Record<string, any>>({});
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showMenu, setShowMenu] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const isCommunity = selectedChatId === 'community';
   const selectedChat = isCommunity ? { id: 'community', participantIds: [] } : chats.find(c => c.id === selectedChatId);
@@ -53,10 +63,79 @@ export default function Messages() {
       orderBy('updatedAt', 'desc')
     );
     const unsubscribe = onSnapshot(q, (snap) => {
-      setChats(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chat)));
+      const fetchedChats = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chat));
+      setChats(fetchedChats);
+      
+      // Auto-select chat if targetUserId is provided
+      if (targetUserId && !selectedChatId) {
+        const existingChat = fetchedChats.find(c => c.participantIds.includes(targetUserId));
+        if (existingChat) {
+          setSelectedChatId(existingChat.id);
+        } else {
+          // Create new chat
+          const startNewChat = async () => {
+            setLoading(true);
+            try {
+              const newChatRef = await addDoc(collection(db, 'chats'), {
+                participantIds: [user.uid, targetUserId],
+                updatedAt: serverTimestamp(),
+                createdAt: serverTimestamp(),
+                lastMessage: '',
+                lastSenderId: ''
+              });
+              setSelectedChatId(newChatRef.id);
+            } catch (err) {
+              handleFirestoreError(err, OperationType.CREATE, 'chats');
+            } finally {
+              setLoading(false);
+            }
+          };
+          startNewChat();
+        }
+      }
     }, (err) => handleFirestoreError(err, OperationType.LIST, 'chats'));
     return unsubscribe;
-  }, [user]);
+  }, [user, targetUserId]);
+
+  // Resolve profiles for chats
+  useEffect(() => {
+    const fetchMissingProfiles = async () => {
+      const missingIds = new Set<string>();
+      chats.forEach(chat => {
+        chat.participantIds.forEach(id => {
+          if (id !== user?.uid && !resolvedProfiles[id]) {
+            missingIds.add(id);
+          }
+        });
+      });
+
+      if (missingIds.size > 0) {
+        const profiles: Record<string, any> = { ...resolvedProfiles };
+        await Promise.all(
+          Array.from(missingIds).map(async (id) => {
+            const docSnap = await getDoc(doc(db, 'users', id));
+            if (docSnap.exists()) {
+              profiles[id] = { id: docSnap.id, ...docSnap.data() };
+            }
+          })
+        );
+        setResolvedProfiles(profiles);
+      }
+    };
+
+    fetchMissingProfiles();
+  }, [chats, user?.uid]);
+
+  // Close menus on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Fetch Messages
   useEffect(() => {
@@ -148,6 +227,8 @@ export default function Messages() {
           <div className="divide-y divide-gray-50">
             {chats.map(chat => {
               const otherAuthorId = chat.participantIds.find(id => id !== user?.uid);
+              const otherProfile = otherAuthorId ? resolvedProfiles[otherAuthorId] : null;
+              
               return (
                 <button 
                   key={chat.id}
@@ -157,12 +238,18 @@ export default function Messages() {
                     selectedChatId === chat.id ? "bg-indigo-50" : ""
                   )}
                 >
-                  <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
-                    <UserIcon className="h-6 w-6 text-gray-400" />
+                  <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                    {otherProfile?.photoURL ? (
+                      <img src={otherProfile.photoURL} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      <UserIcon className="h-6 w-6 text-gray-400" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start mb-1">
-                      <p className="font-bold text-gray-900 truncate">{t('messages.userId')}: {otherAuthorId?.slice(0, 8)}</p>
+                      <p className="font-bold text-gray-900 truncate">
+                        {otherProfile?.displayName || `${t('messages.userId')}: ${otherAuthorId?.slice(0, 8)}`}
+                      </p>
                       <p className="text-[10px] text-gray-400 uppercase font-bold">{chat.updatedAt ? formatTime(chat.updatedAt) : ''}</p>
                     </div>
                     <p className="text-sm text-gray-500 truncate">{chat.lastMessage || t('messages.noMessages')}</p>
@@ -187,7 +274,7 @@ export default function Messages() {
         {selectedChatId ? (
           <>
             {/* Header */}
-            <div className="h-20 bg-white border-b border-gray-100 px-4 md:px-8 flex items-center justify-between shrink-0">
+            <div className="h-20 bg-white border-b border-gray-100 px-4 md:px-8 flex items-center justify-between shrink-0 relative">
               <div className="flex items-center gap-2 md:gap-4">
                 <button 
                   onClick={() => setSelectedChatId(null)}
@@ -196,14 +283,22 @@ export default function Messages() {
                   <ArrowLeft className="h-6 w-6" />
                 </button>
                 <div className={cn(
-                  "h-10 w-10 md:h-12 md:w-12 rounded-2xl flex items-center justify-center shadow-lg shadow-gray-200",
+                  "h-10 w-10 md:h-12 md:w-12 rounded-2xl flex items-center justify-center shadow-lg shadow-gray-200 overflow-hidden",
                   isCommunity ? "bg-emerald-50 text-emerald-600" : "bg-indigo-50 text-indigo-600"
                 )}>
-                  {isCommunity ? <Globe className="h-5 w-5 md:h-6 md:w-6" /> : <UserIcon className="h-5 w-5 md:h-6 md:w-6" />}
+                  {isCommunity ? (
+                    <Globe className="h-5 w-5 md:h-6 md:w-6" />
+                  ) : (
+                    resolvedProfiles[selectedChat?.participantIds?.find(id => id !== user?.uid) || '']?.photoURL ? (
+                      <img src={resolvedProfiles[selectedChat?.participantIds?.find(id => id !== user?.uid) || '']?.photoURL} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      <UserIcon className="h-5 w-5 md:h-6 md:w-6" />
+                    )
+                  )}
                 </div>
                 <div className="min-w-0">
                   <p className="font-bold text-gray-900 truncate text-sm md:text-base">
-                    {isCommunity ? t('messages.communityForum') : `${t('messages.userId')}: ${selectedChat?.participantIds?.find(id => id !== user?.uid)?.slice(0, 8)}`}
+                    {isCommunity ? t('messages.communityForum') : (resolvedProfiles[selectedChat?.participantIds?.find(id => id !== user?.uid) || '']?.displayName || `${t('messages.userId')}: ${selectedChat?.participantIds?.find(id => id !== user?.uid)?.slice(0, 8)}`)}
                   </p>
                   <div className="flex items-center gap-1.5">
                     <div className={cn("h-2 w-2 rounded-full", isCommunity ? "bg-emerald-500" : "bg-emerald-500")} />
@@ -224,9 +319,58 @@ export default function Messages() {
                     </button>
                   </>
                 )}
-                <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
-                  <MoreHorizontal className="h-5 w-5" />
-                </button>
+                <div className="relative">
+                  <button 
+                    onClick={() => setShowMenu(showMenu === 'chat' ? null : 'chat')}
+                    className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
+                  >
+                    <MoreHorizontal className="h-5 w-5" />
+                  </button>
+                  
+                  <AnimatePresence>
+                    {showMenu === 'chat' && (
+                      <motion.div 
+                        ref={menuRef}
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50"
+                      >
+                        {!isCommunity && (
+                          <button 
+                            onClick={() => {
+                              const otherId = selectedChat?.participantIds?.find(id => id !== user?.uid);
+                              if (otherId) window.location.href = `/profile/${otherId}`;
+                              setShowMenu(null);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2"
+                          >
+                            <UserIcon className="h-4 w-4" /> View Profile
+                          </button>
+                        )}
+                        <button 
+                          onClick={() => {
+                            // Implement clear chat logic if needed
+                            setShowMenu(null);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2"
+                        >
+                          <Search className="h-4 w-4" /> Search History
+                        </button>
+                        <div className="h-px bg-gray-50 my-1" />
+                        <button 
+                          onClick={() => {
+                            // Implement report/block logic
+                            setShowMenu(null);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2"
+                        >
+                          <Globe className="h-4 w-4" /> Report Discussion
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
 

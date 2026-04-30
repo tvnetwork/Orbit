@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Search, 
@@ -33,6 +33,18 @@ export default function FreelancerProposals() {
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setActiveMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -175,13 +187,33 @@ export default function FreelancerProposals() {
                          View Contract
                        </Link>
                     ) : (
-                       <button className="p-4 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all">
-                         <Trash2 className="h-5 w-5" />
-                       </button>
+                       <div className="relative">
+                          <button 
+                            onClick={() => setActiveMenuId(activeMenuId === proposal.id ? null : proposal.id)}
+                            className="p-4 text-gray-300 hover:text-gray-900 transition-all"
+                          >
+                            <MoreHorizontal className="h-6 w-6" />
+                          </button>
+                          <AnimatePresence>
+                            {activeMenuId === proposal.id && (
+                              <motion.div 
+                                ref={menuRef}
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 overflow-hidden"
+                              >
+                                <button className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2">
+                                  <Eye className="h-4 w-4" /> View Original Job
+                                </button>
+                                <button className="w-full text-left px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2">
+                                  <Trash2 className="h-4 w-4" /> Withdraw Bid
+                                </button>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                       </div>
                     )}
-                    <button className="p-4 text-gray-300 hover:text-gray-900 transition-all">
-                      <MoreHorizontal className="h-6 w-6" />
-                    </button>
                   </div>
                 </div>
               </motion.div>

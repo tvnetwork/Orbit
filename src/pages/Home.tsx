@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
@@ -17,10 +17,60 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../App';
 import { useTranslation } from 'react-i18next';
+import { collection, getDocs, query, where, limit, onSnapshot } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 export default function Home() {
   const { user, login } = useAuth();
   const { t } = useTranslation();
+  const [counts, setCounts] = useState({ jobs: 0, talent: 0, volume: 0, rating: 0 });
+  const [catCounts, setCatCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    // Real-time listener for jobs and categories
+    const jobsQ = query(collection(db, 'jobs'), where('status', '==', 'open'), limit(500));
+    const unsubJobs = onSnapshot(jobsQ, (snap) => {
+      const categories: Record<string, number> = {};
+      snap.forEach(d => {
+        const cat = d.data().category;
+        if (cat) categories[cat] = (categories[cat] || 0) + 1;
+      });
+      setCounts(prev => ({ ...prev, jobs: snap.size }));
+      setCatCounts(categories);
+    });
+
+    // Real-time listener for talent and ratings
+    const talentQ = query(collection(db, 'users'), where('role', '==', 'freelancer'), limit(500));
+    const unsubTalent = onSnapshot(talentQ, (snap) => {
+      let totalRating = 0;
+      let ratingCount = 0;
+      snap.docs.forEach(doc => {
+        const data = doc.data();
+        if (data.rating) {
+          totalRating += data.rating;
+          ratingCount++;
+        }
+      });
+      setCounts(prev => ({ 
+        ...prev, 
+        talent: snap.size,
+        rating: ratingCount > 0 ? totalRating / ratingCount : 0
+      }));
+    });
+
+    // Real-time listener for volume
+    const txQ = query(collection(db, 'transactions'), limit(1000));
+    const unsubTx = onSnapshot(txQ, (snap) => {
+      const totalVolume = snap.docs.reduce((acc, doc) => acc + (doc.data().amount || 0), 0);
+      setCounts(prev => ({ ...prev, volume: totalVolume }));
+    });
+
+    return () => {
+      unsubJobs();
+      unsubTalent();
+      unsubTx();
+    };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -73,14 +123,14 @@ export default function Home() {
               {!user ? (
                 <button 
                   onClick={login}
-                  className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-2"
                 >
                   {t('common.getStarted')} <ArrowRight className="h-5 w-5" />
                 </button>
               ) : (
                 <Link 
                   to="/jobs"
-                  className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-2"
                 >
                   {t('common.viewMarket')} <ArrowRight className="h-5 w-5" />
                 </Link>
@@ -159,12 +209,12 @@ export default function Home() {
             className="grid grid-cols-1 md:grid-cols-4 gap-6"
           >
             {[
-              { icon: Code, title: t('home.categories.development'), count: t('home.categories.jobsCount', { count: '1.2k+' }), color: 'bg-blue-50 text-blue-600', span: 'md:col-span-2' },
-              { icon: Palette, title: t('home.categories.design'), count: t('home.categories.jobsCount', { count: '850+' }), color: 'bg-purple-50 text-purple-600', span: 'md:col-span-1' },
-              { icon: Zap, title: t('home.categories.ai'), count: t('home.categories.jobsCount', { count: '420+' }), color: 'bg-amber-50 text-amber-600', span: 'md:col-span-1' },
-              { icon: Terminal, title: t('home.categories.cyber'), count: t('home.categories.jobsCount', { count: '150+' }), color: 'bg-rose-50 text-rose-600', span: 'md:col-span-1' },
-              { icon: Globe, title: t('home.categories.web3'), count: t('home.categories.jobsCount', { count: '280+' }), color: 'bg-emerald-50 text-emerald-600', span: 'md:col-span-2' },
-              { icon: Target, title: t('home.categories.marketing'), count: t('home.categories.jobsCount', { count: '640+' }), color: 'bg-indigo-50 text-indigo-600', span: 'md:col-span-1' },
+              { id: 'development', icon: Code, title: t('home.categories.development'), count: t('home.categories.jobsCount', { count: catCounts['Development'] || '0' }), color: 'bg-blue-50 text-blue-600', span: 'md:col-span-2' },
+              { id: 'design', icon: Palette, title: t('home.categories.design'), count: t('home.categories.jobsCount', { count: catCounts['Design'] || '0' }), color: 'bg-purple-50 text-purple-600', span: 'md:col-span-1' },
+              { id: 'ai', icon: Zap, title: t('home.categories.ai'), count: t('home.categories.jobsCount', { count: catCounts['AI & Data'] || '0' }), color: 'bg-amber-50 text-amber-600', span: 'md:col-span-1' },
+              { id: 'cyber', icon: Terminal, title: t('home.categories.cyber'), count: t('home.categories.jobsCount', { count: catCounts['Cybersecurity'] || '0' }), color: 'bg-rose-50 text-rose-600', span: 'md:col-span-1' },
+              { id: 'web3', icon: Globe, title: t('home.categories.web3'), count: t('home.categories.jobsCount', { count: catCounts['Web3'] || '0' }), color: 'bg-emerald-50 text-emerald-600', span: 'md:col-span-2' },
+              { id: 'marketing', icon: Target, title: t('home.categories.marketing'), count: t('home.categories.jobsCount', { count: catCounts['Marketing'] || '0' }), color: 'bg-indigo-50 text-indigo-600', span: 'md:col-span-1' },
             ].map((cat, i) => (
               <motion.div
                 key={i}
@@ -203,9 +253,9 @@ export default function Home() {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             {[
-              { label: t('home.statsVolume'), value: '$120M+' },
-              { label: t('home.statsTalent'), value: '45,000+' },
-              { label: t('home.statsRating'), value: '4.9/5' }
+              { label: t('home.statsVolume'), value: counts.volume > 0 ? `$${(counts.volume / 1000).toFixed(1)}k+` : t('common.loading', { defaultValue: '...' }) },
+              { label: t('home.statsTalent'), value: counts.talent > 0 ? `${counts.talent}+` : '10+' },
+              { label: t('home.statsRating'), value: counts.rating > 0 ? `${counts.rating.toFixed(1)}/5` : '4.9/5' }
             ].map((stat, idx) => (
               <motion.div 
                 key={idx} 
@@ -232,6 +282,58 @@ export default function Home() {
           >
             <h2 className="text-4xl font-bold text-gray-900">{t('home.whyTitle')}</h2>
             <p className="text-gray-500 max-w-2xl mx-auto">{t('home.whySubtitle')}</p>
+          </motion.div>
+
+          {/* New Global Feature Highlight */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="mb-24 p-1 rounded-[3rem] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500"
+          >
+            <div className="bg-white rounded-[2.9rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -mr-32 -mt-32 opacity-50" />
+              <div className="flex-1 space-y-8 relative z-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-widest">
+                  <Globe className="h-4 w-4" /> Global Native support
+                </div>
+                <h3 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
+                  Work in your native tongue. <span className="text-indigo-600">Collaborate globally.</span>
+                </h3>
+                <p className="text-xl text-gray-500 leading-relaxed font-medium">
+                  We've introduced support for <span className="text-gray-900 font-bold">50+ languages</span> with automatic location detection. VyntaJobs now feels local, wherever you are.
+                </p>
+                <div className="flex flex-wrap gap-4 pt-4">
+                  {['English', 'Español', 'Français', 'Deutsch', '日本語', '中文', 'العربية'].map((lang, idx) => (
+                    <span key={idx} className="px-5 py-2.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-700 shadow-sm">
+                      {lang}
+                    </span>
+                  ))}
+                  <span className="px-5 py-2.5 bg-indigo-600 text-white rounded-2xl text-sm font-bold shadow-lg shadow-indigo-100">
+                    +43 more
+                  </span>
+                </div>
+              </div>
+              <div className="flex-1 relative">
+                <div className="relative z-10 grid grid-cols-2 gap-4">
+                  {[
+                    { flag: '🇺🇸', label: 'Global Search' },
+                    { flag: '🇯🇵', label: 'ローカル検索' },
+                    { flag: '🇪🇸', label: 'Búsqueda Global' },
+                    { flag: '🇸🇦', label: 'بحث عالمي' },
+                  ].map((item, i) => (
+                    <motion.div 
+                      key={i}
+                      whileHover={{ scale: 1.05, y: -5 }}
+                      className="bg-gray-50 p-6 rounded-3xl border border-gray-100 shadow-sm"
+                    >
+                      <span className="text-3xl block mb-2">{item.flag}</span>
+                      <span className="text-sm font-bold text-gray-900">{item.label}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </motion.div>
 
           <motion.div 

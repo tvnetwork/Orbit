@@ -18,6 +18,9 @@
         "timezone": { "type": "string" },
         "languages": { "type": "array", "items": { "type": "string" } },
         "githubUrl": { "type": "string" },
+        "linkedinUrl": { "type": "string" },
+        "twitterUrl": { "type": "string" },
+        "websiteUrl": { "type": "string" },
         "portfolio": {
           "type": "array",
           "items": {
@@ -141,6 +144,7 @@
         "totalAmount": { "type": "number" },
         "status": { "type": "string", "enum": ["active", "paused", "completed", "disputed", "cancelled"] },
         "escrowBalance": { "type": "number" },
+        "reviewRequested": { "type": "boolean" },
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }
       },
@@ -191,6 +195,24 @@
         "submittedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "type", "status", "submittedAt"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "A review given by a client to a freelancer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "freelancerId": { "type": "string" },
+        "clientId": { "type": "string" },
+        "clientName": { "type": "string" },
+        "clientPhoto": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "jobId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "visible": { "type": "boolean", "default": true }
+      },
+      "required": ["freelancerId", "clientId", "rating", "createdAt"]
     }
   },
   "firestore": {
@@ -221,6 +243,10 @@
     "kyc/{kycId}": {
       "schema": "KYCDoc",
       "description": "Identity verification records"
+    },
+    "reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Freelancer reviews"
     },
     "chats/{chatId}": {
       "schema": "Chat",

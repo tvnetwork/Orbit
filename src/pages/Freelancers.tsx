@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { 
   Search, 
   Filter, 
@@ -22,7 +23,7 @@ import {
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
 import { db } from '../lib/firebase';
-import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, limit, startAfter } from 'firebase/firestore';
 
 interface FreelancerProfile {
   id: string;
@@ -40,52 +41,102 @@ interface FreelancerProfile {
   bio: string;
 }
 
-const SKILL_OPTIONS = ['React', 'Node.js', 'Python', 'Figma', 'AWS', 'Solidity', 'Kubernetes', 'TypeScript'];
-const LANGUAGE_OPTIONS = ['English', 'Spanish', 'Mandarin', 'Russian', 'German', 'French'];
-const TIMEZONE_OPTIONS = ['PST', 'EST', 'GMT', 'CET', 'IST', 'SGT'];
+const SKILL_OPTIONS = ['React', 'Node.js', 'Python', 'Figma', 'AWS', 'Solidity', 'Kubernetes', 'TypeScript', 'Docker', 'GraphQL', 'Next.js', 'Tailwind CSS'];
+const LANGUAGE_OPTIONS = ['English', 'Spanish', 'Mandarin', 'Russian', 'German', 'French', 'Japanese', 'Arabic'];
+const TIMEZONE_OPTIONS = ['PST', 'EST', 'GMT', 'CET', 'IST', 'SGT', 'AEST', 'MSK'];
+const CATEGORY_OPTIONS = ['Development', 'Design', 'AI & Data', 'Cybersecurity', 'Web3', 'Marketing'];
 
 export default function Freelancers() {
+  const { t } = useTranslation();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const [maxRate, setMaxRate] = useState(250);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedTimezones, setSelectedTimezones] = useState<string[]>([]);
+  const [maxRate, setMaxRate] = useState(500);
   const [showFilters, setShowFilters] = useState(false);
   const [talents, setTalents] = useState<FreelancerProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [lastVisible, setLastVisible] = useState<any>(null);
+  const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    const q = query(
-      collection(db, 'users'), 
-      where('role', '==', 'freelancer')
-    );
+  const fetchTalents = async (isLoadMore = false) => {
+    try {
+      if (isLoadMore) setLoadingMore(true);
+      else setLoading(true);
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+      let q = query(
+        collection(db, 'users'),
+        where('role', '==', 'freelancer'),
+        orderBy('createdAt', 'desc'),
+        limit(12)
+      );
+
+      if (isLoadMore && lastVisible) {
+        q = query(q, startAfter(lastVisible));
+      }
+
+      const snapshot = await getDocs(q);
       const fetchedTalents = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       } as FreelancerProfile));
-      setTalents(fetchedTalents);
-      setLoading(false);
-    });
 
-    return unsubscribe;
+      if (isLoadMore) {
+        setTalents(prev => [...prev, ...fetchedTalents]);
+      } else {
+        setTalents(fetchedTalents);
+      }
+
+      setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+      setHasMore(snapshot.docs.length === 12);
+    } catch (error) {
+      console.error('Error fetching talents:', error);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTalents();
   }, []);
 
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedSkills([]);
+    setSelectedLanguages([]);
+    setSelectedCategories([]);
+    setSelectedTimezones([]);
+    setMaxRate(500);
+  };
+
   const filteredTalents = talents.filter(talent => {
-    const matchesSearch = talent.displayName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         talent.professionalTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         talent.skills?.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
+    const searchLower = searchQuery.toLowerCase();
+    const matchesSearch = !searchQuery || 
+                         talent.displayName?.toLowerCase().includes(searchLower) ||
+                         talent.professionalTitle?.toLowerCase().includes(searchLower) ||
+                         talent.bio?.toLowerCase().includes(searchLower) ||
+                         talent.skills?.some(s => s.toLowerCase().includes(searchLower));
     
     const matchesSkills = selectedSkills.length === 0 || 
-                         selectedSkills.every(s => talent.skills?.includes(s));
+                         selectedSkills.some(s => talent.skills?.includes(s));
     
     const matchesLanguages = selectedLanguages.length === 0 || 
                             selectedLanguages.some(l => talent.languages?.includes(l));
+
+    const matchesCategories = selectedCategories.length === 0 || 
+                             !(talent as any).category || 
+                             selectedCategories.includes((talent as any).category);
+    
+    const matchesTimezones = selectedTimezones.length === 0 || 
+                            selectedTimezones.includes(talent.timezone);
     
     const matchesRate = (talent.hourlyRate || 0) <= maxRate;
 
-    return matchesSearch && matchesSkills && matchesLanguages && matchesRate;
+    return matchesSearch && matchesSkills && matchesLanguages && matchesCategories && matchesTimezones && matchesRate;
   });
 
   const toggleFilter = (list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>, value: string) => {
@@ -103,11 +154,20 @@ export default function Freelancers() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-1">
-              <h1 className="text-4xl font-black text-gray-900 tracking-tight">Talent Directory</h1>
-              <p className="text-gray-500 font-medium font-sans">Find the world's most elite independent professionals.</p>
+              <h1 className="text-4xl font-black text-gray-900 tracking-tight">{t('freelancers.title')}</h1>
+              <p className="text-gray-500 font-medium font-sans">{t('freelancers.subtitle')}</p>
             </div>
             
             <div className="flex items-center gap-3">
+              {(selectedSkills.length > 0 || selectedLanguages.length > 0 || selectedCategories.length > 0 || selectedTimezones.length > 0 || searchQuery || maxRate < 500) && (
+                <button 
+                  onClick={clearFilters}
+                  className="text-xs font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-widest px-4 py-2 flex items-center gap-2 transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                  {t('freelancers.clearFilters')}
+                </button>
+              )}
               <div className="flex bg-gray-50 p-1.5 rounded-2xl border border-gray-100">
                 <button 
                   onClick={() => setViewMode('grid')}
@@ -134,7 +194,7 @@ export default function Freelancers() {
                 className="md:hidden flex items-center gap-2 bg-indigo-600 text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-indigo-100"
               >
                 <Filter className="h-4 w-4" />
-                Filters
+                {t('freelancers.filters')}
               </button>
             </div>
           </div>
@@ -143,7 +203,7 @@ export default function Freelancers() {
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input 
               type="text"
-              placeholder="Search by name, role, or skill..."
+              placeholder={t('freelancers.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-gray-50 border border-gray-100 rounded-[2rem] pl-16 pr-8 py-5 text-lg focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-300 transition-all font-medium"
@@ -167,11 +227,35 @@ export default function Freelancers() {
               </button>
             </div>
 
+            {/* Categories */}
+            <div className="space-y-6">
+              <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                <LayoutGrid className="h-4 w-4" /> {t('freelancers.professionalArea')}
+              </h3>
+              <div className="space-y-2">
+                {CATEGORY_OPTIONS.map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => toggleFilter(selectedCategories, setSelectedCategories, cat)}
+                    className={cn(
+                      "w-full text-left px-5 py-3 rounded-2xl text-sm font-bold transition-all border flex justify-between items-center",
+                      selectedCategories.includes(cat)
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
+                        : "bg-white text-gray-600 border-gray-200 hover:border-indigo-200"
+                    )}
+                  >
+                    {cat}
+                    {selectedCategories.includes(cat) && <CheckCircle2 className="h-4 w-4" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Hourly Rate */}
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                  <DollarSign className="h-4 w-4" /> Max Hourly Rate
+                  <DollarSign className="h-4 w-4" /> {t('freelancers.maxRate')}
                 </h3>
                 <span className="text-sm font-bold text-indigo-600">${maxRate}/hr</span>
               </div>
@@ -193,7 +277,7 @@ export default function Freelancers() {
             {/* Skill Stack */}
             <div className="space-y-6">
               <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                <Cpu className="h-4 w-4" /> Skill Stack
+                <Cpu className="h-4 w-4" /> {t('freelancers.skillStack')}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {SKILL_OPTIONS.map(skill => (
@@ -216,13 +300,26 @@ export default function Freelancers() {
             {/* Timezone */}
             <div className="space-y-6">
               <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                <Globe className="h-4 w-4" /> Timezone
+                <Globe className="h-4 w-4" /> {t('freelancers.timezone')}
               </h3>
               <div className="grid grid-cols-2 gap-2">
                 {TIMEZONE_OPTIONS.map(tz => (
-                  <button key={tz} className="px-4 py-3 rounded-xl bg-white border border-gray-100 text-left text-xs font-bold text-gray-600 hover:border-indigo-200 transition-all flex justify-between items-center group">
+                  <button 
+                    key={tz} 
+                    onClick={() => toggleFilter(selectedTimezones, setSelectedTimezones, tz)}
+                    className={cn(
+                      "px-4 py-3 rounded-xl border text-left text-xs font-bold transition-all flex justify-between items-center group",
+                      selectedTimezones.includes(tz)
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100"
+                        : "bg-white text-gray-600 border-gray-100 hover:border-indigo-200"
+                    )}
+                  >
                     {tz}
-                    <ChevronDown className="h-3 w-3 text-gray-300 group-hover:text-indigo-400" />
+                    {selectedTimezones.includes(tz) ? (
+                      <CheckCircle2 className="h-3 w-3" />
+                    ) : (
+                      <ChevronDown className="h-3 w-3 text-gray-300 group-hover:text-indigo-400" />
+                    )}
                   </button>
                 ))}
               </div>
@@ -231,7 +328,7 @@ export default function Freelancers() {
             {/* Languages */}
             <div className="space-y-6">
               <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                <Languages className="h-4 w-4" /> Languages
+                <Languages className="h-4 w-4" /> {t('freelancers.languages')}
               </h3>
               <div className="space-y-3">
                 {LANGUAGE_OPTIONS.map(lang => (
@@ -251,8 +348,11 @@ export default function Freelancers() {
               </div>
             </div>
 
-            <button className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold text-sm hover:bg-black transition-all">
-              Apply Advanced Filters
+            <button 
+              onClick={() => setShowFilters(false)}
+              className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold text-sm hover:bg-black transition-all"
+            >
+              {t('freelancers.applyFilters')}
             </button>
           </aside>
 
@@ -281,7 +381,7 @@ export default function Freelancers() {
                       <div className="absolute top-6 right-6 z-10">
                         <div className="bg-orange-50 text-orange-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-orange-100 flex items-center gap-1.5">
                           <Award className="h-3 w-3" />
-                          Top Rated
+                          {t('freelancers.topRated')}
                         </div>
                       </div>
                     )}
@@ -355,7 +455,7 @@ export default function Freelancers() {
                           to={`/freelancer/${talent.id}`}
                           className="w-full bg-gray-50 text-gray-900 py-4 rounded-2xl font-bold text-sm border border-gray-100 hover:bg-gray-900 hover:text-white hover:shadow-xl hover:shadow-gray-900/10 transition-all flex items-center justify-center gap-2 group/btn"
                         >
-                          View Full Profile
+                          {t('freelancers.viewProfile')}
                           <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                         </Link>
                       </div>
@@ -366,18 +466,24 @@ export default function Freelancers() {
 
               {filteredTalents.length === 0 && !loading && (
                 <div className="col-span-full py-20 text-center bg-white rounded-[2.5rem] border-2 border-dashed border-gray-100">
-                  <p className="text-gray-400 font-bold">No elite talent matched your search criteria.</p>
+                  <p className="text-gray-400 font-bold">{t('freelancers.noResults')}</p>
                 </div>
               )}
             </div>
 
             {/* Pagination / Load More */}
-            <div className="mt-16 flex justify-center">
-              <button className="flex items-center gap-2 bg-white border border-gray-100 px-8 py-4 rounded-2xl font-bold text-gray-600 hover:bg-gray-50 transition-all group">
-                <Zap className="h-5 w-5 text-orange-400 group-hover:scale-110 transition-transform" />
-                Load More Expert Talent
-              </button>
-            </div>
+            {hasMore && (
+              <div className="mt-16 flex justify-center">
+                <button 
+                  onClick={() => fetchTalents(true)}
+                  disabled={loadingMore}
+                  className="flex items-center gap-2 bg-white border border-gray-100 px-8 py-4 rounded-2xl font-bold text-gray-600 hover:bg-gray-50 transition-all group disabled:opacity-50"
+                >
+                  <Zap className={cn("h-5 w-5 text-orange-400 transition-transform", loadingMore && "animate-pulse")} />
+                  {loadingMore ? 'Loading...' : t('freelancers.loadMore')}
+                </button>
+              </div>
+            )}
           </main>
         </div>
       </div>

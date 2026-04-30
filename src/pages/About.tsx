@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { 
   Orbit, 
@@ -14,9 +14,32 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { db } from '../lib/firebase';
+import { collection, query, where, getDocs, limit, onSnapshot } from 'firebase/firestore';
 
 export default function About() {
   const { t } = useTranslation();
+  const [counts, setCounts] = useState({ jobs: 0, talent: 0, clients: 0 });
+
+  useEffect(() => {
+    const unsubJobs = onSnapshot(query(collection(db, 'jobs'), limit(100)), (snap) => {
+      setCounts(prev => ({ ...prev, jobs: snap.size }));
+    });
+
+    const unsubTalent = onSnapshot(query(collection(db, 'users'), where('role', '==', 'freelancer'), limit(100)), (snap) => {
+      setCounts(prev => ({ ...prev, talent: snap.size }));
+    });
+
+    const unsubClients = onSnapshot(query(collection(db, 'users'), where('role', '==', 'client'), limit(100)), (snap) => {
+      setCounts(prev => ({ ...prev, clients: snap.size }));
+    });
+
+    return () => {
+      unsubJobs();
+      unsubTalent();
+      unsubClients();
+    };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -37,16 +60,16 @@ export default function About() {
 
   const faqs = [
     {
-      q: "How does VyntaJobs verify freelancers?",
-      a: "Every freelancer undergoes a rigorous 4-step identity and portfolio verification process to ensure only the top 3% enter our elite talent cloud."
+      q: t('about.faqs.q1.question'),
+      a: t('about.faqs.q1.answer')
     },
     {
-      q: "Is payment secure?",
-      a: "Yes. VyntaJobs uses a milestone-based escrow system. Funds are held securely until you approve the work delivered."
+      q: t('about.faqs.q2.question'),
+      a: t('about.faqs.q2.answer')
     },
     {
-      q: "Can I manage a large team on VyntaJobs?",
-      a: "Absolutely. Our platform is designed for scale, allowing companies to manage multiple projects and dozens of freelancers from a single mission control dashboard."
+      q: t('about.faqs.q3.question'),
+      a: t('about.faqs.q3.answer')
     }
   ];
 
@@ -85,10 +108,10 @@ export default function About() {
       <section className="py-20 border-y border-gray-100 bg-gray-50/50">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12">
           {[
-            { label: t('about.statsTalent'), value: '150k+' },
-            { label: t('about.statsClients'), value: '240+' },
-            { label: t('about.statsProjects'), value: '1.2M' },
-            { label: t('about.statsReach'), value: '180+' }
+            { label: t('about.statsTalent'), value: counts.talent > 0 ? `${counts.talent}+` : '0' },
+            { label: t('about.statsClients'), value: counts.clients > 0 ? `${counts.clients}+` : '0' },
+            { label: t('about.statsProjects'), value: counts.jobs > 0 ? `${counts.jobs}+` : '0' },
+            { label: t('about.statsReach'), value: 'Global' }
           ].map((stat, i) => (
             <motion.div 
               key={i}
@@ -128,20 +151,20 @@ export default function About() {
             {[
               { 
                 icon: ShieldCheck, 
-                title: 'Radical Integrity', 
-                desc: 'Transparency is our default state. From pricing to project progress, we believe in full visibility.',
+                title: t('about.values.integrity.title'), 
+                desc: t('about.values.integrity.desc'),
                 color: 'blue'
               },
               { 
                 icon: Zap, 
-                title: 'Pure Velocity', 
-                desc: 'Our engine is optimized for speed without compromising depth. Get matched and started in minutes.',
+                title: t('about.values.velocity.title'), 
+                desc: t('about.values.velocity.desc'),
                 color: 'purple'
               },
               { 
                 icon: Award, 
-                title: 'Elite Quality', 
-                desc: 'We curate excellence. Every line of code, every design pixel, and every word matters.',
+                title: t('about.values.quality.title'), 
+                desc: t('about.values.quality.desc'),
                 color: 'emerald'
               }
             ].map((value, i) => (
@@ -167,19 +190,18 @@ export default function About() {
           <div className="space-y-8">
             <h2 className="text-5xl font-bold tracking-tight">{t('about.storyTitle')}</h2>
             <div className="space-y-6 text-gray-400 text-lg leading-relaxed">
-              <p>"What if the world's most talented people didn't need to live in Silicon Valley to work on its biggest problems?"</p>
-              <p>In 2026, VyntaJobs was born to bridge the gap between imagination and execution. We realized that traditional freelancing was broken—plagued by low trust and poor communication. We set out to build a platform that treated freelancers like founders and clients like partners.</p>
-              <p>Today, VyntaJobs is more than a marketplace; it's a launchpad for the next generation of global builders.</p>
+              <p>"{t('about.storyP1')}"</p>
+              <p>{t('about.storyP2')}</p>
             </div>
             <div className="pt-4 flex gap-8">
               <div>
-                <p className="text-3xl font-bold text-white">2026</p>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">Founded</p>
+                <p className="text-3xl font-bold text-white">50+</p>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">Localizations</p>
               </div>
               <div className="w-px bg-gray-800" />
               <div>
-                <p className="text-3xl font-bold text-white">Global</p>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">Presence</p>
+                <p className="text-3xl font-bold text-white">24/7</p>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">Global Support</p>
               </div>
             </div>
           </div>

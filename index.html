@@ -6,21 +6,26 @@
     <title>VyntaJobs | Elite Global Marketplace</title>
     <script>
       // Fix for "TypeError: Cannot set property fetch of #<Window> which has only a getter"
-      // Some libraries try to polyfill fetch by assignment. In this environment, fetch is a getter.
       (function() {
-        try {
-          var desc = Object.getOwnPropertyDescriptor(window, 'fetch') || 
-                     Object.getOwnPropertyDescriptor(Object.getPrototypeOf(window), 'fetch');
-          if (desc && desc.get && !desc.set && desc.configurable) {
-            Object.defineProperty(window, 'fetch', {
-              value: window.fetch,
-              writable: true,
+        var originalFetch = window.fetch;
+        var currentFetch = originalFetch;
+        
+        function tryDefine(obj) {
+          try {
+            Object.defineProperty(obj, 'fetch', {
+              get: function() { return currentFetch; },
+              set: function(v) { currentFetch = v; },
               configurable: true,
               enumerable: true
             });
+            return true;
+          } catch (e) {
+            return false;
           }
-        } catch (e) {
-          console.warn('VyntaJobs: Could not thaw fetch property', e);
+        }
+
+        if (!tryDefine(window)) {
+          tryDefine(Object.getPrototypeOf(window));
         }
       })();
     </script>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { 
   Briefcase, 
   DollarSign, 
@@ -19,6 +20,7 @@ import { useAuth } from '../App';
 import { Link } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from '../lib/utils';
+import ComingSoonOverlay from '../components/ComingSoonOverlay';
 
 const EARNINGS_DATA = [
   { name: 'Mon', amount: 400 },
@@ -31,9 +33,13 @@ const EARNINGS_DATA = [
 ];
 
 export default function FreelancerDashboard() {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
   const [activeContracts, setActiveContracts] = useState<any[]>([]);
   const [proposals, setProposals] = useState<any[]>([]);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [balance, setBalance] = useState(0);
+  const [earningsData, setEarningsData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -43,7 +49,7 @@ export default function FreelancerDashboard() {
     const contractsQ = query(
       collection(db, 'contracts'),
       where('freelancerId', '==', user.uid),
-      where('status', '==', 'active')
+      where('status', 'in', ['active', 'completed']) // Include both for historical data maybe
     );
 
     const proposalsQ = query(
@@ -51,6 +57,19 @@ export default function FreelancerDashboard() {
       where('freelancerId', '==', user.uid),
       orderBy('createdAt', 'desc'),
       limit(5)
+    );
+
+    const pendingProposalsQ = query(
+      collection(db, 'proposals'),
+      where('freelancerId', '==', user.uid),
+      where('status', '==', 'pending')
+    );
+
+    const txQ = query(
+      collection(db, 'transactions'),
+      where('userId', '==', user.uid),
+      orderBy('createdAt', 'desc'),
+      limit(50)
     );
 
     const unsubContracts = onSnapshot(contractsQ, (snap) => {
@@ -62,9 +81,42 @@ export default function FreelancerDashboard() {
       setLoading(false);
     });
 
+    const unsubPending = onSnapshot(pendingProposalsQ, (snap) => {
+      setPendingCount(snap.size);
+    });
+
+    const unsubTx = onSnapshot(txQ, (snap) => {
+      const txs = snap.docs.map(doc => doc.data());
+      const total = txs.reduce((acc, data) => {
+        if (data.type === 'deposit' || data.type === 'payment_received') {
+          return acc + (data.amount || 0);
+        } else if (data.type === 'withdrawal' || data.type === 'payment_sent') {
+          return acc - (data.amount || 0);
+        }
+        return acc;
+      }, 0);
+      setBalance(total);
+
+      // Process earnings data for chart
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const aggregated = days.map(day => ({ name: day, amount: 0 }));
+      
+      txs.forEach(tx => {
+          if (tx.type === 'payment_received' && tx.createdAt) {
+              const d = new Date(tx.createdAt.toDate());
+              const dayName = days[d.getDay()];
+              const index = aggregated.findIndex(a => a.name === dayName);
+              if (index !== -1) aggregated[index].amount += tx.amount || 0;
+          }
+      });
+      setEarningsData(aggregated);
+    });
+
     return () => {
       unsubContracts();
       unsubProposals();
+      unsubPending();
+      unsubTx();
     };
   }, [user]);
 
@@ -75,13 +127,13 @@ export default function FreelancerDashboard() {
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-20 pt-10">
+    <div className="bg-gray-50 min-h-screen pb-20 pt-10 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Welcome Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">Freelancer Command Center</h1>
-            <p className="text-gray-500 mt-1 font-medium">Monitoring your elite business performance.</p>
+            <h1 className="text-4xl font-black text-gray-900 tracking-tight">{t('dashboard.freelancerTitle')}</h1>
+            <p className="text-gray-500 mt-1 font-medium">{t('dashboard.freelancerSubtitle')}</p>
           </div>
           <div className="flex items-center gap-4">
             <Link to="/wallet" className="bg-white border border-gray-100 p-4 rounded-3xl flex items-center gap-4 hover:shadow-lg transition-all pr-8">
@@ -89,8 +141,8 @@ export default function FreelancerDashboard() {
                 <DollarSign className="h-6 w-6" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Available Balance</p>
-                <p className="text-xl font-black text-gray-900">$12,450.00</p>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('dashboard.availableBalance')}</p>
+                <p className="text-xl font-black text-gray-900">${balance.toLocaleString()}</p>
               </div>
             </Link>
           </div>
@@ -99,10 +151,10 @@ export default function FreelancerDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {[
-            { label: 'Active Contracts', value: activeContracts.length, icon: Briefcase, color: 'indigo' },
-            { label: 'Pending Bids', value: '12', icon: Clock, color: 'orange' },
-            { label: 'Profile Views', value: '1,240', icon: TrendingUp, color: 'purple' },
-            { label: 'Success Rate', value: '98%', icon: Award, color: 'emerald' },
+            { label: t('dashboard.activeContracts'), value: activeContracts.length, icon: Briefcase, color: 'indigo' },
+            { label: t('dashboard.pendingBids'), value: pendingCount, icon: Clock, color: 'orange' },
+            { label: t('dashboard.completedJobs'), value: profile?.completedJobs || 0, icon: CheckCircle2, color: 'purple' },
+            { label: t('dashboard.systemRating'), value: profile?.rating ? `${profile.rating}/5` : '5.0/5', icon: Award, color: 'emerald' },
           ].map((stat, i) => (
             <motion.div 
               key={i}
@@ -122,18 +174,18 @@ export default function FreelancerDashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Earnings Chart */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-8 relative">
             <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
               <div className="flex items-center justify-between mb-10">
-                <h3 className="text-xl font-black text-gray-900 tracking-tight">Earnings Flow</h3>
+                <h3 className="text-xl font-black text-gray-900 tracking-tight">{t('dashboard.earningsFlow')}</h3>
                 <div className="flex gap-2">
-                  <button className="px-4 py-2 bg-gray-50 rounded-xl text-xs font-bold text-gray-500">Weekly</button>
-                  <button className="px-4 py-2 bg-indigo-50 rounded-xl text-xs font-bold text-indigo-600">Monthly</button>
+                  <button className="px-4 py-2 bg-gray-50 rounded-xl text-xs font-bold text-gray-500">{t('jobs.filterHourly')}</button>
+                  <button className="px-4 py-2 bg-indigo-50 rounded-xl text-xs font-bold text-indigo-600">{t('common.viewMarket')}</button>
                 </div>
               </div>
               <div className="h-[350px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={EARNINGS_DATA}>
+                  <AreaChart data={earningsData.length > 0 ? earningsData : EARNINGS_DATA}>
                     <defs>
                       <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.1}/>
@@ -173,8 +225,8 @@ export default function FreelancerDashboard() {
             {/* Active Contracts List */}
             <div className="space-y-6">
               <div className="flex items-center justify-between px-4">
-                <h3 className="text-xl font-black text-gray-900 tracking-tight">Ongoing Engagements</h3>
-                <Link to="/freelancer/contracts" className="text-sm font-bold text-indigo-600 hover:underline">View All</Link>
+                <h3 className="text-xl font-black text-gray-900 tracking-tight">{t('dashboard.ongoingEngagements')}</h3>
+                <Link to="/freelancer/contracts" className="text-sm font-bold text-indigo-600 hover:underline">{t('dashboard.viewAll')}</Link>
               </div>
               <div className="space-y-4">
                 {activeContracts.length > 0 ? activeContracts.map(contract => (
@@ -188,8 +240,8 @@ export default function FreelancerDashboard() {
                         <Zap className="h-6 w-6" />
                       </div>
                       <div>
-                        <h4 className="font-black text-gray-900 leading-tight">Elite UI/UX for Fintech App</h4>
-                        <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest">Next Milestone: Portfolio Review</p>
+                        <h4 className="font-black text-gray-900 leading-tight">{contract.jobTitle || 'Active Engagement'}</h4>
+                        <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest">Ongoing Project</p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -201,8 +253,15 @@ export default function FreelancerDashboard() {
                     </div>
                   </Link>
                 )) : (
-                  <div className="bg-white p-12 text-center rounded-[3rem] border border-gray-100 italic text-gray-400 font-medium">
-                    No active contracts yet. Start bidding to win elite projects.
+                  <div className="space-y-6">
+                    <div className="bg-white p-12 text-center rounded-[3rem] border border-gray-100 italic text-gray-400 font-medium">
+                      {t('dashboard.noActiveContracts')}
+                    </div>
+                    <div className="flex justify-center">
+                      <Link to="/jobs" className="px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-gray-100">
+                        {t('dashboard.startBidding')}
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>
@@ -216,19 +275,19 @@ export default function FreelancerDashboard() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[60px] rounded-full -mr-16 -mt-16" />
               <h3 className="text-xl font-black mb-6 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-orange-400" />
-                Quick Actions
+                {t('dashboard.quickActions')}
               </h3>
               <div className="space-y-3">
                 <Link to="/jobs" className="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 rounded-2xl transition-all border border-white/10">
-                  <span className="font-bold">Browse Elite Jobs</span>
+                  <span className="font-bold">{t('dashboard.browseJobs')}</span>
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
                 <Link to="/profile" className="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 rounded-2xl transition-all border border-white/10">
-                  <span className="font-bold">Optimize Profile</span>
+                  <span className="font-bold">{t('dashboard.optimizeProfile')}</span>
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
                 <Link to="/wallet" className="flex items-center justify-between p-5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl transition-all border border-indigo-500">
-                  <span className="font-bold underline underline-offset-4 decoration-2">Withdraw Funds</span>
+                  <span className="font-bold underline underline-offset-4 decoration-2">{t('dashboard.withdrawFunds')}</span>
                   <DollarSign className="h-4 w-4" />
                 </Link>
               </div>
@@ -236,7 +295,7 @@ export default function FreelancerDashboard() {
 
             {/* Recent Proposals */}
             <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
-              <h3 className="text-xl font-black text-gray-900 tracking-tight mb-8">Pipeline Tracker</h3>
+              <h3 className="text-xl font-black text-gray-900 tracking-tight mb-8">{t('dashboard.pipelineTracker')}</h3>
               <div className="space-y-8">
                 {proposals.length > 0 ? proposals.map((proposal, i) => (
                   <div key={proposal.id} className="relative pl-8">
@@ -260,7 +319,7 @@ export default function FreelancerDashboard() {
                           {proposal.status}
                         </span>
                       </div>
-                      <p className="font-bold text-gray-900 text-sm leading-tight line-clamp-1">Applied for React Specialist Position</p>
+                      <p className="font-bold text-gray-900 text-sm leading-tight line-clamp-1">{proposal.jobTitle || 'Job Application'}</p>
                     </div>
                   </div>
                 )) : (
@@ -268,7 +327,7 @@ export default function FreelancerDashboard() {
                 )}
               </div>
               <Link to="/freelancer/proposals" className="w-full mt-10 py-4 border border-gray-100 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all block text-center">
-                View Full Pipeline
+                {t('dashboard.viewPipeline')}
               </Link>
             </div>
           </div>

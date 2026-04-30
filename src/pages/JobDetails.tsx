@@ -169,7 +169,9 @@ export default function JobDetails() {
           >
             <div className="flex flex-wrap items-center gap-3 mb-6">
               <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-bold uppercase tracking-wider">{job.category}</span>
-              <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-lg text-xs font-bold uppercase tracking-wider">{job.status}</span>
+              <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-lg text-xs font-bold uppercase tracking-wider">
+                {t(`jobs.status.${job.status}`)}
+              </span>
             </div>
             
             <h1 className="text-4xl font-bold text-gray-900 mb-6">{job.title}</h1>
@@ -251,41 +253,41 @@ export default function JobDetails() {
                     <p className="text-gray-500">{t('jobs.noProposalsYet')}</p>
                   </div>
                 ) : (
-                  proposals.map(proposal => (
-                    <div key={proposal.id} className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-4">
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
-                            <UserIcon className="h-6 w-6" />
-                          </div>
-                          <div>
-                            <Link to={`/profile/${proposal.freelancerId}`} className="font-bold hover:text-indigo-600 transition-colors">{t('jobs.freelancerId')}: {proposal.freelancerId.slice(0, 8)}...</Link>
-                            <p className="text-sm text-emerald-600 font-bold">{t('jobs.budget')}: ${proposal.bidAmount}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {proposal.status === 'pending' ? (
-                            <>
-                              <button 
-                                onClick={() => handleProposalAction(proposal.id, 'rejected')}
-                                className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                              >
-                                <XCircle className="h-6 w-6" />
-                              </button>
-                              <button 
-                                onClick={() => handleProposalAction(proposal.id, 'accepted')}
-                                className="p-2 text-gray-400 hover:text-emerald-500 transition-colors"
-                              >
-                                <CheckCircle className="h-6 w-6" />
-                              </button>
-                            </>
-                          ) : (
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${proposal.status === 'accepted' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
-                              {proposal.status}
-                            </span>
-                          )}
-                        </div>
+              proposals.map(proposal => (
+                <div key={proposal.id} className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+                        <UserIcon className="h-6 w-6" />
                       </div>
+                      <div>
+                        <Link to={`/profile/${proposal.freelancerId}`} className="font-bold hover:text-indigo-600 transition-colors">{t('jobs.freelancerId')}: {proposal.freelancerId.slice(0, 8)}...</Link>
+                        <p className="text-sm text-emerald-600 font-bold">{t('jobs.budget')}: ${proposal.bidAmount}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {proposal.status === 'pending' ? (
+                        <>
+                          <button 
+                            onClick={() => handleProposalAction(proposal.id, 'rejected')}
+                            className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                          >
+                            <XCircle className="h-6 w-6" />
+                          </button>
+                          <button 
+                            onClick={() => handleProposalAction(proposal.id, 'accepted')}
+                            className="p-2 text-gray-400 hover:text-emerald-500 transition-colors"
+                          >
+                            <CheckCircle className="h-6 w-6" />
+                          </button>
+                        </>
+                      ) : (
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${proposal.status === 'accepted' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
+                          {t(`jobs.status.${proposal.status}`)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                       <div className="text-gray-600 text-sm italic markdown-container">
                         <ReactMarkdown>{proposal.coverLetter}</ReactMarkdown>
                       </div>
@@ -388,7 +390,7 @@ export default function JobDetails() {
           )}
  
           <div className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6 md:space-y-8">
-            {isClient && freelancerProfile ? (
+            {freelancerProfile ? (
               <div className="space-y-4">
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('jobs.assignedFreelancer')}</h4>
                 <div className="flex items-center gap-4">
@@ -400,7 +402,7 @@ export default function JobDetails() {
                     )}
                   </div>
                   <div>
-                    <Link to={`/profile/${freelancerProfile.uid}`} className="font-bold text-gray-900 leading-none mb-1 hover:text-indigo-600 transition-colors block">{freelancerProfile.displayName || 'Expert Freelancer'}</Link>
+                    <Link to={`/profile/${freelancerProfile.uid}`} className="font-bold text-gray-900 leading-none mb-1 hover:text-indigo-600 transition-colors block">{freelancerProfile.displayName || t('profile.expertProfessional')}</Link>
                     <p className="text-[10px] text-gray-500 font-mono tracking-tighter">ID: {freelancerProfile.uid.slice(0, 16)}</p>
                   </div>
                 </div>
@@ -413,29 +415,31 @@ export default function JobDetails() {
                     </span>
                   </div>
                 </div>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={async () => {
-                    const chatParticipants = [job.clientId, job.assignedFreelancerId!].sort();
-                    const chatQuery = query(
-                      collection(db, 'chats'),
-                      where('participantIds', '==', chatParticipants)
-                    );
-                    const chatSnap = await getDocs(chatQuery);
-                    if (!chatSnap.empty) {
-                      navigate(`/messages?chatId=${chatSnap.docs[0].id}`);
-                    }
-                  }}
-                  className="w-full bg-indigo-600 text-white p-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all flex items-center justify-center gap-2"
-                >
-                  <BrandIcon className="h-5 w-5" />
-                  {t('jobs.openWorkroom')}
-                </motion.button>
+                {isClient && (
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={async () => {
+                      const chatParticipants = [job.clientId, job.assignedFreelancerId!].sort();
+                      const chatQuery = query(
+                        collection(db, 'chats'),
+                        where('participantIds', '==', chatParticipants)
+                      );
+                      const chatSnap = await getDocs(chatQuery);
+                      if (!chatSnap.empty) {
+                        navigate(`/messages?chatId=${chatSnap.docs[0].id}`);
+                      }
+                    }}
+                    className="w-full bg-indigo-600 text-white p-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all flex items-center justify-center gap-2"
+                  >
+                    <BrandIcon className="h-5 w-5" />
+                    {t('jobs.openWorkroom')}
+                  </motion.button>
+                )}
               </div>
             ) : (
               <div className="space-y-4">
-                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('jobs.aboutClient')}</h4>
+                <h3 className="text-xl font-bold text-gray-900 tracking-tight">{t('jobs.projectStakeholder')}</h3>
                 <div className="flex items-center gap-4">
                   <div className="h-14 w-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100 overflow-hidden">
                     {clientProfile?.photoURL ? (
@@ -447,15 +451,6 @@ export default function JobDetails() {
                   <div>
                     <p className="font-bold text-gray-900 leading-none mb-1">{clientProfile?.displayName || 'Elite Client'}</p>
                     <p className="text-[10px] text-gray-500 font-mono tracking-tighter">ID: {job.clientId.slice(0, 16)}</p>
-                  </div>
-                </div>
-                <div className="p-4 bg-gray-50 rounded-2xl space-y-1">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase">{t('jobs.memberSince')}</p>
-                  <div className="flex items-center text-indigo-600 gap-1 mt-0.5">
-                    <Calendar className="h-3 w-3" />
-                    <span className="font-bold text-gray-900 text-sm">
-                      {formatDate(clientProfile?.createdAt)}
-                    </span>
                   </div>
                 </div>
               </div>

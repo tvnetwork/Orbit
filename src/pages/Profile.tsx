@@ -23,7 +23,8 @@ import {
   Clock,
   ShieldCheck,
   ChevronRight,
-  Link as LinkIcon
+  Link as LinkIcon,
+  ExternalLink
 } from 'lucide-react';
 import { UserRole } from '../types';
 import { cn } from '../lib/utils';
@@ -38,6 +39,10 @@ export default function Profile() {
     skills: profile?.skills || [],
     professionalTitle: profile?.professionalTitle || '',
     location: profile?.location || '',
+    githubUrl: profile?.githubUrl || '',
+    linkedinUrl: profile?.linkedinUrl || '',
+    twitterUrl: profile?.twitterUrl || '',
+    websiteUrl: profile?.websiteUrl || '',
     portfolio: profile?.portfolio || [],
   });
   const [newSkill, setNewSkill] = useState('');
@@ -50,6 +55,63 @@ export default function Profile() {
     projectUrl: '',
     imageUrl: ''
   });
+  const isFirstRender = useRef(true);
+
+  const handleSave = React.useCallback(async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!user) return;
+    setLoading(true);
+    try {
+      await updateDoc(doc(db, 'users', user.uid), {
+        displayName: form.displayName,
+        bio: form.bio,
+        skills: form.skills,
+        professionalTitle: form.professionalTitle,
+        location: form.location,
+        githubUrl: form.githubUrl,
+        linkedinUrl: form.linkedinUrl,
+        twitterUrl: form.twitterUrl,
+        websiteUrl: form.websiteUrl,
+        portfolio: form.portfolio,
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (error) {
+      handleFirestoreError(error, OperationType.UPDATE, `users/${user.uid}`);
+    } finally {
+      setLoading(false);
+    }
+  }, [user, form]);
+
+  // Autosave effect
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+        // Only autosave if form is different from current profile to avoid infinite loops
+        const hasChanged = JSON.stringify(form) !== JSON.stringify({
+          displayName: profile?.displayName || '',
+          bio: profile?.bio || '',
+          skills: profile?.skills || [],
+          professionalTitle: profile?.professionalTitle || '',
+          location: profile?.location || '',
+          githubUrl: profile?.githubUrl || '',
+          linkedinUrl: profile?.linkedinUrl || '',
+          twitterUrl: profile?.twitterUrl || '',
+          websiteUrl: profile?.websiteUrl || '',
+          portfolio: profile?.portfolio || [],
+        });
+
+    if (!hasChanged) return;
+
+    const timer = setTimeout(() => {
+      handleSave();
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [form, profile, handleSave]);
 
   useEffect(() => {
     if (profile) {
@@ -59,6 +121,10 @@ export default function Profile() {
         skills: profile.skills || [],
         professionalTitle: profile.professionalTitle || '',
         location: profile.location || '',
+        githubUrl: profile.githubUrl || '',
+        linkedinUrl: profile.linkedinUrl || '',
+        twitterUrl: profile.twitterUrl || '',
+        websiteUrl: profile.websiteUrl || '',
         portfolio: profile.portfolio || [],
       });
     }
@@ -92,37 +158,45 @@ export default function Profile() {
     }
   };
 
-  const handleSave = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    if (!user) return;
-    setLoading(true);
-    try {
-      await updateDoc(doc(db, 'users', user.uid), {
-        displayName: form.displayName,
-        bio: form.bio,
-        skills: form.skills,
-        professionalTitle: form.professionalTitle,
-        location: form.location,
-        portfolio: form.portfolio,
-      });
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
-    } catch (error) {
-      handleFirestoreError(error, OperationType.UPDATE, `users/${user.uid}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const addPortfolioItem = () => {
-    if (!newPortfolioItem.title) return;
+    if (!newPortfolioItem.title || !newPortfolioItem.projectUrl) return;
+    
+    // Ensure URL has protocol
+    let validatedUrl = newPortfolioItem.projectUrl;
+    if (!validatedUrl.startsWith('http://') && !validatedUrl.startsWith('https://')) {
+        validatedUrl = `https://${validatedUrl}`;
+    }
+
     const item = {
       ...newPortfolioItem,
+      projectUrl: validatedUrl,
       id: Math.random().toString(36).substring(7)
     };
     setForm(prev => ({ ...prev, portfolio: [...prev.portfolio, item] }));
     setNewPortfolioItem({ title: '', description: '', projectUrl: '', imageUrl: '' });
     setShowPortfolioModal(false);
+  };
+
+  const fetchUrlMetadata = async (url: string) => {
+    if (!url || !url.startsWith('http')) return;
+    try {
+        const response = await fetch('/api/og', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+        });
+        if (response.ok) {
+            const data = await response.json();
+            setNewPortfolioItem(prev => ({
+                ...prev,
+                title: prev.title || data.title || '',
+                description: prev.description || data.description || '',
+                imageUrl: data.image || data.logo || prev.imageUrl
+            }));
+        }
+    } catch (error) {
+        console.error("Failed to fetch metadata:", error);
+    }
   };
 
   const removePortfolioItem = (id: string) => {
@@ -286,38 +360,45 @@ export default function Profile() {
                         <LinkIcon className="h-3.5 w-3.5" />
                         View Public
                       </Link>
-                      <motion.button 
-                        whileHover={{ scale: 1.02, y: -1 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => handleSave()}
-                        disabled={loading}
-                        className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 disabled:opacity-50 text-[10px] uppercase tracking-widest justify-center min-w-[120px]"
-                      >
-                        <AnimatePresence mode="wait">
-                          {saved ? (
-                            <motion.div
-                              key="saved"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -10 }}
-                              className="flex items-center gap-2"
-                            >
-                              <CheckCircle className="h-3.5 w-3.5" /> {t('profile.saved')}
-                            </motion.div>
-                          ) : (
-                            <motion.div
-                              key="save"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -10 }}
-                              className="flex items-center gap-2"
-                            >
-                              {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-                              {t('profile.saveChanges')}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.button>
+                      <div className="relative">
+                        <motion.button 
+                          whileHover={{ scale: 1.02, y: -1 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => handleSave()}
+                          disabled={loading}
+                          className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 disabled:opacity-50 text-[10px] uppercase tracking-widest justify-center min-w-[120px]"
+                        >
+                          <AnimatePresence mode="wait">
+                            {saved ? (
+                              <motion.div
+                                key="saved"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                className="flex items-center gap-2"
+                              >
+                                <CheckCircle className="h-3.5 w-3.5" /> {t('profile.saved')}
+                              </motion.div>
+                            ) : (
+                              <motion.div
+                                key="save"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                className="flex items-center gap-2"
+                              >
+                                {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+                                {loading ? 'Syncing...' : 'Sync Now'}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.button>
+                        {!saved && !loading && (
+                          <div className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 text-white text-[9px] px-2 py-1 rounded-lg opacity-0 hover:opacity-100 transition-opacity pointer-events-none font-bold uppercase tracking-tighter">
+                            Autosave active
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -339,19 +420,84 @@ export default function Profile() {
                   </div>
                   <div className="group space-y-3">
                     <label className="text-xs font-bold text-gray-400 group-focus-within:text-indigo-600 uppercase tracking-[0.2em] flex items-center gap-2 transition-colors">
-                      <Award className="h-3 w-3" /> Professional Title
+                      <Award className="h-3 w-3" /> {t('profile.professionalTitle')}
                     </label>
                     <input 
                       type="text" 
                       value={form.professionalTitle}
                       onChange={e => setForm(prev => ({ ...prev, professionalTitle: e.target.value }))}
                       className="w-full bg-gray-50/50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-300"
-                      placeholder="e.g. Senior Fullstack Developer"
+                      placeholder={t('profile.professionalTitlePlaceholder') || "e.g. Senior Fullstack Developer"}
                     />
                   </div>
                 </div>
 
-                <div className="group space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-50">
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{t('profile.socials')}</h4>
+                    <div className="space-y-4">
+                      <div className="group space-y-2">
+                        <div className="flex items-center gap-2">
+                          <LinkIcon className="h-3 w-3 text-gray-400" />
+                          <span className="text-xs font-bold text-gray-500">Website</span>
+                        </div>
+                        <input 
+                          type="url" 
+                          value={form.websiteUrl}
+                          onChange={e => setForm(prev => ({ ...prev, websiteUrl: e.target.value }))}
+                          className="w-full bg-gray-50/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900"
+                          placeholder="https://yourwebsite.com"
+                        />
+                      </div>
+                      <div className="group space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Code className="h-3 w-3 text-gray-400" />
+                          <span className="text-xs font-bold text-gray-500">GitHub</span>
+                        </div>
+                        <input 
+                          type="url" 
+                          value={form.githubUrl}
+                          onChange={e => setForm(prev => ({ ...prev, githubUrl: e.target.value }))}
+                          className="w-full bg-gray-50/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900"
+                          placeholder="https://github.com/username"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">&nbsp;</h4>
+                    <div className="space-y-4">
+                      <div className="group space-y-2">
+                        <div className="flex items-center gap-2">
+                          <UserIcon className="h-3 w-3 text-gray-400" />
+                          <span className="text-xs font-bold text-gray-500">LinkedIn</span>
+                        </div>
+                        <input 
+                          type="url" 
+                          value={form.linkedinUrl}
+                          onChange={e => setForm(prev => ({ ...prev, linkedinUrl: e.target.value }))}
+                          className="w-full bg-gray-50/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900"
+                          placeholder="https://linkedin.com/in/username"
+                        />
+                      </div>
+                      <div className="group space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Zap className="h-3 w-3 text-gray-400" />
+                          <span className="text-xs font-bold text-gray-500">X (Twitter)</span>
+                        </div>
+                        <input 
+                          type="url" 
+                          value={form.twitterUrl}
+                          onChange={e => setForm(prev => ({ ...prev, twitterUrl: e.target.value }))}
+                          className="w-full bg-gray-50/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900"
+                          placeholder="https://x.com/username"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group space-y-3 pt-8">
                   <label className="text-xs font-bold text-gray-400 group-focus-within:text-indigo-600 uppercase tracking-[0.2em] flex items-center gap-2 transition-colors">
                     <MapPin className="h-3 w-3" /> {t('profile.location')}
                   </label>
@@ -366,7 +512,7 @@ export default function Profile() {
 
                 <div className="group space-y-3">
                   <label className="text-xs font-bold text-gray-400 group-focus-within:text-indigo-600 uppercase tracking-[0.2em] flex items-center gap-2 transition-colors">
-                    <Briefcase className="h-3 w-3" /> Professional Bio & Experience
+                    <Briefcase className="h-3 w-3" /> {t('profile.bio')}
                   </label>
                   <textarea 
                     rows={8}
@@ -380,14 +526,14 @@ export default function Profile() {
                 <div className="group space-y-6 pt-6">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-bold text-gray-400 group-focus-within:text-indigo-600 uppercase tracking-[0.2em] flex items-center gap-2 transition-colors">
-                      <Code className="h-3 w-3" /> Skillset & Expertise
+                      <Code className="h-3 w-3" /> {t('profile.skills')}
                     </label>
-                    <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{form.skills.length} / 15 Skills Used</span>
+                    <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{form.skills.length} / 15 {t('profile.skillsUsed')}</span>
                   </div>
                   <div className="relative group/input">
                     <input 
                       type="text" 
-                      placeholder="Add a new skill (e.g. UI Design)"
+                      placeholder={t('profile.addSkill')}
                       value={newSkill}
                       onChange={e => setNewSkill(e.target.value)}
                       onKeyDown={addSkill}
@@ -440,43 +586,52 @@ export default function Profile() {
             >
               <div className="flex justify-between items-center mb-8">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Portfolio & Showcase</h3>
-                  <p className="text-sm text-gray-500 mt-1">Display your best work and case studies.</p>
+                  <h3 className="text-2xl font-bold text-gray-900 tracking-tight">{t('profile.portfolioTitle')}</h3>
+                  <p className="text-sm text-gray-500 mt-1">{t('profile.portfolioSubtitle')}</p>
                 </div>
                 <button 
                   onClick={() => setShowPortfolioModal(true)}
                   className="p-3 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition-all flex items-center gap-2 font-bold text-sm"
                 >
-                  <Plus className="h-4 w-4" /> Add Project
+                  <Plus className="h-4 w-4" /> {t('profile.addProject')}
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {form.portfolio.map((item) => (
-                  <div key={item.id} className="group relative bg-gray-50 rounded-2xl p-6 border border-transparent hover:border-indigo-100 hover:bg-white hover:shadow-lg transition-all">
+                  <div key={item.id} className="group relative bg-gray-50 rounded-2xl p-6 border border-transparent hover:border-indigo-100 hover:bg-white hover:shadow-lg transition-all flex flex-col">
                     <button 
-                      onClick={() => removePortfolioItem(item.id)}
-                      className="absolute top-4 right-4 p-1.5 bg-gray-100 text-gray-400 rounded-lg opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-50 transition-all"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        removePortfolioItem(item.id);
+                      }}
+                      className="absolute top-4 right-4 p-1.5 bg-gray-100 text-gray-400 rounded-lg opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-50 transition-all z-20"
                     >
                       <X className="h-4 w-4" />
                     </button>
+                    {item.imageUrl && (
+                      <div className="h-40 w-full rounded-xl mb-4 overflow-hidden bg-gray-100 border border-gray-100">
+                        <img src={item.imageUrl} alt="" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    )}
                     <h4 className="font-bold text-gray-900 mb-2">{item.title}</h4>
-                    <p className="text-sm text-gray-500 line-clamp-2 mb-4">{item.description}</p>
+                    <p className="text-sm text-gray-500 line-clamp-2 mb-4 flex-grow">{item.description}</p>
                     {item.projectUrl && (
                       <a 
                         href={item.projectUrl} 
                         target="_blank" 
                         rel="noreferrer"
-                        className="text-xs font-bold text-indigo-600 flex items-center gap-1 hover:underline"
+                        className="text-xs font-black text-indigo-600 flex items-center justify-center gap-2 py-3 bg-indigo-50/50 rounded-xl hover:bg-indigo-600 hover:text-white transition-all uppercase tracking-widest px-4 border border-indigo-100/50"
                       >
-                        View Project <ChevronRight className="h-3 w-3" />
+                         Visit Project <ExternalLink className="h-3 w-3" />
                       </a>
                     )}
                   </div>
                 ))}
                 {form.portfolio.length === 0 && (
                   <div className="col-span-full py-12 text-center border-2 border-dashed border-gray-100 rounded-3xl">
-                    <p className="text-sm text-gray-400 italic">No portfolio items added yet. Showcase your skills with real-world examples.</p>
+                    <p className="text-sm text-gray-400 italic">{t('profile.noPortfolio')}</p>
                   </div>
                 )}
               </div>
@@ -509,7 +664,7 @@ export default function Profile() {
                      "font-bold text-lg",
                      profile?.verificationStatus === 'verified' ? "text-emerald-900" : profile?.verificationStatus === 'pending' ? "text-amber-900" : "text-gray-900"
                    )}>
-                     {profile?.verificationStatus === 'verified' ? t('profile.identityVerified') : profile?.verificationStatus === 'pending' ? "Verification Pending" : "Request Verification"}
+                     {profile?.verificationStatus === 'verified' ? t('profile.identityVerified') : profile?.verificationStatus === 'pending' ? t('profile.verificationPending') : t('profile.requestVerification')}
                    </h4>
                    <p className={cn(
                      "text-sm leading-relaxed",
@@ -518,8 +673,8 @@ export default function Profile() {
                      {profile?.verificationStatus === 'verified' 
                       ? t('profile.identityDesc') 
                       : profile?.verificationStatus === 'pending'
-                      ? "Our team is currently reviewing your profile and identity documents."
-                      : "Upgrade your account to elite status to gain higher visibility and trust."}
+                      ? t('profile.verificationPendingDesc')
+                      : t('profile.upgradeElite')}
                    </p>
                    {profile?.verificationStatus === 'none' && (
                      <p className="text-xs font-bold text-indigo-600 mt-2 flex items-center gap-1 uppercase tracking-widest">
@@ -555,8 +710,8 @@ export default function Profile() {
             >
               <div className="px-6 py-6 sm:px-10 sm:pt-10 sm:pb-6 flex justify-between items-center sm:items-start border-b border-gray-50 flex-shrink-0">
                 <div className="space-y-1">
-                  <h3 className="text-2xl font-bold text-gray-900 leading-none">Add Portfolio Project</h3>
-                  <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Showcase your achievement</p>
+                  <h3 className="text-2xl font-bold text-gray-900 leading-none">{t('profile.addPortfolioProject')}</h3>
+                  <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">{t('profile.showcaseAchievement')}</p>
                 </div>
                 <button onClick={() => setShowPortfolioModal(false)} className="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
                   <X className="h-5 w-5 text-gray-400" />
@@ -567,7 +722,7 @@ export default function Profile() {
                 <div className="space-y-6">
                   <div className="group space-y-2">
                     <label className="text-xs font-bold text-gray-400 group-focus-within:text-indigo-600 uppercase tracking-widest transition-colors flex items-center gap-2">
-                       <Award className="h-3 w-3" /> Project Title
+                       <Award className="h-3 w-3" /> {t('profile.projectTitle')}
                     </label>
                     <input 
                       type="text" 
@@ -579,41 +734,53 @@ export default function Profile() {
                   </div>
                   <div className="group space-y-2">
                     <label className="text-xs font-bold text-gray-400 group-focus-within:text-indigo-600 uppercase tracking-widest transition-colors flex items-center gap-2">
-                       <Briefcase className="h-3 w-3" /> Description
+                       <Briefcase className="h-3 w-3" /> {t('profile.projectDescription')}
                     </label>
                     <textarea 
                       rows={4}
                       value={newPortfolioItem.description}
                       onChange={e => setNewPortfolioItem(prev => ({ ...prev, description: e.target.value }))}
                       className="w-full bg-gray-50/50 border border-transparent focus:border-indigo-500 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white outline-none transition-all font-medium text-gray-900 leading-relaxed"
-                      placeholder="What did you build and which technologies were used?"
+                      placeholder={t('profile.projectDescriptionPlaceholder')}
                     />
                   </div>
                   <div className="group space-y-2">
                     <label className="text-xs font-bold text-gray-400 group-focus-within:text-indigo-600 uppercase tracking-widest transition-colors flex items-center gap-2">
-                       <Zap className="h-3 w-3" /> Project URL (Optional)
+                       <Zap className="h-3 w-3" /> {t('profile.projectUrl')}
                     </label>
                     <input 
                       type="url" 
                       value={newPortfolioItem.projectUrl}
                       onChange={e => setNewPortfolioItem(prev => ({ ...prev, projectUrl: e.target.value }))}
+                      onBlur={(e) => fetchUrlMetadata(e.target.value)}
                       className="w-full bg-gray-50/50 border border-transparent focus:border-indigo-500 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white outline-none transition-all font-medium text-gray-900"
-                      placeholder="https://github.com/..."
+                      placeholder="https://..."
+                      required
                     />
                   </div>
+                  {newPortfolioItem.imageUrl && (
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{t('profile.visualPreview')}</label>
+                       <div className="h-44 w-full rounded-2xl overflow-hidden border border-gray-100 shadow-inner group/preview relative">
+                         <img src={newPortfolioItem.imageUrl} alt="Preview" className="h-full w-full object-cover transition-transform group-hover/preview:scale-110 duration-700" />
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                       </div>
+                       <p className="text-[9px] font-bold text-indigo-500 uppercase tracking-tighter italic">Auto-detected from project link</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
               <div className="p-6 sm:px-10 sm:pb-10 sm:pt-6 border-t border-gray-50 flex-shrink-0 bg-white">
                 <button 
                   onClick={addPortfolioItem}
-                  disabled={!newPortfolioItem.title}
+                  disabled={!newPortfolioItem.title || !newPortfolioItem.projectUrl}
                   className="w-full bg-indigo-600 text-white py-5 rounded-2xl font-bold hover:bg-indigo-700 disabled:opacity-50 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-3"
                 >
-                  <Plus className="h-5 w-5" /> Add Project
+                  <Plus className="h-5 w-5" /> {t('profile.addProject')}
                 </button>
                 <p className="text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-4">
-                  Changes will be saved to your profile
+                  {t('profile.changesSavedNote')}
                 </p>
               </div>
             </motion.div>

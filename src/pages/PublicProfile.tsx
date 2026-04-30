@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { UserProfile } from '../types';
 import { motion } from 'motion/react';
@@ -16,7 +16,11 @@ import {
   ShieldCheck,
   ChevronRight,
   ExternalLink,
-  MessageSquare
+  MessageSquare,
+  Github,
+  Twitter,
+  Linkedin,
+  Globe
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -33,21 +37,24 @@ export default function PublicProfile() {
   };
 
   useEffect(() => {
-    async function fetchProfile() {
-      if (!uid) return;
-      try {
-        const docSnap = await getDoc(doc(db, 'users', uid));
-        if (docSnap.exists()) {
-          setProfile(docSnap.data() as UserProfile);
-        }
-      } catch (error) {
-        handleFirestoreError(error, OperationType.GET, `users/${uid}`);
-      } finally {
-        setLoading(false);
+    if (!uid) return;
+    
+    const unsub = onSnapshot(doc(db, 'users', uid), (docSnap) => {
+      if (docSnap.exists()) {
+        setProfile(docSnap.data() as UserProfile);
       }
-    }
-    fetchProfile();
+      setLoading(false);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, `users/${uid}`);
+      setLoading(false);
+    });
+
+    return () => unsub();
   }, [uid]);
+
+  const handleChat = () => {
+    navigate(`/messages?user=${uid}`);
+  };
 
   if (loading) {
     return (
@@ -65,7 +72,7 @@ export default function PublicProfile() {
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
         <p className="text-gray-500 font-medium">User profile not found.</p>
         <button onClick={() => navigate(-1)} className="text-indigo-600 font-bold hover:underline flex items-center gap-2">
-          Go Back
+          {t('common.back')}
         </button>
       </div>
     );
@@ -104,20 +111,46 @@ export default function PublicProfile() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 leading-tight">{profile.displayName}</h2>
-                  <p className="font-medium text-indigo-600 text-sm mt-1">{profile.professionalTitle || 'Expert Professional'}</p>
+                  <p className="font-medium text-indigo-600 text-sm mt-1">{profile.professionalTitle || t('profile.expertProfessional')}</p>
                   <p className="text-gray-500 flex items-center gap-2 mt-2 text-sm">
-                    <MapPin className="h-4 w-4 text-gray-300" /> {profile.location || 'Distributed'}
+                    <MapPin className="h-4 w-4 text-gray-300" /> {profile.location || t('profile.distributed')}
                   </p>
                 </div>
 
                 {/* Stats section removed as per user request */}
 
                 <button 
-                  onClick={() => navigate('/messages')}
+                  onClick={handleChat}
                   className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-2"
                 >
-                  <MessageSquare className="h-5 w-5" /> Contact {profile.displayName.split(' ')[0]}
+                  <MessageSquare className="h-5 w-5" /> {t('profile.chatWith', { name: profile.displayName.split(' ')[0] })}
                 </button>
+
+                <div className="pt-8 border-t border-gray-50 flex items-center justify-center gap-4">
+                  {profile.websiteUrl && (
+                    <a href={profile.websiteUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-gray-500">
+                      <Globe className="h-5 w-5" />
+                    </a>
+                  )}
+                  {profile.githubUrl && (
+                    <a href={profile.githubUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-gray-500">
+                      <Github className="h-5 w-5" />
+                    </a>
+                  )}
+                  {profile.linkedinUrl && (
+                    <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-gray-500">
+                      <Linkedin className="h-5 w-5" />
+                    </a>
+                  )}
+                  {profile.twitterUrl && (
+                    <a href={profile.twitterUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-gray-500">
+                      <Twitter className="h-5 w-5" />
+                    </a>
+                  )}
+                  <a href={`mailto:${profile.email}`} className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-gray-500">
+                    <Mail className="h-5 w-5" />
+                  </a>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -134,12 +167,12 @@ export default function PublicProfile() {
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">{t('profile.generalInfo')}</h3>
                 <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-wrap">
-                  {profile.bio || 'This professional hasn\'t added a bio yet.'}
+                  {profile.bio || t('profile.noBioYet')}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-6">{t('profile.fullName')} (Skills)</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-6">{t('profile.skills')}</h3>
                 <div className="flex flex-wrap gap-2">
                   {profile.skills?.map(skill => (
                     <span 
@@ -150,7 +183,7 @@ export default function PublicProfile() {
                     </span>
                   ))}
                   {(!profile.skills || profile.skills.length === 0) && (
-                    <p className="text-gray-400 italic">No skills listed yet.</p>
+                    <p className="text-gray-400 italic">{t('profile.noSkillsListed')}</p>
                   )}
                 </div>
               </div>
@@ -164,27 +197,36 @@ export default function PublicProfile() {
             transition={{ delay: 0.1 }}
             className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl overflow-hidden p-8 md:p-12"
           >
-            <h3 className="text-2xl font-bold text-gray-900 mb-8">Showcase & Portfolio</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-8">{t('profile.portfolioTitle')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {profile.portfolio?.map((item) => (
-                <div key={item.id} className="group bg-gray-50 rounded-2xl p-6 border border-transparent hover:border-indigo-100 hover:bg-white hover:shadow-lg transition-all">
-                  <h4 className="font-bold text-gray-900 mb-2 truncate">{item.title}</h4>
-                  <p className="text-sm text-gray-500 line-clamp-3 mb-4">{item.description}</p>
-                  {item.projectUrl && (
-                    <a 
-                      href={item.projectUrl} 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className="text-xs font-bold text-indigo-600 flex items-center gap-1 hover:underline"
-                    >
-                      <ExternalLink className="h-3 w-3" /> Visit Project
-                    </a>
+                <motion.a 
+                  key={item.id}
+                  href={item.projectUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  whileHover={{ y: -5 }}
+                  className="group bg-gray-50 rounded-2xl p-6 border border-transparent hover:border-indigo-100 hover:bg-white hover:shadow-lg transition-all block"
+                >
+                  {item.imageUrl && (
+                    <div className="aspect-video w-full rounded-xl mb-4 overflow-hidden bg-gray-100 border border-gray-100 shadow-sm relative">
+                      <img src={item.imageUrl} alt="" className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                    </div>
                   )}
-                </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-bold text-gray-900 truncate group-hover:text-indigo-600 transition-colors">{item.title}</h4>
+                    <ExternalLink className="h-4 w-4 text-gray-300 group-hover:text-indigo-500 transition-all" />
+                  </div>
+                  <p className="text-sm text-gray-500 line-clamp-3 mb-4">{item.description}</p>
+                  <span className="text-xs font-bold text-indigo-600 flex items-center gap-1 hover:underline">
+                    {t('profile.visitProject')}
+                  </span>
+                </motion.a>
               ))}
               {(!profile.portfolio || profile.portfolio.length === 0) && (
                 <div className="col-span-full py-12 text-center border-2 border-dashed border-gray-100 rounded-3xl">
-                  <p className="text-sm text-gray-400 italic">No portfolio items featured yet.</p>
+                  <p className="text-sm text-gray-400 italic">{t('profile.noPortfolioShowcase')}</p>
                 </div>
               )}
             </div>

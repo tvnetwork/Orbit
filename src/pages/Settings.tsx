@@ -23,15 +23,19 @@ import { cn } from '../lib/utils';
 import { db, auth, handleFirestoreError, OperationType } from '../lib/firebase';
 import { doc, updateDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 
-const TABS = [
-  { id: 'profile', label: 'Profile', icon: User },
-  { id: 'notifications', label: 'Alerts', icon: Bell },
-  { id: 'security', label: 'Security', icon: Shield },
-  { id: 'kyc', label: 'Verification', icon: Key },
+import { useTranslation } from 'react-i18next';
+
+const TABS = (t: any) => [
+  { id: 'profile', label: t('settings.tabProfile'), icon: User },
+  { id: 'notifications', label: t('settings.tabAlerts'), icon: Bell },
+  { id: 'security', label: t('settings.tabSecurity'), icon: Shield },
+  { id: 'kyc', label: t('settings.tabVerification'), icon: Key },
 ];
 
 export default function Settings() {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
+  const tabs = TABS(t);
   const [activeTab, setActiveTab] = useState('profile');
   const [isSaving, setIsSaving] = useState(false);
   const [kycSubmitting, setKycSubmitting] = useState(false);
@@ -93,14 +97,14 @@ export default function Settings() {
     <div className="bg-gray-50 min-h-screen py-20">
       <div className="max-w-6xl mx-auto px-4">
         <div className="mb-12">
-          <h1 className="text-4xl font-black text-gray-900 tracking-tight">System Preferences</h1>
-          <p className="text-gray-500 mt-1 font-medium italic">Configure your identity and privacy across the ecosystem.</p>
+          <h1 className="text-4xl font-black text-gray-900 tracking-tight">{t('settings.title')}</h1>
+          <p className="text-gray-500 mt-1 font-medium italic">{t('settings.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Nav Sidebar */}
           <div className="lg:col-span-3 space-y-2">
-            {TABS.map(tab => (
+            {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -122,7 +126,7 @@ export default function Settings() {
             <div className="pt-8 mt-8 border-t border-gray-100">
                <button className="w-full flex items-center gap-4 px-6 py-4 text-red-400 font-bold text-sm hover:bg-red-50 rounded-2xl transition-all">
                  <Trash2 className="h-4 w-4" />
-                 Delete Account
+                 {t('settings.deleteAccount')}
                </button>
             </div>
           </div>
@@ -151,15 +155,15 @@ export default function Settings() {
                       </button>
                     </div>
                     <div>
-                      <h3 className="text-2xl font-black text-gray-900 tracking-tight">Identity Avatar</h3>
-                      <p className="text-gray-400 text-sm font-medium mt-1">Uploaded JPG or PNG should be 500x500px.</p>
-                      <button className="mt-4 text-sm font-black text-indigo-600 hover:underline underline-offset-4 decoration-2">Remove Photo</button>
+                      <h3 className="text-2xl font-black text-gray-900 tracking-tight">{t('settings.identityAvatar')}</h3>
+                      <p className="text-gray-400 text-sm font-medium mt-1">{t('settings.avatarDesc')}</p>
+                      <button className="mt-4 text-sm font-black text-indigo-600 hover:underline underline-offset-4 decoration-2">{t('settings.removePhoto')}</button>
                     </div>
                   </div>
 
                   <form onSubmit={handleUpdateProfile} className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-50">
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Legal Name</label>
+                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('settings.fullName')}</label>
                        <input 
                         type="text"
                         value={form.displayName}
@@ -168,7 +172,7 @@ export default function Settings() {
                        />
                     </div>
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">E-mail Address</label>
+                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('settings.emailAddress')}</label>
                        <div className="relative">
                          <Mail className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300" />
                          <input 
@@ -180,12 +184,12 @@ export default function Settings() {
                        </div>
                     </div>
                     <div className="col-span-full space-y-2">
-                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Bio / Headline</label>
+                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('settings.bioHeadline')}</label>
                        <textarea 
                         rows={4}
                         value={form.bio}
                         onChange={e => setForm(prev => ({ ...prev, bio: e.target.value }))}
-                        placeholder="Expert specializing in..."
+                        placeholder={t('settings.bioPlaceholder')}
                         className="w-full bg-gray-50 border border-gray-100 rounded-3xl px-6 py-4 font-bold focus:outline-none focus:ring-4 focus:ring-indigo-50"
                        />
                     </div>
@@ -195,7 +199,7 @@ export default function Settings() {
                         className="bg-gray-900 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-black transition-all flex items-center gap-2 shadow-lg shadow-gray-100"
                       >
                         {isSaving ? <Cloud className="h-4 w-4 animate-bounce" /> : <CheckCircle2 className="h-4 w-4" />}
-                        Persist Changes
+                        {t('settings.persistChanges')}
                       </button>
                     </div>
                   </form>
@@ -205,8 +209,8 @@ export default function Settings() {
               {activeTab === 'kyc' && (
                 <div className="space-y-12">
                    <div>
-                     <h3 className="text-3xl font-black text-gray-900 tracking-tight">Financial Shield</h3>
-                     <p className="text-gray-500 mt-1 font-medium">Verify your identity to unlock global currency features.</p>
+                     <h3 className="text-3xl font-black text-gray-900 tracking-tight">{t('settings.financialShield')}</h3>
+                     <p className="text-gray-500 mt-1 font-medium">{t('settings.kycDesc')}</p>
                    </div>
 
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -231,8 +235,8 @@ export default function Settings() {
                           </span>
                         </div>
                         <div>
-                          <h4 className="text-xl font-black text-gray-900 tracking-tight leading-tight">Identity Document</h4>
-                          <p className="text-gray-500 text-sm font-medium mt-1 leading-relaxed">Required for anti-fraud measures and tax compliance in 180+ regions.</p>
+                          <h4 className="text-xl font-black text-gray-900 tracking-tight leading-tight">{t('settings.identityDocument')}</h4>
+                          <p className="text-gray-500 text-sm font-medium mt-1 leading-relaxed">{t('settings.kycNote')}</p>
                         </div>
                         
                         {profile?.verificationStatus === 'none' && (
@@ -241,14 +245,14 @@ export default function Settings() {
                             disabled={kycSubmitting}
                             className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-100 transition-all flex items-center justify-center gap-2"
                           >
-                             {kycSubmitting ? 'Processing...' : 'Upload Passport/ID'}
+                             {kycSubmitting ? t('settings.processing') : t('settings.uploadId')}
                              <Upload className="h-4 w-4" />
                           </button>
                         )}
                         {profile?.verificationStatus === 'pending' && (
                           <div className="flex items-center gap-3 p-4 bg-white/50 rounded-2xl text-xs font-bold text-orange-600 italic">
                              <AlertCircle className="h-4 w-4" />
-                             Documentation is currently under elite human review.
+                             {t('settings.humanReview')}
                           </div>
                         )}
                      </div>
@@ -257,23 +261,23 @@ export default function Settings() {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[50px] rounded-full -mr-16 -mt-16" />
                         <div className="space-y-4 relative">
                           <CheckCircle2 className="h-10 w-10 text-emerald-400" />
-                          <h4 className="text-xl font-black tracking-tight leading-tight">Verification Benefits</h4>
+                          <h4 className="text-xl font-black tracking-tight leading-tight">{t('settings.verificationBenefits')}</h4>
                           <ul className="space-y-3 text-sm text-gray-400 font-medium font-sans">
                             <li className="flex items-center gap-2">
                               <span className="h-1.5 w-1.5 bg-emerald-400 rounded-full" />
-                              Zero Withdrawal Threshold
+                              {t('settings.benefit1')}
                             </li>
                             <li className="flex items-center gap-2">
                               <span className="h-1.5 w-1.5 bg-emerald-400 rounded-full" />
-                              Elite Badge on Profile
+                              {t('settings.benefit2')}
                             </li>
                             <li className="flex items-center gap-2">
                               <span className="h-1.5 w-1.5 bg-emerald-400 rounded-full" />
-                              Instant Milestone Payouts
+                              {t('settings.benefit3')}
                             </li>
                           </ul>
                         </div>
-                        <div className="mt-8 text-[10px] font-black text-gray-500 uppercase tracking-widest text-center">Powered by Vynta Identity Engine</div>
+                        <div className="mt-8 text-[10px] font-black text-gray-500 uppercase tracking-widest text-center">{t('settings.poweredBy')}</div>
                      </div>
                    </div>
                 </div>
@@ -282,8 +286,8 @@ export default function Settings() {
               {activeTab === 'security' && (
                 <div className="space-y-12">
                    <div>
-                     <h3 className="text-3xl font-black text-gray-900 tracking-tight">Shield & Access</h3>
-                     <p className="text-gray-500 mt-1 font-medium">Protect your capital and career credentials.</p>
+                     <h3 className="text-3xl font-black text-gray-900 tracking-tight">{t('settings.shieldAccess')}</h3>
+                     <p className="text-gray-500 mt-1 font-medium">{t('settings.securityDesc')}</p>
                    </div>
 
                    <div className="space-y-6">
@@ -293,11 +297,11 @@ export default function Settings() {
                              <Lock className="h-6 w-6" />
                            </div>
                            <div>
-                             <h4 className="font-black text-gray-900 tracking-tight leading-tight">Master Auth Password</h4>
-                             <p className="text-xs text-gray-500 font-medium mt-1">Rotation recommended every 90 days.</p>
+                             <h4 className="font-black text-gray-900 tracking-tight leading-tight">{t('settings.masterPassword')}</h4>
+                             <p className="text-xs text-gray-500 font-medium mt-1">{t('settings.rotationNote')}</p>
                            </div>
                          </div>
-                         <button className="px-6 py-3 bg-white border border-gray-200 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-50 hover:text-indigo-600 transition-all">Update</button>
+                         <button className="px-6 py-3 bg-white border border-gray-200 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-50 hover:text-indigo-600 transition-all">{t('settings.update')}</button>
                       </div>
 
                       <div className="p-8 bg-black rounded-[2.5rem] flex items-center justify-between shadow-2xl relative overflow-hidden">
@@ -307,8 +311,8 @@ export default function Settings() {
                              <Smartphone className="h-6 w-6" />
                            </div>
                            <div>
-                             <h4 className="font-black text-white tracking-tight leading-tight">Two-Factor Authentication</h4>
-                             <p className="text-xs text-gray-500 font-medium mt-1">Biometric or SMS secure verification.</p>
+                             <h4 className="font-black text-white tracking-tight leading-tight">{t('settings.twoFactor')}</h4>
+                             <p className="text-xs text-gray-500 font-medium mt-1">{t('settings.biometricNote')}</p>
                            </div>
                          </div>
                          <div className="flex items-center gap-3">
@@ -323,7 +327,7 @@ export default function Settings() {
                    <div className="p-10 bg-indigo-50 border border-indigo-100 rounded-[3rem] space-y-6">
                       <div className="flex items-center gap-3">
                         <Globe className="h-5 w-5 text-indigo-600" />
-                        <h4 className="text-lg font-black text-indigo-900 tracking-tight">Login Sessions</h4>
+                        <h4 className="text-lg font-black text-indigo-900 tracking-tight">{t('settings.loginSessions')}</h4>
                       </div>
                       <div className="space-y-4">
                         {[
@@ -333,9 +337,9 @@ export default function Settings() {
                           <div key={i} className="flex items-center justify-between text-sm py-3 border-b border-indigo-100 last:border-0">
                             <div>
                               <p className="font-black text-indigo-900 tracking-tight leading-tight">{sess.device}</p>
-                              <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mt-1">{sess.location} • {sess.active ? 'Current' : '3h ago'}</p>
+                              <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mt-1">{sess.location} • {sess.active ? t('settings.activeNow') : '3h ago'}</p>
                             </div>
-                            <button className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Log out</button>
+                            <button className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('settings.logout')}</button>
                           </div>
                         ))}
                       </div>
@@ -346,16 +350,16 @@ export default function Settings() {
               {activeTab === 'notifications' && (
                 <div className="space-y-12">
                    <div>
-                     <h3 className="text-3xl font-black text-gray-900 tracking-tight">Signal Feed</h3>
-                     <p className="text-gray-500 mt-1 font-medium italic">Command how information reaches your awareness.</p>
+                     <h3 className="text-3xl font-black text-gray-900 tracking-tight">{t('settings.signalFeed')}</h3>
+                     <p className="text-gray-500 mt-1 font-medium italic">{t('settings.notificationsDesc')}</p>
                    </div>
 
                    <div className="space-y-8">
                      {[
-                       { id: 'jobs', title: 'Elite Job Matches', desc: 'When a project matches your skill DNA.' },
-                       { id: 'messages', title: 'Direct Communications', desc: 'Instant pings from clients and collaborators.' },
-                       { id: 'wallet', title: 'Financial Movements', desc: 'Alerts for escrow funding and releases.' },
-                       { id: 'community', title: 'Network Mentions', desc: 'When you are cited in cohorts or the global forum.' }
+                       { id: 'jobs', title: t('settings.optJobs'), desc: t('settings.optJobsDesc') },
+                       { id: 'messages', title: t('settings.optMessages'), desc: t('settings.optMessagesDesc') },
+                       { id: 'wallet', title: t('settings.optWallet'), desc: t('settings.optWalletDesc') },
+                       { id: 'community', title: t('settings.optCommunity'), desc: t('settings.optCommunityDesc') }
                      ].map(opt => (
                        <div key={opt.id} className="flex items-center justify-between group">
                          <div className="space-y-1">
@@ -377,9 +381,9 @@ export default function Settings() {
                    <div className="p-8 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 space-y-4">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs font-black text-gray-900 uppercase tracking-widest">Global Silence Mode</span>
+                        <span className="text-xs font-black text-gray-900 uppercase tracking-widest">{t('settings.silenceMode')}</span>
                       </div>
-                      <p className="text-xs text-gray-400 font-medium leading-relaxed">Activate to pause all signals except critical financial alerts during deep work sessions.</p>
+                      <p className="text-xs text-gray-400 font-medium leading-relaxed">{t('settings.silenceModeDesc')}</p>
                    </div>
                 </div>
               )}

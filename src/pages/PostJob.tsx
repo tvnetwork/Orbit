@@ -110,19 +110,19 @@ export default function PostJob() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <AlertCircle className="h-16 w-16 text-yellow-500 mx-auto mb-6" />
-        <h2 className="text-3xl font-bold">Client Access Only</h2>
-        <p className="text-gray-500 mt-2">Only registered clients can post new projects in our elite database.</p>
+        <h2 className="text-3xl font-bold">{t('postProject.clientOnly')}</h2>
+        <p className="text-gray-500 mt-2">{t('postProject.clientOnlyDesc')}</p>
         <button onClick={() => navigate('/jobs')} className="mt-8 text-indigo-600 font-bold hover:underline">
-          Back to Marketplace
+          {t('postProject.backMarketplace')}
         </button>
       </div>
     );
   }
 
   const steps = [
-    { number: 1, title: 'Identity', icon: Target },
-    { number: 2, title: 'Requirements', icon: Settings },
-    { number: 3, title: 'Budget', icon: DollarSign }
+    { number: 1, title: t('postProject.step1'), icon: Target },
+    { number: 2, title: t('postProject.step2'), icon: Settings },
+    { number: 3, title: t('postProject.step3'), icon: DollarSign }
   ];
 
   return (
@@ -157,16 +157,16 @@ export default function PostJob() {
           {step === 1 && (
             <div className="space-y-10 flex-1">
               <div>
-                <h2 className="text-3xl font-black text-gray-900 tracking-tight">Project Identity</h2>
-                <p className="text-gray-500 mt-1">Define the core vision of your project.</p>
+                <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t('postProject.projectIdentity')}</h2>
+                <p className="text-gray-500 mt-1">{t('postProject.identityDesc')}</p>
               </div>
 
               <div className="space-y-8">
                 <div className="space-y-3">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest">Project Title</label>
+                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest">{t('postProject.projectTitle')}</label>
                   <input 
                     type="text" 
-                    placeholder="e.g. Senior React Developer for Fintech App"
+                    placeholder={t('postProject.titlePlaceholder')}
                     value={form.title}
                     onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))}
                     className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 outline-none transition-all text-lg font-medium"
@@ -175,19 +175,19 @@ export default function PostJob() {
 
                 <div className="space-y-3">
                   <div className="flex justify-between items-end">
-                    <label className="text-sm font-black text-gray-700 uppercase tracking-widest">Description</label>
+                    <label className="text-sm font-black text-gray-700 uppercase tracking-widest">{t('postProject.description')}</label>
                     <button 
                       onClick={enhanceDescription}
                       disabled={aiLoading || !form.title || !form.description}
                       className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl text-xs font-bold hover:bg-indigo-100 transition-all flex items-center gap-2 group"
                     >
                       {aiLoading ? <Sparkles className="h-3 w-3 animate-pulse" /> : <Sparkles className="h-3 w-3" />}
-                      AI Enhance
+                      {t('postProject.aiEnhance')}
                     </button>
                   </div>
                   <textarea 
                     rows={6}
-                    placeholder="Describe the scope, technical challenges, and goals..."
+                    placeholder={t('postProject.descriptionPlaceholder')}
                     value={form.description}
                     onChange={e => setForm(prev => ({ ...prev, description: e.target.value }))}
                     className="w-full px-8 py-6 bg-gray-50 border border-gray-100 rounded-[2.5rem] focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 outline-none transition-all leading-relaxed"
@@ -200,17 +200,17 @@ export default function PostJob() {
           {step === 2 && (
             <div className="space-y-10 flex-1">
               <div>
-                <h2 className="text-3xl font-black text-gray-900 tracking-tight">Required Expertise</h2>
-                <p className="text-gray-500 mt-1">What skills are mandatory for this success?</p>
+                <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t('postProject.requiredExpertise')}</h2>
+                <p className="text-gray-500 mt-1">{t('postProject.expertiseDesc')}</p>
               </div>
 
               <div className="space-y-8">
                 <form onSubmit={addSkill} className="space-y-3">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest">Add Skill</label>
+                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest">{t('postProject.addSkill')}</label>
                   <div className="flex gap-4">
                     <input 
                       type="text" 
-                      placeholder="e.g. TypeScript, AWS, Figma"
+                      placeholder={t('postProject.skillsPlaceholder')}
                       value={form.newSkill}
                       onChange={e => setForm(prev => ({ ...prev, newSkill: e.target.value }))}
                       className="flex-1 px-8 py-5 bg-gray-50 border border-gray-100 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 outline-none transition-all"
@@ -219,7 +219,7 @@ export default function PostJob() {
                       type="submit"
                       className="bg-gray-900 text-white px-8 rounded-3xl font-bold hover:bg-black transition-all"
                     >
-                      Add
+                      {t('postProject.add')}
                     </button>
                   </div>
                 </form>
@@ -234,20 +234,20 @@ export default function PostJob() {
                     </div>
                   ))}
                   {form.skills.length === 0 && (
-                    <div className="text-gray-400 text-sm font-medium italic">No skills added yet...</div>
+                    <div className="text-gray-400 text-sm font-medium italic">{t('postProject.noSkills')}</div>
                   )}
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest">Category</label>
+                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest">{t('postProject.category')}</label>
                   <select 
                     value={form.category}
                     onChange={e => setForm(prev => ({ ...prev, category: e.target.value }))}
                     className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-3xl outline-none"
                   >
-                    <option value="Development">Development</option>
-                    <option value="Design">Design</option>
-                    <option value="AI & ML">AI & ML</option>
+                    <option value="Development">{t('postProject.categories.development')}</option>
+                    <option value="Design">{t('postProject.categories.design')}</option>
+                    <option value="AI & ML">{t('postProject.categories.data')}</option>
                     <option value="Strategy">Strategy</option>
                   </select>
                 </div>
@@ -258,13 +258,13 @@ export default function PostJob() {
           {step === 3 && (
             <div className="space-y-10 flex-1">
               <div>
-                <h2 className="text-3xl font-black text-gray-900 tracking-tight">Budget & Escrow</h2>
-                <p className="text-gray-500 mt-1">Set the financial parameters for your project.</p>
+                <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t('postProject.budgetEscrow')}</h2>
+                <p className="text-gray-500 mt-1">{t('postProject.budgetDesc')}</p>
               </div>
 
               <div className="space-y-12">
                 <div className="space-y-4">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest text-center block">Budget Type</label>
+                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest text-center block">{t('postProject.budgetType')}</label>
                   <div className="flex p-2 bg-gray-50 rounded-[2rem] border border-gray-100">
                     <button 
                       onClick={() => setForm(prev => ({ ...prev, type: 'fixed' }))}
@@ -273,7 +273,7 @@ export default function PostJob() {
                         form.type === 'fixed' ? "bg-white shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 hover:text-gray-600"
                       )}
                     >
-                      <DollarSign className="h-5 w-5" /> Fixed Price
+                      <DollarSign className="h-5 w-5" /> {t('postProject.fixedPrice')}
                     </button>
                     <button 
                       onClick={() => setForm(prev => ({ ...prev, type: 'hourly' }))}
@@ -282,13 +282,13 @@ export default function PostJob() {
                         form.type === 'hourly' ? "bg-white shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 hover:text-gray-600"
                       )}
                     >
-                      <Clock className="h-5 w-5" /> Hourly Rate
+                      <Clock className="h-5 w-5" /> {t('postProject.hourlyRate')}
                     </button>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest text-center block">Total Budget (USD)</label>
+                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest text-center block">{t('postProject.totalBudget')}</label>
                   <div className="relative">
                     <DollarSign className="absolute left-8 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" />
                     <input 
@@ -299,7 +299,7 @@ export default function PostJob() {
                       className="w-full px-16 py-8 bg-gray-50 border border-gray-100 rounded-[2.5rem] text-center text-4xl font-black focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 outline-none transition-all placeholder:text-gray-200"
                     />
                   </div>
-                  <p className="text-center text-xs text-gray-400 font-bold uppercase tracking-widest">Elite talent typically starts at $500+</p>
+                  <p className="text-center text-xs text-gray-400 font-bold uppercase tracking-widest">{t('postProject.talentNote')}</p>
                 </div>
               </div>
             </div>
@@ -312,7 +312,7 @@ export default function PostJob() {
                 onClick={() => setStep(step - 1)}
                 className="flex items-center gap-2 px-8 py-5 rounded-3xl font-bold text-gray-500 hover:bg-gray-50 transition-all"
               >
-                <ChevronLeft className="h-5 w-5" /> Back
+                <ChevronLeft className="h-5 w-5" /> {t('postProject.back')}
               </button>
             )}
             {step < 3 ? (
@@ -321,7 +321,7 @@ export default function PostJob() {
                 disabled={step === 1 && !form.title}
                 className="flex-1 bg-gray-900 text-white p-5 rounded-3xl font-bold hover:bg-black transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
               >
-                Continue to {steps[step].title}
+                {t('postProject.continueTo', { step: steps[step].title })}
                 <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-all" />
               </button>
             ) : (
@@ -331,7 +331,7 @@ export default function PostJob() {
                 className="flex-1 bg-indigo-600 text-white p-5 rounded-3xl font-bold hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 shadow-xl shadow-indigo-100 disabled:opacity-50"
               >
                 {loading ? <Sparkles className="h-5 w-5 animate-pulse" /> : <Send className="h-5 w-5" />}
-                Publish Elite Project
+                {t('postProject.publish')}
               </button>
             )}
           </div>

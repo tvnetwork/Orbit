@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { 
   Users, 
   Plus, 
@@ -17,20 +18,23 @@ import { db, auth } from '../lib/firebase';
 import { 
   collection, 
   query, 
-  onSnapshot, 
-  addDoc, 
-  serverTimestamp, 
-  orderBy, 
+  limit,
+  onSnapshot,
+  addDoc,
+  serverTimestamp,
+  orderBy,
   where,
   setDoc,
   doc,
-  deleteDoc
+  deleteDoc,
+  getDocs
 } from 'firebase/firestore';
 import { useAuth } from '../App';
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
 
 export default function Groups() {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
   const [cohorts, setCohorts] = useState<any[]>([]);
   const [joinedCohortIds, setJoinedCohortIds] = useState<Set<string>>(new Set());
@@ -38,11 +42,31 @@ export default function Groups() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [counts, setCounts] = useState({ talent: 0, messages: 0 });
   const [newCohort, setNewCohort] = useState({
     name: '',
     description: '',
     color: 'indigo'
   });
+
+  useEffect(() => {
+    // Real-time listener for talent count
+    const talentQ = query(collection(db, 'users'), where('role', '==', 'freelancer'), limit(500));
+    const unsubTalent = onSnapshot(talentQ, (snap) => {
+      setCounts(prev => ({ ...prev, talent: snap.size }));
+    });
+
+    // Real-time listener for message count
+    const msgQ = query(collection(db, 'community_messages'), limit(500));
+    const unsubMsg = onSnapshot(msgQ, (snap) => {
+      setCounts(prev => ({ ...prev, messages: snap.size }));
+    });
+
+    return () => {
+      unsubTalent();
+      unsubMsg();
+    };
+  }, []);
 
   useEffect(() => {
     const q = query(collection(db, 'cohorts'), orderBy('createdAt', 'desc'));
@@ -106,8 +130,8 @@ export default function Groups() {
         {/* Hero Section */}
         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-2xl">
-            <h1 className="text-5xl font-black text-gray-900 tracking-tight leading-none mb-4">Elite Cohorts</h1>
-            <p className="text-xl font-medium text-gray-400 italic">High-performance networks for domain specialists.</p>
+            <h1 className="text-5xl font-black text-gray-900 tracking-tight leading-none mb-4">{t('groups.title')}</h1>
+            <p className="text-xl font-medium text-gray-400 italic">{t('groups.subtitle')}</p>
           </div>
           <button 
             onClick={() => setIsCreating(true)}
@@ -116,7 +140,7 @@ export default function Groups() {
              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
              <div className="flex items-center gap-3 relative">
                <Plus className="h-5 w-5" />
-               New Domain Group
+               {t('groups.newGroup')}
              </div>
           </button>
         </div>
@@ -124,9 +148,9 @@ export default function Groups() {
         {/* Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
            {[
-             { label: 'Active Masters', value: '4,200+', icon: Users, color: 'indigo' },
-             { label: 'Domains Covered', value: '85+', icon: Globe, color: 'emerald' },
-             { label: 'Daily Knowledge', value: '1.2k Links', icon: Zap, color: 'orange' }
+             { label: t('groups.activeMasters'), value: counts.talent > 0 ? `${counts.talent}+` : '0', icon: Users, color: 'indigo' },
+             { label: t('groups.verifiedDomains'), value: 'Live', icon: Globe, color: 'emerald' },
+             { label: t('groups.networkInsights'), value: counts.messages > 0 ? `${counts.messages} Insights` : 'No Links', icon: Zap, color: 'orange' }
            ].map((stat, i) => (
              <div key={i} className="bg-white p-8 rounded-[2.5rem] border border-gray-100 flex items-center gap-6 shadow-sm">
                 <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center", `bg-${stat.color}-50 text-${stat.color}-600`)}>
@@ -146,15 +170,15 @@ export default function Groups() {
              <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
              <input 
               type="text"
-              placeholder="Search domain DNA..."
+              placeholder={t('groups.searchPlaceholder')}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full bg-gray-50 border border-gray-100 rounded-[2rem] pl-14 pr-6 py-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-indigo-50 transition-all"
              />
            </div>
            <div className="flex items-center gap-2">
-             <button className="px-6 py-3 bg-gray-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest">All Cohorts</button>
-             <button className="px-6 py-3 bg-white text-gray-400 hover:text-gray-900 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">Featured Only</button>
+             <button className="px-6 py-3 bg-gray-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest">{t('groups.allCohorts')}</button>
+             <button className="px-6 py-3 bg-white text-gray-400 hover:text-gray-900 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">{t('groups.featuredOnly')}</button>
            </div>
         </div>
 
@@ -202,7 +226,7 @@ export default function Groups() {
                           </div>
                         ))}
                      </div>
-                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{cohort.membersCount || 0} Domain Leads</span>
+                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{cohort.membersCount || 0} {t('groups.domainLeads')}</span>
                    </div>
 
                    <div className="flex gap-3">
@@ -210,7 +234,7 @@ export default function Groups() {
                         to={`/community?cohort=${cohort.id}`} 
                         className="flex-1 py-4 bg-gray-50 text-gray-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-50 hover:text-indigo-600 border border-transparent hover:border-indigo-100 transition-all text-center flex items-center justify-center gap-2"
                       >
-                        Open Forge
+                        {t('groups.openForge')}
                         <ArrowRight className="h-3 w-3" />
                       </Link>
                       <button 
@@ -225,12 +249,12 @@ export default function Groups() {
                         {joinedCohortIds.has(cohort.id) ? (
                           <>
                             <Zap className="h-4 w-4 fill-emerald-600" />
-                            Joined
+                            {t('groups.joined')}
                           </>
                         ) : (
                           <>
                             <UserPlus className="h-4 w-4" />
-                            Join
+                            {t('groups.join')}
                           </>
                         )}
                       </button>
@@ -263,14 +287,14 @@ export default function Groups() {
                      <Users className="h-6 w-6" />
                    </div>
                    <div>
-                     <h2 className="text-3xl font-black text-gray-900 tracking-tight">Birth a Cohort</h2>
-                     <p className="text-gray-500 font-medium italic">Define the DNA of your specialist network.</p>
+                     <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t('groups.createTitle')}</h2>
+                     <p className="text-gray-500 font-medium italic">{t('groups.createSubtitle')}</p>
                    </div>
                  </div>
 
                  <form onSubmit={handleCreateCohort} className="space-y-8">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Domain Name</label>
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('groups.domainName')}</label>
                       <input 
                         required
                         type="text"
@@ -281,7 +305,7 @@ export default function Groups() {
                       />
                     </div>
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Mission / DNA</label>
+                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('groups.mission')}</label>
                        <textarea 
                         required
                         rows={4}
@@ -297,13 +321,13 @@ export default function Groups() {
                         onClick={() => setIsCreating(false)}
                         className="px-8 py-4 text-sm font-black text-gray-400 uppercase tracking-widest hover:text-gray-900"
                       >
-                        Discard
+                        {t('groups.discard')}
                       </button>
                       <button 
                         type="submit"
                         className="px-10 py-4 bg-gray-900 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-gray-100"
                       >
-                        Finalize Cohort
+                        {t('groups.finalize')}
                       </button>
                     </div>
                  </form>

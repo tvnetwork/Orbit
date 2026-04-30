@@ -132,7 +132,7 @@ export default function SubmitProposal() {
         {/* Breadcrumb */}
         <Link to={`/jobs/${jobId}`} className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-indigo-600 mb-8 transition-colors">
           <ChevronLeft className="h-4 w-4" />
-          Back to Job Details
+          {t('submitProposal.backToDetails')}
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -144,15 +144,15 @@ export default function SubmitProposal() {
                   <Send className="h-6 w-6" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-black text-gray-900 tracking-tight">Submit Proposal</h1>
-                  <p className="text-gray-500 font-medium">Draft your winning proposal for this project.</p>
+                  <h1 className="text-3xl font-black text-gray-900 tracking-tight">{t('submitProposal.title')}</h1>
+                  <p className="text-gray-500 font-medium">{t('submitProposal.subtitle')}</p>
                 </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-10">
                 <div className="space-y-4">
                   <div className="flex justify-between items-end">
-                    <label className="text-sm font-black text-gray-700 uppercase tracking-widest ml-1">Cover Letter</label>
+                    <label className="text-sm font-black text-gray-700 uppercase tracking-widest ml-1">{t('submitProposal.coverLetter')}</label>
                     <button 
                       type="button"
                       onClick={improveCoverLetter}
@@ -160,13 +160,13 @@ export default function SubmitProposal() {
                       className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl text-xs font-bold hover:bg-indigo-100 transition-all flex items-center gap-2"
                     >
                       {aiLoading ? <Sparkles className="h-3 w-3 animate-pulse" /> : <Sparkles className="h-3 w-3" />}
-                      AI Refine
+                      {t('submitProposal.aiRefine')}
                     </button>
                   </div>
                   <textarea 
                     required
                     rows={12}
-                    placeholder="Tell the client why you're the perfect fit for this role..."
+                    placeholder={t('submitProposal.coverLetterPlaceholder')}
                     value={form.coverLetter}
                     onChange={e => setForm(prev => ({ ...prev, coverLetter: e.target.value }))}
                     className="w-full px-8 py-6 bg-gray-50 border border-gray-100 rounded-[2.5rem] focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 transition-all leading-relaxed"
@@ -176,8 +176,8 @@ export default function SubmitProposal() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-xl font-black text-gray-900 tracking-tight">Project Milestones</h3>
-                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Break down your deliverables</p>
+                      <h3 className="text-xl font-black text-gray-900 tracking-tight">{t('submitProposal.milestonesTitle')}</h3>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">{t('submitProposal.milestonesSubtitle')}</p>
                     </div>
                     <button 
                       type="button"
@@ -197,9 +197,9 @@ export default function SubmitProposal() {
                         className="flex gap-4 items-start bg-gray-50 p-6 rounded-3xl border border-gray-100"
                       >
                         <div className="flex-1 space-y-4">
-                          <input 
+                           <input 
                             type="text"
-                            placeholder="Milestone title (e.g. Initial Research & Wireframes)"
+                            placeholder={t('submitProposal.milestoneTitlePlaceholder')}
                             value={m.title}
                             onChange={e => updateMilestone(m.id, 'title', e.target.value)}
                             className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-300"
@@ -208,7 +208,7 @@ export default function SubmitProposal() {
                             <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <input 
                               type="number"
-                              placeholder="Amount"
+                              placeholder={t('submitProposal.milestoneAmount')}
                               value={m.amount}
                               onChange={e => updateMilestone(m.id, 'amount', e.target.value)}
                               className="w-full bg-white border border-gray-100 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-300"
@@ -226,7 +226,7 @@ export default function SubmitProposal() {
                     ))}
                     {form.milestones.length === 0 && (
                       <div className="text-center py-10 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-                        <p className="text-sm font-medium text-gray-400 italic">No milestones defined. Recommended for larger projects.</p>
+                        <p className="text-sm font-medium text-gray-400 italic">{t('submitProposal.noMilestones')}</p>
                       </div>
                     )}
                   </div>
@@ -239,7 +239,7 @@ export default function SubmitProposal() {
                       disabled={submitting}
                       className="w-full bg-indigo-600 text-white py-6 rounded-3xl font-black text-xl hover:bg-indigo-700 shadow-xl shadow-indigo-100 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                     >
-                      {submitting ? 'Transmitting...' : 'Submit Proposal'}
+                      {submitting ? t('submitProposal.transmitting') : t('submitProposal.title')}
                       <Send className="h-6 w-6" />
                     </button>
                   </div>
@@ -252,10 +252,10 @@ export default function SubmitProposal() {
           <div className="lg:col-span-4 space-y-6 sticky top-28">
             <div className="bg-gray-900 text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-[60px] rounded-full -mr-16 -mt-16" />
-               <h3 className="text-xl font-black mb-8">Bid Summary</h3>
+               <h3 className="text-xl font-black mb-8">{t('submitProposal.bidSummary')}</h3>
                <div className="space-y-8">
                  <div className="space-y-3">
-                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Bid Amount (USD)</label>
+                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('submitProposal.totalBidAmount')}</label>
                    <div className="relative">
                      <DollarSign className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" />
                      <input 
@@ -268,41 +268,41 @@ export default function SubmitProposal() {
                    </div>
                  </div>
                  <div className="space-y-3">
-                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Project Duration</label>
+                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('submitProposal.projectDuration')}</label>
                    <select 
                      value={form.duration}
                      onChange={e => setForm(prev => ({ ...prev, duration: e.target.value }))}
                      className="w-full bg-white/10 border border-white/10 rounded-3xl px-6 py-4 font-bold focus:outline-none focus:ring-4 focus:ring-white/5 transition-all"
                    >
-                     <option value="Less than 1 month">Less than 1 month</option>
-                     <option value="1 to 3 months">1 to 3 months</option>
-                     <option value="3 to 6 months">3 to 6 months</option>
-                     <option value="More than 6 months">More than 6 months</option>
+                     <option value={t('submitProposal.durations.short')}>{t('submitProposal.durations.short')}</option>
+                     <option value={t('submitProposal.durations.medium')}>{t('submitProposal.durations.medium')}</option>
+                     <option value={t('submitProposal.durations.long')}>{t('submitProposal.durations.long')}</option>
+                     <option value={t('submitProposal.durations.xlong')}>{t('submitProposal.durations.xlong')}</option>
                    </select>
                  </div>
                </div>
 
                <div className="mt-10 pt-10 border-t border-white/10 space-y-4">
                  <div className="flex justify-between text-sm">
-                   <span className="text-gray-400 font-medium tracking-tight">Service Fee (10%)</span>
+                   <span className="text-gray-400 font-medium tracking-tight">{t('submitProposal.serviceFee')}</span>
                    <span className="font-bold text-red-400">-${(Number(form.bidAmount) * 0.1).toFixed(2)}</span>
                  </div>
                  <div className="flex justify-between text-lg">
-                   <span className="text-white font-black tracking-tight">You'll Receive</span>
+                   <span className="text-white font-black tracking-tight">{t('submitProposal.youWillReceive')}</span>
                    <span className="font-black text-emerald-400">${(Number(form.bidAmount) * 0.9).toFixed(2)}</span>
                  </div>
                </div>
             </div>
 
             <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100">
-               <h4 className="text-sm font-black text-gray-900 border-b border-gray-50 pb-4 mb-4">Job Quick Glimpse</h4>
+               <h4 className="text-sm font-black text-gray-900 border-b border-gray-50 pb-4 mb-4">{t('submitProposal.quickGlimpse')}</h4>
                <div className="space-y-4">
                  <div className="flex gap-4">
                    <div className="h-10 w-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 shrink-0">
                      <Briefcase className="h-5 w-5" />
                    </div>
                    <div>
-                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Fixed Budget</p>
+                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{t('submitProposal.fixedBudget')}</p>
                      <p className="font-black text-gray-900 tracking-tight leading-tight">${job.budget}</p>
                    </div>
                  </div>
@@ -311,7 +311,7 @@ export default function SubmitProposal() {
                      <Clock className="h-5 w-5" />
                    </div>
                    <div>
-                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Category</p>
+                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{t('submitProposal.category')}</p>
                      <p className="font-black text-gray-900 tracking-tight leading-tight">{job.category}</p>
                    </div>
                  </div>
