@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ChevronLeft, 
@@ -31,6 +32,7 @@ export default function SubmitProposal() {
   const { id: jobId } = useParams();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
+  const { t } = useTranslation();
   const [job, setJob] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);

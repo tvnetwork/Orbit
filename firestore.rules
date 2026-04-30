@@ -1,195 +1,368 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 0. Global Safety Net
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // --- Helpers ---
-    function isSignedIn() { return request.auth != null; }
-    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
-    function incoming() { return request.resource.data; }
-    function existing() { return resource.data; }
-    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
-    
-    // Auth tokens do not contain custom claims. Admin status is strictly verified against a trusted record or hardcoded email for bootstrap.
-    function isAdmin() { 
-      return isSignedIn() && (
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
-        request.auth.token.email == 'oladoyeheritage445@gmail.com'
-      ); 
+    function isSignedIn() {
+      return request.auth != null;
     }
 
-    // --- Validation Helpers ---
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function userDocExists(uid) {
+      return exists(/databases/$(database)/documents/users/$(uid));
+    }
+
+    function userDoc(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data;
+    }
+
+    function authEmail() {
+      return isSignedIn() && request.auth.token.email is string
+        ? request.auth.token.email
+        : '';
+    }
+
+    function isBootstrapAdmin() {
+      return authEmail() == 'oladoyeheritage445@gmail.com';
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        isBootstrapAdmin() ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (userDocExists(request.auth.uid) && userDoc(request.auth.uid).role == 'admin')
+      );
+    }
+
+    function isClientUser() {
+      return isSignedIn() &&
+        userDocExists(request.auth.uid) &&
+        userDoc(request.auth.uid).role == 'client';
+    }
+
+    function isFreelancerUser() {
+      return isSignedIn() &&
+        userDocExists(request.auth.uid) &&
+        userDoc(request.auth.uid).role == 'freelancer';
+    }
+
+    function isShortString(value, max) {
+      return value is string && value.size() <= max;
+    }
+
+    function isOptionalShortString(data, key, max) {
+      return !data.keys().hasAny([key]) || (data[key] is string && data[key].size() <= max);
+    }
+
+    function isOptionalList(data, key, max) {
+      return !data.keys().hasAny([key]) || (data[key] is list && data[key].size() <= max);
+    }
 
     function isValidUser(data) {
-      return data.keys().hasAll(['uid', 'email', 'role', 'createdAt']) &&
-             data.keys().size() <= 23 &&
-             data.uid == request.auth.uid &&
-             data.email is string && data.email.size() <= 256 &&
-             data.role in ['freelancer', 'client', 'admin'] &&
-             (data.get('displayName', '') is string && data.get('displayName', '').size() <= 100) &&
-             (data.get('photoURL', '') is string && data.get('photoURL', '').size() <= 1000) &&
-             (data.get('professionalTitle', '') is string && data.get('professionalTitle', '').size() <= 150) &&
-             (data.get('githubUrl', '') is string && data.get('githubUrl', '').size() <= 500) &&
-             (data.get('linkedinUrl', '') is string && data.get('linkedinUrl', '').size() <= 500) &&
-             (data.get('twitterUrl', '') is string && data.get('twitterUrl', '').size() <= 500) &&
-             (data.get('websiteUrl', '') is string && data.get('websiteUrl', '').size() <= 500) &&
-             (data.get('verificationStatus', 'none') in ['none', 'pending', 'verified']) &&
-             (data.get('rating', 0) is number && data.get('rating', 0) >= 0 && data.get('rating', 0) <= 5);
+      return data.uid == request.auth.uid &&
+        isShortString(data.email, 256) &&
+        data.role in ['freelancer', 'client', 'admin'] &&
+        data.createdAt is timestamp &&
+        isOptionalShortString(data, 'displayName', 100) &&
+        isOptionalShortString(data, 'photoURL', 1000) &&
+        isOptionalShortString(data, 'professionalTitle', 150) &&
+        isOptionalShortString(data, 'bio', 5000) &&
+        isOptionalShortString(data, 'location', 120) &&
+        isOptionalShortString(data, 'timezone', 120) &&
+        isOptionalShortString(data, 'githubUrl', 500) &&
+        isOptionalShortString(data, 'linkedinUrl', 500) &&
+        isOptionalShortString(data, 'twitterUrl', 500) &&
+        isOptionalShortString(data, 'websiteUrl', 500) &&
+        isOptionalList(data, 'skills', 50) &&
+        isOptionalList(data, 'languages', 30) &&
+        (!data.keys().hasAny(['portfolio']) || data.portfolio is list) &&
+        (!data.keys().hasAny(['hourlyRate']) || (data.hourlyRate is number && data.hourlyRate >= 0)) &&
+        (!data.keys().hasAny(['completedJobs']) || (data.completedJobs is number && data.completedJobs >= 0)) &&
+        (!data.keys().hasAny(['rating']) || (data.rating is number && data.rating >= 0 && data.rating <= 5)) &&
+        (!data.keys().hasAny(['verificationStatus']) || data.verificationStatus in ['none', 'pending', 'verified']) &&
+        (!data.keys().hasAny(['lastActive']) || data.lastActive is timestamp);
     }
 
     function isValidJob(data) {
-      return data.keys().hasAll(['clientId', 'title', 'description', 'budget', 'type', 'status', 'createdAt']) &&
-             data.keys().size() <= 15 &&
-             data.clientId == request.auth.uid &&
-             data.title is string && data.title.size() <= 200 &&
-             data.description is string && data.description.size() <= 10000 &&
-             data.budget is number && data.budget >= 0 &&
-             data.type in ['fixed', 'hourly'] &&
-             data.status in ['open', 'in_progress', 'completed', 'cancelled'];
+      return isShortString(data.clientId, 128) &&
+        data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+        data.description is string && data.description.size() > 0 && data.description.size() <= 10000 &&
+        data.budget is number && data.budget >= 0 &&
+        data.type in ['fixed', 'hourly'] &&
+        data.status in ['open', 'in_progress', 'completed', 'cancelled'] &&
+        data.createdAt is timestamp &&
+        isOptionalShortString(data, 'category', 120) &&
+        isOptionalList(data, 'skills', 50) &&
+        isOptionalShortString(data, 'deadline', 120) &&
+        isOptionalShortString(data, 'duration', 120) &&
+        isOptionalShortString(data, 'assignedFreelancerId', 128) &&
+        isOptionalShortString(data, 'acceptedProposalId', 128) &&
+        (!data.keys().hasAny(['updatedAt']) || data.updatedAt is timestamp);
     }
 
     function isValidProposal(data) {
-      return data.keys().hasAll(['jobId', 'freelancerId', 'coverLetter', 'bidAmount', 'status', 'createdAt']) &&
-             data.keys().size() <= 10 &&
-             data.freelancerId == request.auth.uid &&
-             data.coverLetter is string && data.coverLetter.size() <= 5000 &&
-             data.bidAmount is number && data.bidAmount > 0 &&
-             data.status in ['unread', 'shortlisted', 'interviewing', 'hired', 'rejected', 'withdrawn'];
-    }
-
-    function isValidTransaction(data) {
-      return data.keys().hasAll(['userId', 'amount', 'type', 'status', 'createdAt']) &&
-             data.keys().size() <= 10 &&
-             data.userId is string &&
-             data.amount is number &&
-             data.type in ['deposit', 'withdrawal', 'payment_received', 'payment_sent', 'escrow_hold'] &&
-             data.status in ['pending', 'completed', 'failed'];
+      return isShortString(data.jobId, 128) &&
+        isShortString(data.freelancerId, 128) &&
+        data.coverLetter is string && data.coverLetter.size() > 0 && data.coverLetter.size() <= 5000 &&
+        data.bidAmount is number && data.bidAmount > 0 &&
+        data.status in ['unread', 'pending', 'accepted', 'rejected', 'shortlisted', 'interviewing', 'hired', 'withdrawn'] &&
+        data.createdAt is timestamp &&
+        isOptionalShortString(data, 'clientId', 128) &&
+        isOptionalShortString(data, 'type', 40) &&
+        isOptionalShortString(data, 'duration', 120) &&
+        isOptionalList(data, 'milestones', 25);
     }
 
     function isValidReview(data) {
-      return data.keys().hasAll(['freelancerId', 'clientId', 'rating', 'createdAt']) &&
-             data.keys().size() <= 10 &&
-             data.clientId == request.auth.uid &&
-             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
-             (data.get('comment', '') is string && data.get('comment', '').size() <= 5000) &&
-             (data.get('clientName', '') is string && data.get('clientName', '').size() <= 100) &&
-             (data.get('clientPhoto', '') is string && data.get('clientPhoto', '').size() <= 1000);
+      return isShortString(data.freelancerId, 128) &&
+        isShortString(data.clientId, 128) &&
+        data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+        data.createdAt is timestamp &&
+        isOptionalShortString(data, 'comment', 5000) &&
+        isOptionalShortString(data, 'clientName', 100) &&
+        (!data.keys().hasAny(['clientPhoto']) || data.clientPhoto == null || (data.clientPhoto is string && data.clientPhoto.size() <= 1000));
     }
 
-    // --- Collection Rules ---
+    function isValidSupportMessage(data) {
+      return data.type in ['contact_form', 'live_chat'] &&
+        data.createdAt is timestamp &&
+        isOptionalShortString(data, 'firstName', 100) &&
+        isOptionalShortString(data, 'lastName', 100) &&
+        isOptionalShortString(data, 'email', 256) &&
+        isOptionalShortString(data, 'subject', 200) &&
+        isOptionalShortString(data, 'message', 5000) &&
+        isOptionalShortString(data, 'userId', 128) &&
+        isOptionalShortString(data, 'userEmail', 256) &&
+        isOptionalShortString(data, 'lastMessage', 5000) &&
+        (!data.keys().hasAny(['messages']) || data.messages is list) &&
+        (!data.keys().hasAny(['updatedAt']) || data.updatedAt is timestamp) &&
+        (!data.keys().hasAny(['status']) || data.status in ['unread', 'active', 'closed']);
+    }
+
+    function isValidCohort(data) {
+      return data.creatorId == request.auth.uid &&
+        isShortString(data.name, 120) &&
+        isOptionalShortString(data, 'description', 5000) &&
+        isOptionalShortString(data, 'color', 40) &&
+        (!data.keys().hasAny(['membersCount']) || (data.membersCount is number && data.membersCount >= 0)) &&
+        (!data.keys().hasAny(['featured']) || data.featured is bool) &&
+        data.createdAt is timestamp;
+    }
+
+    function canMutateOwnUserDoc(userId) {
+      return isOwner(userId) &&
+        incoming().uid == existing().uid &&
+        incoming().email == existing().email &&
+        incoming().createdAt == existing().createdAt &&
+        isValidUser(incoming()) &&
+        (
+          incoming().role == existing().role ||
+          (existing().role in ['freelancer', 'client'] && incoming().role in ['freelancer', 'client'])
+        );
+    }
 
     match /users/{userId} {
-      allow get: if isSignedIn();
-      allow list: if isSignedIn() && (isAdmin() || resource.data.role == 'freelancer'); // Allow listing freelancers for discovery or all for admin
+      allow get, list: if true;
       allow create: if isSignedIn() && isOwner(userId) && isValidUser(incoming()) && incoming().createdAt == request.time;
-      allow update: if isSignedIn() && (
-        isAdmin() ||
-        (isOwner(userId) && isValidUser(incoming()) && (
-          // Action: Profile Edit
-          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'professionalTitle', 'bio', 'skills', 'location', 'hourlyRate', 'timezone', 'languages', 'githubUrl', 'linkedinUrl', 'twitterUrl', 'websiteUrl', 'portfolio', 'lastActive']) ||
-          // Action: Request Verification
-          (incoming().diff(existing()).affectedKeys().hasOnly(['verificationStatus']) && incoming().verificationStatus == 'pending' && existing().verificationStatus == 'none')
-        ) && 
-        incoming().uid == existing().uid && 
-        incoming().role == existing().role && 
-        incoming().createdAt == existing().createdAt)
-      );
+      allow update: if isAdmin() || canMutateOwnUserDoc(userId);
+    }
+
+    match /users/{userId}/joined_cohorts/{cohortId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && incoming().joinedAt == request.time;
+      allow delete: if isOwner(userId) || isAdmin();
     }
 
     match /jobs/{jobId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() && isValidJob(incoming()) && incoming().createdAt == request.time && 
-                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'client';
-      allow update: if isSignedIn() && (
-        isAdmin() ||
-        (isOwner(existing().clientId) && isValidJob(incoming()) && (
-          // Action: Edit Details
-          incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'budget', 'type', 'category', 'updatedAt']) ||
-          // Action: Close/Cancel Job
-          (incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']) && incoming().status in ['completed', 'cancelled'])
-        ) && 
-        incoming().clientId == existing().clientId && 
-        incoming().createdAt == existing().createdAt)
+      allow read: if true;
+      allow create: if isClientUser() &&
+        incoming().clientId == request.auth.uid &&
+        isValidJob(incoming()) &&
+        incoming().createdAt == request.time;
+      allow update: if isAdmin() || (
+        isClientUser() &&
+        isOwner(existing().clientId) &&
+        incoming().clientId == existing().clientId &&
+        incoming().createdAt == existing().createdAt &&
+        isValidJob(incoming())
       );
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || (isClientUser() && isOwner(existing().clientId));
     }
 
     match /proposals/{proposalId} {
-      allow read: if isSignedIn() && (isOwner(existing().freelancerId) || isOwner(get(/databases/$(database)/documents/jobs/$(existing().jobId)).data.clientId) || isAdmin());
-      allow create: if isSignedIn() && isValidProposal(incoming()) && incoming().createdAt == request.time &&
-                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'freelancer' &&
-                      exists(/databases/$(database)/documents/jobs/$(incoming().jobId)) &&
-                      get(/databases/$(database)/documents/jobs/$(incoming().jobId)).data.status == 'open';
-      allow update: if isSignedIn() && (
+      allow read: if isSignedIn() && (
         isAdmin() ||
-        (isOwner(existing().freelancerId) && incoming().diff(existing()).affectedKeys().hasOnly(['coverLetter', 'bidAmount', 'status']) && incoming().status == 'withdrawn') ||
-        (isOwner(get(/databases/$(database)/documents/jobs/$(existing().jobId)).data.clientId) && incoming().diff(existing()).affectedKeys().hasOnly(['status']))
+        isOwner(existing().freelancerId) ||
+        (existing().clientId is string && isOwner(existing().clientId)) ||
+        (exists(/databases/$(database)/documents/jobs/$(existing().jobId)) &&
+          isOwner(get(/databases/$(database)/documents/jobs/$(existing().jobId)).data.clientId))
+      );
+      allow create: if isSignedIn() &&
+        isValidProposal(incoming()) &&
+        incoming().createdAt == request.time &&
+        exists(/databases/$(database)/documents/jobs/$(incoming().jobId)) &&
+        get(/databases/$(database)/documents/jobs/$(incoming().jobId)).data.status == 'open' &&
+        (
+          (isFreelancerUser() && incoming().freelancerId == request.auth.uid) ||
+          (
+            isClientUser() &&
+            incoming().clientId == request.auth.uid &&
+            incoming().type == 'offer' &&
+            get(/databases/$(database)/documents/jobs/$(incoming().jobId)).data.clientId == request.auth.uid
+          )
+        );
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        isValidProposal(incoming()) &&
+        incoming().jobId == existing().jobId &&
+        incoming().freelancerId == existing().freelancerId &&
+        incoming().createdAt == existing().createdAt &&
+        (
+          isOwner(existing().freelancerId) ||
+          (existing().clientId is string && isOwner(existing().clientId)) ||
+          (exists(/databases/$(database)/documents/jobs/$(existing().jobId)) &&
+            isOwner(get(/databases/$(database)/documents/jobs/$(existing().jobId)).data.clientId))
+        )
       );
     }
 
     match /contracts/{contractId} {
-      allow read: if isSignedIn() && (isOwner(existing().clientId) || isOwner(existing().freelancerId) || isAdmin());
-      allow create: if isAdmin(); // Contracts are system managed or created via client action that triggers a backend function
-      allow update: if isAdmin() || (isSignedIn() && (isOwner(existing().clientId) || isOwner(existing().freelancerId)) && 
-                      incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']));
+      allow read: if isSignedIn() && (isAdmin() || isOwner(existing().clientId) || isOwner(existing().freelancerId));
+      allow create: if isAdmin();
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        (isOwner(existing().clientId) || isOwner(existing().freelancerId))
+      );
+    }
+
+    match /contracts/{contractId}/messages/{messageId} {
+      allow read: if isSignedIn() && (
+        isAdmin() ||
+        request.auth.uid in get(/databases/$(database)/documents/contracts/$(contractId)).data.participantIds ||
+        isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.clientId) ||
+        isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.freelancerId)
+      );
+      allow create: if isSignedIn() &&
+        (
+          request.auth.uid in get(/databases/$(database)/documents/contracts/$(contractId)).data.participantIds ||
+          isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.clientId) ||
+          isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.freelancerId) ||
+          isAdmin()
+        ) &&
+        incoming().createdAt == request.time;
+    }
+
+    match /contracts/{contractId}/milestones/{milestoneId} {
+      allow read: if isSignedIn() && (
+        isAdmin() ||
+        isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.clientId) ||
+        isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.freelancerId)
+      );
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        (
+          isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.clientId) ||
+          isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.freelancerId)
+        )
+      );
     }
 
     match /transactions/{transactionId} {
-      allow read: if isOwner(existing().userId) || isAdmin();
-      allow create, update, delete: if isAdmin(); // Transactions are absolute system truth
+      allow read: if isAdmin() || (isSignedIn() && existing().userId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
     }
 
     match /kyc/{kycId} {
-      allow read, update: if isAdmin() || (isSignedIn() && isOwner(existing().userId));
+      allow read: if isAdmin() || (isSignedIn() && existing().userId == request.auth.uid);
       allow create: if isSignedIn() && incoming().userId == request.auth.uid && incoming().status == 'pending';
+      allow update: if isAdmin() || (isSignedIn() && existing().userId == request.auth.uid);
     }
 
     match /reviews/{reviewId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() && isValidReview(incoming()) && incoming().createdAt == request.time &&
-                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'client';
-      allow delete: if isAdmin();
+      allow read: if true;
+      allow create: if isClientUser() &&
+        incoming().clientId == request.auth.uid &&
+        isValidReview(incoming()) &&
+        incoming().createdAt == request.time;
+      allow update: if isAdmin() || (isSignedIn() && existing().clientId == request.auth.uid && isValidReview(incoming()) && incoming().createdAt == existing().createdAt && incoming().clientId == existing().clientId && incoming().freelancerId == existing().freelancerId);
+      allow delete: if isAdmin() || (isSignedIn() && existing().clientId == request.auth.uid);
+    }
+
+    match /support_messages/{messageId} {
+      allow create: if isValidSupportMessage(incoming()) && incoming().createdAt == request.time;
+      allow read, list, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isValidSupportMessage(incoming()) &&
+        (
+          (isSignedIn() && existing().userId == request.auth.uid) ||
+          (!isSignedIn() && existing().userId == 'anonymous' && existing().type == 'live_chat')
+        )
+      );
     }
 
     match /community_messages/{messageId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() && incoming().senderId == request.auth.uid && 
-                      incoming().createdAt == request.time && 
-                      incoming().text is string && incoming().text.size() <= 2000;
-      allow delete: if isAdmin() || isOwner(existing().senderId);
+      allow read: if true;
+      allow create: if isSignedIn() &&
+        incoming().senderId == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        incoming().text is string &&
+        incoming().text.size() <= 2000;
+      allow delete: if isAdmin() || (isSignedIn() && existing().senderId == request.auth.uid);
     }
 
     match /cohorts/{cohortId} {
-      allow read: if isSignedIn();
-      allow create, update, delete: if isAdmin(); // Cohorts are managed by admins currently
-      
+      allow read: if true;
+      allow create: if isSignedIn() && isValidCohort(incoming()) && incoming().createdAt == request.time;
+      allow update: if isAdmin() || (isSignedIn() && existing().creatorId == request.auth.uid);
+      allow delete: if isAdmin() || (isSignedIn() && existing().creatorId == request.auth.uid);
+
       match /messages/{messageId} {
-        allow read: if isSignedIn();
-        allow create: if isSignedIn() && incoming().senderId == request.auth.uid && 
-                        incoming().createdAt == request.time && 
-                        incoming().text is string && incoming().text.size() <= 2000;
-        allow delete: if isAdmin() || isOwner(existing().senderId);
+        allow read: if true;
+        allow create: if isSignedIn() &&
+          incoming().senderId == request.auth.uid &&
+          incoming().createdAt == request.time &&
+          incoming().text is string &&
+          incoming().text.size() <= 2000;
+        allow delete: if isAdmin() || (isSignedIn() && existing().senderId == request.auth.uid);
       }
-      
+
       match /members/{userId} {
-        allow read: if isSignedIn();
-        allow create, delete: if isOwner(userId);
+        allow read: if true;
+        allow create, delete: if isOwner(userId) || isAdmin();
       }
     }
 
     match /chats/{chatId} {
-      allow read: if isSignedIn() && (request.auth.uid in existing().participantIds || isAdmin());
-      allow write: if isSignedIn() && (request.auth.uid in incoming().participantIds || isAdmin());
+      allow read: if isSignedIn() && (isAdmin() || request.auth.uid in existing().participantIds);
+      allow create: if isSignedIn() && (isAdmin() || request.auth.uid in incoming().participantIds);
+      allow update: if isSignedIn() && (isAdmin() || request.auth.uid in existing().participantIds);
     }
 
     match /chats/{chatId}/messages/{messageId} {
-      allow read: if isSignedIn() && (request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantIds || isAdmin());
-      allow create: if isSignedIn() && (request.auth.uid == incoming().senderId || isAdmin()) &&
-                      (request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantIds || isAdmin()) &&
-                      incoming().createdAt == request.time;
+      allow read: if isSignedIn() && (
+        isAdmin() ||
+        request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantIds
+      );
+      allow create: if isSignedIn() &&
+        incoming().senderId == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        (
+          isAdmin() ||
+          request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantIds
+        );
     }
   }
 }
