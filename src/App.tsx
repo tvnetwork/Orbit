@@ -49,6 +49,9 @@ export const useAuth = () => {
 // Layout Component
 const Footer = React.lazy(() => import('./components/Footer'));
 
+const isNavActive = (pathname: string, to: string) =>
+  to === '/' ? pathname === '/' : pathname === to || pathname.startsWith(`${to}/`);
+
 const Navbar = () => {
   const { user, profile, loading, login, logout } = useAuth();
   const location = useLocation();
@@ -80,13 +83,22 @@ const Navbar = () => {
     { to: "/admin", label: t('nav.admin'), show: profile?.role === 'admin' || user?.email === 'oladoyeheritage445@gmail.com', icon: Lock },
   ];
 
+  const mobilePrimaryLink =
+    profile?.role === 'client'
+      ? { to: "/client/dashboard", icon: LayoutDashboard, label: t('nav.clientHub') }
+      : profile?.role === 'freelancer'
+        ? { to: "/freelancer/dashboard", icon: LayoutDashboard, label: t('nav.dashboard') }
+        : { to: "/groups", icon: Users, label: t('nav.groups') };
+
+  const mobileSocialLink = user
+    ? { to: "/messages", icon: MessageSquare, label: t('nav.messages', { defaultValue: 'Messages' }) }
+    : { to: "/community", icon: Globe, label: t('common.community') };
+
   const bottomLinks = [
-    { to: "/", icon: BrandIcon, label: t('common.home') },
-    { to: "/jobs", icon: Search, label: t('common.jobs') },
-    ...(profile?.role === 'client' ? [{ to: "/client/dashboard", icon: LayoutDashboard, label: t('nav.clientHub') }] : []),
-    ...(profile?.role === 'freelancer' ? [{ to: "/freelancer/dashboard", icon: LayoutDashboard, label: t('nav.dashboard') }] : []),
-    { to: "/messages", icon: MessageSquare, label: t('common.messages') },
-    { to: "/wallet", icon: DollarSign, label: t('common.wallet') },
+    { to: "/", icon: BrandIcon, label: t('common.brandName') },
+    { to: "/jobs", icon: Search, label: t('nav.marketplace') },
+    mobilePrimaryLink,
+    mobileSocialLink,
     { to: user ? "/profile" : "/login", icon: user ? UserIcon : LogOut, label: user ? t('profile.title') : t('common.login') }
   ];
 
@@ -178,38 +190,34 @@ const Navbar = () => {
 
 
       {/* Modern Floating Bottom Navigation */}
-      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-50 pointer-events-none">
+      <div className="md:hidden fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pointer-events-none">
         <motion.div 
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-white/90 backdrop-blur-2xl border border-white/40 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex items-center justify-around p-2 pointer-events-auto ring-1 ring-black/5"
+          className="mx-auto flex w-full max-w-md items-stretch justify-between gap-1 rounded-[2rem] border border-slate-200/80 bg-white/95 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-2xl pointer-events-auto ring-1 ring-slate-900/5"
         >
           {bottomLinks.map((link) => {
-            const isActive = location.pathname === link.to;
+            const isActive = isNavActive(location.pathname, link.to);
             return (
               <Link 
                 key={link.to} 
                 to={link.to}
                 className={cn(
-                  "relative flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300",
-                  isActive ? "text-indigo-600" : "text-gray-400 hover:text-gray-600"
+                  "relative flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[1.35rem] px-2 py-2.5 text-center transition-all duration-300",
+                  isActive ? "text-indigo-700" : "text-slate-500 hover:text-slate-700"
                 )}
               >
                 {isActive && (
                   <motion.div 
                     layoutId="activeTab"
-                    className="absolute inset-0 bg-indigo-50/80 rounded-2xl -z-10"
+                    className="absolute inset-0 -z-10 rounded-[1.35rem] bg-gradient-to-b from-indigo-50 to-white"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
-                <link.icon className={cn("h-6 w-6 transition-transform duration-300", isActive && "scale-110")} />
-                {isActive && (
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -bottom-1 w-1 h-1 rounded-full bg-indigo-600"
-                  />
-                )}
+                <link.icon className={cn("h-5 w-5 transition-transform duration-300", isActive && "scale-110")} />
+                <span className={cn("max-w-full truncate text-[11px] font-semibold leading-none", isActive && "text-indigo-700")}>
+                  {link.label}
+                </span>
               </Link>
             );
           })}

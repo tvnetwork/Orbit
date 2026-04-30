@@ -1,6 +1,5 @@
 import { baseResources } from '../src/languages';
-
-type TranslationTree = Record<string, string | TranslationTree>;
+import type { TranslationTree } from '../src/languages/types';
 
 function flattenTranslations(tree: TranslationTree, prefix = ''): string[] {
   return Object.entries(tree).flatMap(([key, value]) => {
