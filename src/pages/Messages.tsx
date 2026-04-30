@@ -201,7 +201,7 @@ export default function Messages() {
   };
 
   return (
-    <div className="bg-white h-[calc(100vh-64px)] flex overflow-hidden relative">
+    <div className="relative flex min-h-[calc(100vh-64px)] bg-white md:h-[calc(100vh-64px)] md:overflow-hidden">
       
       {/* Sidebar */}
       <div className={cn(
@@ -308,7 +308,7 @@ export default function Messages() {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-1 md:gap-2">
+            <div className="flex items-center gap-1 md:gap-2">
                 {!isCommunity && (
                   <>
                     <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all hidden sm:block">
@@ -375,7 +375,7 @@ export default function Messages() {
             </div>
 
             {/* Messages List */}
-            <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 md:space-y-8">
+            <div className="flex-1 space-y-5 overflow-y-auto p-4 md:space-y-8 md:p-8">
               {messages.map((msg: any, i) => {
                 const isMine = msg.senderId === user?.uid;
                 const showAvatar = isCommunity && !isMine;
@@ -409,7 +409,7 @@ export default function Messages() {
                         </p>
                       )}
                       <div className={cn(
-                        "max-w-md px-6 py-4 rounded-[2rem] shadow-sm",
+                        "max-w-[85vw] px-4 py-3 rounded-[1.5rem] shadow-sm sm:max-w-md sm:px-6 sm:py-4 sm:rounded-[2rem]",
                         isMine 
                           ? "bg-indigo-600 text-white rounded-br-none" 
                           : "bg-white border border-gray-100 text-gray-900 rounded-bl-none"
@@ -429,15 +429,15 @@ export default function Messages() {
             </div>
 
             {/* Input */}
-            <div className="p-8 bg-white border-t border-gray-100">
-              <form onSubmit={handleSendMessage} className="flex gap-4 max-w-5xl mx-auto">
+            <div className="border-t border-gray-100 bg-white p-4 sm:p-6 md:p-8">
+              <form onSubmit={handleSendMessage} className="mx-auto flex max-w-5xl gap-3 sm:gap-4">
                 <div className="flex-1 relative group">
                   <input 
                     type="text" 
                     value={newMessage}
                     onChange={e => setNewMessage(e.target.value)}
                     placeholder={isCommunity ? "Share something with the community..." : t('messages.messagePlaceholder')}
-                    className="w-full bg-gray-50 border border-gray-100 px-8 py-5 rounded-[2rem] focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 focus:bg-white outline-none transition-all text-sm shadow-inner"
+                    className="w-full rounded-[1.5rem] border border-gray-100 bg-gray-50 px-5 py-4 text-sm shadow-inner outline-none transition-all focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 sm:px-8 sm:py-5 sm:rounded-[2rem]"
                   />
                 </div>
                 <motion.button 
@@ -446,7 +446,7 @@ export default function Messages() {
                   type="submit"
                   disabled={!newMessage.trim()}
                   className={cn(
-                    "px-10 rounded-[2rem] font-bold transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50 disabled:shadow-none",
+                    "flex items-center justify-center gap-2 rounded-[1.5rem] px-5 font-bold transition-all shadow-xl disabled:opacity-50 disabled:shadow-none sm:gap-3 sm:rounded-[2rem] sm:px-10",
                     isCommunity ? "bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-100" : "bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100"
                   )}
                 >
@@ -477,4 +477,3 @@ export default function Messages() {
     </div>
   );
 }
-

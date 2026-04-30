@@ -76,8 +76,8 @@ export default function About() {
   return (
     <div className="bg-white min-h-screen font-sans selection:bg-indigo-100 selection:text-indigo-900">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <section className="relative overflow-hidden pb-16 pt-20 sm:pb-20 sm:pt-24 md:pb-24 md:pt-32">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 relative">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -91,10 +91,10 @@ export default function About() {
               <Orbit className="h-4 w-4" />
               {t('about.heroMission')}
             </motion.div>
-            <h1 className="text-6xl md:text-8xl font-bold text-gray-900 mb-8 tracking-tighter leading-[0.9]">
+            <h1 className="mb-6 text-4xl font-bold leading-[0.95] tracking-tighter text-gray-900 sm:text-5xl md:mb-8 md:text-7xl lg:text-8xl">
               Redefining the <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Universe</span> of Work.
             </h1>
-            <p className="text-xl md:text-2xl text-gray-500 max-w-2xl leading-relaxed font-medium">
+            <p className="max-w-2xl text-lg font-medium leading-relaxed text-gray-500 md:text-2xl">
               {t('about.heroSubtitle')}
             </p>
           </motion.div>
@@ -106,7 +106,7 @@ export default function About() {
 
       {/* Stats Section */}
       <section className="py-20 border-y border-gray-100 bg-gray-50/50">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 sm:px-6 md:grid-cols-4 md:gap-12">
           {[
             { label: t('about.statsTalent'), value: counts.talent > 0 ? `${counts.talent}+` : '0' },
             { label: t('about.statsClients'), value: counts.clients > 0 ? `${counts.clients}+` : '0' },
@@ -129,9 +129,9 @@ export default function About() {
       </section>
 
       {/* Core Values */}
-      <section className="py-32">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+      <section className="py-20 md:py-32">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-12 flex flex-col justify-between gap-6 md:mb-20 md:flex-row md:items-end md:gap-8">
             <div className="max-w-xl">
               <h2 className="text-4xl font-bold text-gray-900 tracking-tight mb-4">{t('about.valuesTitle')}</h2>
               <p className="text-gray-500 font-medium">{t('about.valuesSubtitle')}</p>
@@ -185,15 +185,15 @@ export default function About() {
       </section>
 
       {/* Story Section */}
-      <section className="py-32 bg-gray-900 text-white overflow-hidden relative">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
+      <section className="relative overflow-hidden bg-gray-900 py-20 text-white md:py-32">
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 md:grid-cols-2 md:gap-20 items-center">
           <div className="space-y-8">
-            <h2 className="text-5xl font-bold tracking-tight">{t('about.storyTitle')}</h2>
-            <div className="space-y-6 text-gray-400 text-lg leading-relaxed">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{t('about.storyTitle')}</h2>
+            <div className="space-y-6 text-base leading-relaxed text-gray-400 sm:text-lg">
               <p>"{t('about.storyP1')}"</p>
               <p>{t('about.storyP2')}</p>
             </div>
-            <div className="pt-4 flex gap-8">
+            <div className="flex gap-6 pt-4 sm:gap-8">
               <div>
                 <p className="text-3xl font-bold text-white">50+</p>
                 <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">Localizations</p>
@@ -207,7 +207,7 @@ export default function About() {
           </div>
           <div className="relative">
             <div className="aspect-square bg-indigo-600 rounded-3xl rotate-3 flex items-center justify-center relative z-10 overflow-hidden group">
-              <Globe2 className="h-48 w-48 text-white/20 animate-pulse" />
+              <Globe2 className="h-32 w-32 text-white/20 animate-pulse sm:h-40 sm:w-40 md:h-48 md:w-48" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
             <div className="absolute -inset-4 border border-indigo-500/30 rounded-3xl -rotate-3 -z-10" />
@@ -216,9 +216,9 @@ export default function About() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-32 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-20">
+      <section className="bg-gray-50 py-20 md:py-32">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="mb-12 text-center md:mb-20">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">{t('about.faqTitle')}</h2>
             <p className="text-gray-500 text-lg">{t('about.faqSubtitle')}</p>
           </div>
@@ -235,13 +235,13 @@ export default function About() {
                   transition={{ delay: i * 0.1 }}
                   className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden flex flex-col shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500"
                 >
-                  <div className="p-10 flex-1 flex flex-col">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6 leading-tight min-h-[4rem]">{faq.q}</h3>
-                    <p className="text-gray-500 text-lg leading-relaxed flex-1">
+                  <div className="flex flex-1 flex-col p-6 sm:p-8 md:p-10">
+                    <h3 className="mb-4 text-xl font-bold leading-tight text-gray-900 sm:mb-6 sm:text-2xl md:min-h-[4rem]">{faq.q}</h3>
+                    <p className="flex-1 text-base leading-relaxed text-gray-500 md:text-lg">
                       {faq.a}
                     </p>
                   </div>
-                  <div className="px-10 py-6 bg-gray-50/50 border-t border-gray-50">
+                  <div className="border-t border-gray-50 bg-gray-50/50 px-6 py-5 sm:px-8 md:px-10 md:py-6">
                     <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Help Article &rarr;</span>
                   </div>
                 </motion.div>
@@ -252,11 +252,11 @@ export default function About() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 pb-48">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="relative p-16 md:p-24 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[3rem] text-white overflow-hidden text-center shadow-2xl shadow-indigo-500/20">
+      <section className="py-20 pb-28 md:py-32 md:pb-40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-indigo-600 to-purple-700 p-8 text-center text-white shadow-2xl shadow-indigo-500/20 sm:p-12 md:rounded-[3rem] md:p-20 lg:p-24">
             <div className="relative z-10 max-w-2xl mx-auto space-y-8">
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tight">{t('about.readyTitle')}</h2>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-6xl">{t('about.readyTitle')}</h2>
               <p className="text-indigo-100 text-lg md:text-xl leading-relaxed font-medium">
                 {t('about.readySubtitle')}
               </p>
