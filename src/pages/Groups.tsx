@@ -124,18 +124,18 @@ export default function Groups() {
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-20 pt-16">
+    <div className="min-h-screen bg-gray-50 pb-20 pt-10 sm:pt-12 md:pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Hero Section */}
-        <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="mb-12 flex flex-col justify-between gap-6 md:mb-16 md:flex-row md:items-end md:gap-8">
           <div className="max-w-2xl">
-            <h1 className="text-5xl font-black text-gray-900 tracking-tight leading-none mb-4">{t('groups.title')}</h1>
-            <p className="text-xl font-medium text-gray-400 italic">{t('groups.subtitle')}</p>
+            <h1 className="mb-4 text-4xl font-black leading-none tracking-tight text-gray-900 sm:text-5xl">{t('groups.title')}</h1>
+            <p className="text-lg font-medium italic text-gray-400 sm:text-xl">{t('groups.subtitle')}</p>
           </div>
           <button 
             onClick={() => setIsCreating(true)}
-            className="group relative px-10 py-5 bg-gray-900 text-white rounded-[2rem] font-black text-sm uppercase tracking-widest shadow-2xl hover:bg-black transition-all overflow-hidden"
+            className="group relative w-full overflow-hidden rounded-[2rem] bg-gray-900 px-6 py-4 text-sm font-black uppercase tracking-widest text-white shadow-2xl transition-all hover:bg-black sm:w-auto sm:px-10 sm:py-5"
           >
              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
              <div className="flex items-center gap-3 relative">
@@ -165,7 +165,7 @@ export default function Groups() {
         </div>
 
         {/* Action Bar */}
-        <div className="bg-white p-4 rounded-[2.5rem] border border-gray-100 shadow-sm mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="mb-12 flex flex-col justify-between gap-4 rounded-[2rem] border border-gray-100 bg-white p-4 shadow-sm sm:gap-6 md:flex-row md:items-center md:rounded-[2.5rem]">
            <div className="relative w-full md:w-96">
              <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
              <input 
@@ -176,9 +176,9 @@ export default function Groups() {
               className="w-full bg-gray-50 border border-gray-100 rounded-[2rem] pl-14 pr-6 py-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-indigo-50 transition-all"
              />
            </div>
-           <div className="flex items-center gap-2">
-             <button className="px-6 py-3 bg-gray-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest">{t('groups.allCohorts')}</button>
-             <button className="px-6 py-3 bg-white text-gray-400 hover:text-gray-900 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">{t('groups.featuredOnly')}</button>
+           <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
+             <button className="rounded-2xl bg-gray-900 px-6 py-3 text-[10px] font-black uppercase tracking-widest text-white">{t('groups.allCohorts')}</button>
+             <button className="rounded-2xl bg-white px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-400 transition-all hover:text-gray-900">{t('groups.featuredOnly')}</button>
            </div>
         </div>
 
@@ -194,7 +194,7 @@ export default function Groups() {
                  transition={{ delay: i * 0.05 }}
                  className="group bg-white rounded-[3rem] p-1 border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/5 transition-all relative"
                >
-                 <div className="p-10 space-y-8">
+                 <div className="space-y-6 p-6 sm:p-8 lg:p-10">
                    <div className="flex justify-between items-start">
                       <div className={cn(
                         "h-16 w-16 rounded-[2rem] flex items-center justify-center transition-all group-hover:scale-110",
@@ -229,7 +229,7 @@ export default function Groups() {
                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{cohort.membersCount || 0} {t('groups.domainLeads')}</span>
                    </div>
 
-                   <div className="flex gap-3">
+                   <div className="flex flex-col gap-3 sm:flex-row">
                       <Link 
                         to={`/community?cohort=${cohort.id}`} 
                         className="flex-1 py-4 bg-gray-50 text-gray-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-50 hover:text-indigo-600 border border-transparent hover:border-indigo-100 transition-all text-center flex items-center justify-center gap-2"
@@ -280,9 +280,9 @@ export default function Groups() {
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                className="bg-white w-full max-w-xl rounded-[3rem] p-12 shadow-2xl relative z-10 border border-gray-100"
+                className="relative z-10 w-full max-w-xl rounded-[2.5rem] border border-gray-100 bg-white p-6 shadow-2xl sm:p-8 lg:rounded-[3rem] lg:p-12"
               >
-                 <div className="flex items-center gap-4 mb-10">
+                 <div className="mb-8 flex items-start gap-4 sm:mb-10">
                    <div className="h-14 w-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-100">
                      <Users className="h-6 w-6" />
                    </div>
@@ -315,7 +315,7 @@ export default function Groups() {
                         className="w-full bg-gray-50 border border-gray-100 rounded-3xl px-6 py-4 font-bold focus:outline-none focus:ring-4 focus:ring-indigo-50"
                        />
                     </div>
-                    <div className="flex justify-end gap-4">
+                    <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-4">
                       <button 
                         type="button" 
                         onClick={() => setIsCreating(false)}

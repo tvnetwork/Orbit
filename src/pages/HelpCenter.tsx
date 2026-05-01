@@ -49,15 +49,35 @@ export default function HelpCenter() {
 
       <div className="max-w-7xl mx-auto px-4 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
-          {categories.map((cat, i) => (
-            <div key={i} className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
-              <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-fit group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:-rotate-6">
-                <cat.icon className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-bold mt-6 mb-2">{cat.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{cat.desc}</p>
+          {/* Link each category to its HTML guide */}
+          <a href="/public/guides/GettingStarted.html" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
+            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-fit group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:-rotate-6">
+              <Book className="h-6 w-6" />
             </div>
-          ))}
+            <h3 className="text-xl font-bold mt-6 mb-2">{t('help.gettingStarted')}</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">{t('help.gettingStartedDesc')}</p>
+          </a>
+          <a href="/public/guides/PaymentsAndFees.html" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
+            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-fit group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:-rotate-6">
+              <FileText className="h-6 w-6" />
+            </div>
+            <h3 className="text-xl font-bold mt-6 mb-2">{t('help.paymentsFees')}</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">{t('help.paymentsFeesDesc')}</p>
+          </a>
+          <a href="/public/guides/SafetyAndPrivacy.html" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
+            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-fit group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:-rotate-6">
+              <Search className="h-6 w-6" />
+            </div>
+            <h3 className="text-xl font-bold mt-6 mb-2">{t('help.safetyPrivacy')}</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">{t('help.safetyPrivacyDesc')}</p>
+          </a>
+          <a href="/public/guides/Collaboration.html" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
+            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-fit group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:-rotate-6">
+              <MessageCircle className="h-6 w-6" />
+            </div>
+            <h3 className="text-xl font-bold mt-6 mb-2">{t('help.collaboration')}</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">{t('help.collaborationDesc')}</p>
+          </a>
         </div>
 
         <div className="space-y-8 max-w-4xl mx-auto">

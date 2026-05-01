@@ -2,30 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { Globe, X, Check } from 'lucide-react';
-
-const languageNames: Record<string, string> = {
-  en: 'English',
-  es: 'Español',
-  pt: 'Português',
-  it: 'Italiano',
-  fr: 'Français',
-  de: 'Deutsch',
-  ja: '日本語',
-  zh: '中文',
-  ko: '한국어',
-  ar: 'العربية',
-  hi: 'हिन्दी',
-  ru: 'Русский',
-};
+import { availableLanguages } from '../languages';
 
 export default function TranslationPrompt() {
   const { i18n } = useTranslation();
   const [suggestion, setSuggestion] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const languageNames = Object.fromEntries(
+    availableLanguages.map(({ code, name }) => [code, name])
+  ) as Record<string, string>;
 
   useEffect(() => {
     const browserLang = navigator.language.split('-')[0];
-    const currentLang = i18n.language.split('-')[0];
+    const currentLang = (i18n.resolvedLanguage ?? i18n.language).split('-')[0];
     const dismissed = localStorage.getItem('translation-prompt-dismissed');
 
     if (browserLang !== currentLang && languageNames[browserLang] && !dismissed) {
@@ -33,6 +22,9 @@ export default function TranslationPrompt() {
       const timer = setTimeout(() => setIsVisible(true), 2000);
       return () => clearTimeout(timer);
     }
+
+    setSuggestion(null);
+    setIsVisible(false);
   }, [i18n.language]);
 
   const handleSwitch = () => {

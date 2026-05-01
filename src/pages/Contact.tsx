@@ -43,7 +43,7 @@ export default function Contact() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white p-12 rounded-[3rem] shadow-xl text-center max-w-lg space-y-6"
+          className="max-w-lg space-y-6 rounded-[2.5rem] bg-white p-8 text-center shadow-xl sm:p-12 sm:rounded-[3rem]"
         >
           <div className="h-20 w-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 mx-auto">
             <CheckCircle2 className="h-10 w-10" />
@@ -63,22 +63,22 @@ export default function Contact() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-12"
+            className="space-y-8 md:space-y-12"
           >
             <div className="space-y-6">
-              <h1 className="text-6xl font-bold tracking-tight text-gray-900 leading-none">{t('contact.heroTitle')}</h1>
-              <p className="text-xl text-gray-500 leading-relaxed max-w-lg">
+              <h1 className="text-4xl font-bold leading-none tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">{t('contact.heroTitle')}</h1>
+              <p className="max-w-lg text-lg leading-relaxed text-gray-500 md:text-xl">
                 {t('contact.heroSubtitle')}
               </p>
             </div>
 
             <div className="space-y-8">
-              <div className="flex items-center gap-6">
+              <div className="flex items-start gap-4 sm:gap-6">
                 <div className="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 text-indigo-600">
                   <Mail className="h-6 w-6" />
                 </div>
@@ -87,7 +87,7 @@ export default function Contact() {
                   <p className="text-lg font-bold">support@orbit.global</p>
                 </div>
               </div>
-              <div className="flex items-center gap-6">
+              <div className="flex items-start gap-4 sm:gap-6">
                 <div className="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 text-purple-600">
                   <MapPin className="h-6 w-6" />
                 </div>
@@ -98,7 +98,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="relative min-h-[400px]">
+            <div className="relative min-h-[320px] sm:min-h-[400px]">
               <AnimatePresence mode="wait">
                 {!showChat ? (
                   <motion.div 
@@ -106,7 +106,7 @@ export default function Contact() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    className="p-8 bg-indigo-600 rounded-[2.5rem] text-white space-y-4 shadow-xl shadow-indigo-200"
+                    className="space-y-4 rounded-[2rem] bg-indigo-600 p-6 text-white shadow-xl shadow-indigo-200 sm:rounded-[2.5rem] sm:p-8"
                   >
                     <div className="flex items-center gap-3">
                       <MessageSquare className="h-6 w-6" />
@@ -126,11 +126,11 @@ export default function Contact() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
-                    className="h-[600px] relative"
+                    className="relative h-[70vh] min-h-[420px] max-h-[600px]"
                   >
                     <button 
                       onClick={() => setShowChat(false)}
-                      className="absolute -top-12 left-0 text-indigo-600 font-bold flex items-center gap-2 hover:gap-3 transition-all"
+                      className="absolute -top-10 left-0 flex items-center gap-2 text-sm font-bold text-indigo-600 transition-all hover:gap-3 sm:-top-12"
                     >
                       <ArrowLeft className="h-4 w-4" /> Back to options
                     </button>
@@ -145,9 +145,9 @@ export default function Contact() {
             onSubmit={handleSubmit}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-12 rounded-[3rem] border border-gray-100 shadow-xl shadow-gray-200/50 space-y-8"
+            className="space-y-6 rounded-[2.5rem] border border-gray-100 bg-white p-6 shadow-xl shadow-gray-200/50 sm:space-y-8 sm:p-8 lg:rounded-[3rem] lg:p-12"
           >
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700">{t('contact.firstName')}</label>
                 <input 

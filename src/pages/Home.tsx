@@ -19,23 +19,28 @@ import { useAuth } from '../App';
 import { useTranslation } from 'react-i18next';
 import { collection, getDocs, query, where, limit, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { availableLanguages } from '../languages';
 
 export default function Home() {
   const { user, login } = useAuth();
   const { t } = useTranslation();
   const [counts, setCounts] = useState({ jobs: 0, talent: 0, volume: 0, rating: 0 });
   const [catCounts, setCatCounts] = useState<Record<string, number>>({});
+  const featuredLanguages = availableLanguages.slice(0, 7);
 
   useEffect(() => {
     // Real-time listener for jobs and categories
     const jobsQ = query(collection(db, 'jobs'), where('status', '==', 'open'), limit(500));
     const unsubJobs = onSnapshot(jobsQ, (snap) => {
       const categories: Record<string, number> = {};
+      let totalVolume = 0;
       snap.forEach(d => {
-        const cat = d.data().category;
+        const data = d.data();
+        const cat = data.category;
+        totalVolume += Number(data.budget || 0);
         if (cat) categories[cat] = (categories[cat] || 0) + 1;
       });
-      setCounts(prev => ({ ...prev, jobs: snap.size }));
+      setCounts(prev => ({ ...prev, jobs: snap.size, volume: totalVolume }));
       setCatCounts(categories);
     });
 
@@ -58,17 +63,9 @@ export default function Home() {
       }));
     });
 
-    // Real-time listener for volume
-    const txQ = query(collection(db, 'transactions'), limit(1000));
-    const unsubTx = onSnapshot(txQ, (snap) => {
-      const totalVolume = snap.docs.reduce((acc, doc) => acc + (doc.data().amount || 0), 0);
-      setCounts(prev => ({ ...prev, volume: totalVolume }));
-    });
-
     return () => {
       unsubJobs();
       unsubTalent();
-      unsubTx();
     };
   }, []);
 
@@ -301,17 +298,14 @@ export default function Home() {
                   Work in your native tongue. <span className="text-indigo-600">Collaborate globally.</span>
                 </h3>
                 <p className="text-xl text-gray-500 leading-relaxed font-medium">
-                  We've introduced support for <span className="text-gray-900 font-bold">50+ languages</span> with automatic location detection. VyntaJobs now feels local, wherever you are.
+                  We've introduced support for <span className="text-gray-900 font-bold">{availableLanguages.length} live languages</span> with automatic location detection. VyntaJobs now feels local, wherever you are.
                 </p>
                 <div className="flex flex-wrap gap-4 pt-4">
-                  {['English', 'Español', 'Français', 'Deutsch', '日本語', '中文', 'العربية'].map((lang, idx) => (
-                    <span key={idx} className="px-5 py-2.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-700 shadow-sm">
-                      {lang}
+                  {featuredLanguages.map((language) => (
+                    <span key={language.code} className="px-5 py-2.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-700 shadow-sm">
+                      {language.name}
                     </span>
                   ))}
-                  <span className="px-5 py-2.5 bg-indigo-600 text-white rounded-2xl text-sm font-bold shadow-lg shadow-indigo-100">
-                    +43 more
-                  </span>
                 </div>
               </div>
               <div className="flex-1 relative">

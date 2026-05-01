@@ -2,71 +2,20 @@ import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Languages, ChevronDown, Search, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-
-const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'pt', name: 'Português', flag: '🇵🇹' },
-  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'ja', name: '日本語', flag: '🇯🇵' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' },
-  { code: 'ko', name: '한국어', flag: '🇰🇷' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
-  { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
-  { code: 'pl', name: 'Polski', flag: '🇵🇱' },
-  { code: 'sv', name: 'Svenska', flag: '🇸🇪' },
-  { code: 'vi', name: 'Tiếng Việt', flag: '🇻🇳' },
-  { code: 'th', name: 'ไทย', flag: '🇹🇭' },
-  { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' },
-  { code: 'el', name: 'Ελληνικά', flag: '🇬🇷' },
-  { code: 'he', name: 'עברית', flag: '🇮🇱' },
-  { code: 'cs', name: 'Čeština', flag: '🇨🇿' },
-  { code: 'hu', name: 'Magyar', flag: '🇭🇺' },
-  { code: 'ro', name: 'Română', flag: '🇷🇴' },
-  { code: 'uk', name: 'Українська', flag: '🇺🇦' },
-  { code: 'no', name: 'Norsk', flag: '🇳🇴' },
-  { code: 'da', name: 'Dansk', flag: '🇩🇰' },
-  { code: 'fi', name: 'Suomi', flag: '🇫🇮' },
-  { code: 'sk', name: 'Slovenčina', flag: '🇸🇰' },
-  { code: 'bg', name: 'Български', flag: '🇧🇬' },
-  { code: 'hr', name: 'Hrvatski', flag: '🇭🇷' },
-  { code: 'sr', name: 'Српски', flag: '🇷🇸' },
-  { code: 'sl', name: 'Slovenščina', flag: '🇸🇮' },
-  { code: 'et', name: 'Eesti', flag: '🇪🇪' },
-  { code: 'lv', name: 'Latviešu', flag: '🇱🇻' },
-  { code: 'lt', name: 'Lietuvių', flag: '🇱🇹' },
-  { code: 'fa', name: 'فارسی', flag: '🇮🇷' },
-  { code: 'bn', name: 'বাংলা', flag: '🇧🇩' },
-  { code: 'pa', name: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
-  { code: 'te', name: 'తెలుగు', flag: '🇮🇳' },
-  { code: 'ta', name: 'தமிழ்', flag: '🇮🇳' },
-  { code: 'ko', name: '한국어', flag: '🇰🇷' },
-  { code: 'ms', name: 'Bahasa Melayu', flag: '🇲🇾' },
-  { code: 'sw', name: 'Kiswahili', flag: '🇰🇪' },
-  { code: 'af', name: 'Afrikaans', flag: '🇿🇦' },
-  { code: 'tl', name: 'Tagalog', flag: '🇵🇭' },
-  { code: 'is', name: 'Íslenska', flag: '🇮🇸' },
-  { code: 'ga', name: 'Gaeilge', flag: '🇮🇪' },
-  { code: 'cy', name: 'Cymraeg', flag: '🇬🇧' },
-  { code: 'mt', name: 'Malti', flag: '🇲🇹' },
-];
+import { availableLanguages } from '../languages';
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const activeCode = i18n.resolvedLanguage?.split('-')[0] ?? i18n.language.split('-')[0];
 
   const currentLanguage = useMemo(() => 
-    languages.find(lang => lang.code === i18n.language) || languages[0]
-  , [i18n.language]);
+    availableLanguages.find(lang => lang.code === activeCode) || availableLanguages[0]
+  , [activeCode]);
 
   const filteredLanguages = useMemo(() => 
-    languages.filter(lang => 
+    availableLanguages.filter(lang => 
       lang.name.toLowerCase().includes(search.toLowerCase()) ||
       lang.code.toLowerCase().includes(search.toLowerCase())
     )
@@ -125,7 +74,7 @@ export default function LanguageSwitcher() {
                       key={lang.code}
                       onClick={() => changeLanguage(lang.code)}
                       className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all text-sm font-bold ${
-                        i18n.language === lang.code 
+                        activeCode === lang.code 
                           ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' 
                           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                       }`}
@@ -134,7 +83,7 @@ export default function LanguageSwitcher() {
                         <span className="text-xl">{lang.flag}</span>
                         {lang.name}
                       </div>
-                      {i18n.language === lang.code && <Check className="h-4 w-4" />}
+                      {activeCode === lang.code && <Check className="h-4 w-4" />}
                     </button>
                   ))
                 ) : (

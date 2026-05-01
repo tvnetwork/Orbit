@@ -133,14 +133,14 @@ export default function ContractRoom() {
   );
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="flex min-h-screen flex-col bg-gray-50 lg:h-screen lg:overflow-hidden">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 flex items-center justify-between px-8 py-5 flex-shrink-0 z-10">
-        <div className="flex items-center gap-6">
+      <header className="z-10 flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 bg-white px-4 py-4 sm:px-6 lg:flex-nowrap lg:items-center lg:px-8 lg:py-5 flex-shrink-0">
+        <div className="flex min-w-0 items-center gap-3 sm:gap-4 lg:gap-6">
           <Link to={profile?.role === 'client' ? '/client/dashboard' : '/freelancer/dashboard'} className="p-2 hover:bg-gray-50 rounded-xl transition-colors">
             <ChevronLeft className="h-6 w-6 text-gray-400" />
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
             <div className="relative">
               <img 
                 src={contract?.otherParty?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(contract?.otherParty?.displayName || 'User')}`} 
@@ -150,8 +150,8 @@ export default function ContractRoom() {
               />
               <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />
             </div>
-            <div>
-              <h2 className="text-xl font-black text-gray-900 tracking-tight leading-tight">
+            <div className="min-w-0">
+              <h2 className="truncate text-lg font-black leading-tight tracking-tight text-gray-900 sm:text-xl">
                 {contract?.otherParty?.displayName || 'Project Partner'}
               </h2>
               <div className="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-0.5">
@@ -162,7 +162,7 @@ export default function ContractRoom() {
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex w-full items-center justify-between gap-3 sm:justify-end sm:gap-4 lg:w-auto lg:gap-6">
           <div className="text-right hidden md:block">
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Contract Value</p>
             <p className="text-xl font-black text-gray-900 leading-none tracking-tight">${contract?.totalAmount}</p>
@@ -179,7 +179,7 @@ export default function ContractRoom() {
                    createdAt: serverTimestamp()
                  });
               }}
-              className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-bold hover:bg-indigo-100 transition-colors"
+              className="rounded-xl bg-indigo-50 px-3 py-2 text-[11px] font-bold text-indigo-600 transition-colors hover:bg-indigo-100 sm:px-4 sm:text-xs"
             >
               Request Review
             </button>
@@ -237,16 +237,16 @@ export default function ContractRoom() {
       </header>
 
       {/* Main Workspace */}
-      <div className="flex-1 flex overflow-hidden lg:grid lg:grid-cols-12">
+      <div className="flex flex-1 flex-col overflow-y-auto lg:grid lg:grid-cols-12 lg:overflow-hidden">
         {/* Left: Chat Side */}
-        <div className="col-span-12 lg:col-span-7 flex flex-col bg-white border-r border-gray-100 h-full overflow-hidden">
-          <div className="p-4 bg-indigo-600 flex items-center justify-center gap-2">
+        <div className="col-span-12 flex min-h-[60vh] flex-col overflow-hidden border-b border-gray-100 bg-white lg:col-span-7 lg:h-full lg:border-b-0 lg:border-r">
+          <div className="flex items-center justify-center gap-2 bg-indigo-600 px-4 py-3 text-center">
             <AlertCircle className="h-4 w-4 text-white" />
             <span className="text-[10px] font-black text-white uppercase tracking-widest">Always communicate within the secure workspace for contract protection.</span>
           </div>
           
           {/* Messages Area */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-12 space-y-8">
+          <div ref={scrollRef} className="flex-1 space-y-6 overflow-y-auto p-4 sm:p-6 lg:space-y-8 lg:p-12">
             {messages.map((msg, i) => {
               const isMine = msg.senderId === user?.uid;
               return (
@@ -255,12 +255,12 @@ export default function ContractRoom() {
                   animate={{ opacity: 1, y: 0 }}
                   key={msg.id}
                   className={cn(
-                    "flex flex-col max-w-[80%]",
+                    "flex max-w-[88%] flex-col sm:max-w-[80%]",
                     isMine ? "ml-auto items-end" : "items-start"
                   )}
                 >
                   <div className={cn(
-                    "p-6 text-sm font-medium leading-relaxed shadow-sm",
+                    "p-4 text-sm font-medium leading-relaxed shadow-sm sm:p-5 lg:p-6",
                     isMine 
                       ? "bg-indigo-600 text-white rounded-[2.5rem] rounded-tr-none" 
                       : "bg-gray-50 text-gray-900 border border-gray-100 rounded-[2.5rem] rounded-tl-none"
@@ -277,8 +277,8 @@ export default function ContractRoom() {
           </div>
 
           {/* Input Area */}
-          <div className="p-8 border-t border-gray-100 bg-white">
-            <form onSubmit={sendMessage} className="flex items-center gap-4 bg-gray-50 p-2 rounded-[2.5rem] border border-gray-100 shadow-sm focus-within:ring-4 focus-within:ring-indigo-50 transition-all">
+          <div className="border-t border-gray-100 bg-white p-4 sm:p-6 lg:p-8">
+            <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-[2rem] border border-gray-100 bg-gray-50 p-2 shadow-sm transition-all focus-within:ring-4 focus-within:ring-indigo-50 sm:gap-4 sm:rounded-[2.5rem]">
               <button type="button" className="p-4 text-gray-400 hover:text-indigo-600 transition-colors">
                 <Paperclip className="h-6 w-6" />
               </button>
@@ -300,8 +300,8 @@ export default function ContractRoom() {
         </div>
 
         {/* Right: Operational Side */}
-        <div className="hidden lg:flex lg:col-span-5 flex-col h-full overflow-hidden bg-gray-50/50">
-          <div className="flex-1 overflow-y-auto p-12 space-y-12">
+        <div className="flex flex-col bg-gray-50/50 lg:col-span-5 lg:h-full lg:overflow-hidden">
+          <div className="flex-1 space-y-8 overflow-y-auto p-4 sm:p-6 lg:space-y-12 lg:p-12">
             
             {/* Escrow Status Card */}
             <div className="bg-gray-900 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden">
@@ -315,7 +315,7 @@ export default function ContractRoom() {
                </div>
                
                <div className="space-y-6">
-                 <div className="grid grid-cols-2 gap-6">
+                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
                    <div className="bg-white/5 p-6 rounded-3xl border border-white/5">
                      <p className="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-1">Total Escrowed</p>
                      <p className="text-2xl font-black">${contract?.totalAmount}</p>

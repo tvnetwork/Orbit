@@ -1,20 +1,79 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# VyntaJobs
 
-# Run and deploy your AI Studio app
+This repository lives in the `Orbit` workspace, but the actual app/product name is VyntaJobs. It is a React + Vite application for the VyntaJobs marketplace experience, with Firebase authentication, Firestore integration, and an i18next translation system organized in isolated per-language files.
 
-This contains everything you need to run your app locally.
+## Stack
 
-View your app in AI Studio: https://ai.studio/apps/7e3e1f3e-acff-4c4f-9c77-f9d76ee5575e
+- React 19
+- Vite 6
+- TypeScript
+- Firebase Auth + Firestore
+- i18next + react-i18next
+- Tailwind CSS 4
 
-## Run Locally
+## Local Setup
 
-**Prerequisites:**  Node.js
+Prerequisites:
 
+- Node.js 20+
+- npm
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create your local environment from [.env.example](C:/Users/DELL/Documents/GitHub/Orbit/.env.example) and provide the values you need for local development.
+
+Run the app:
+
+```bash
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+## Translations
+
+Languages are stored in [src/languages](C:/Users/DELL/Documents/GitHub/Orbit/src/languages), one file per locale. The shared registry in [src/languages/index.ts](C:/Users/DELL/Documents/GitHub/Orbit/src/languages/index.ts) controls which languages are available in the UI.
+
+Currently registered languages:
+
+- `en` English
+- `es` Spanish
+- `fr` French
+- `de` German
+- `it` Italian
+- `pt` Portuguese
+- `ar` Arabic
+- `ja` Japanese
+- `zh` Chinese
+- `hi` Hindi
+- `ru` Russian
+
+Useful translation commands:
+
+```bash
+npm run i18n:check
+npm run i18n:translate
+```
+
+- `npm run i18n:check` reports missing keys against English.
+- `npm run i18n:translate` fills missing keys and can generate registered locale files from the English source.
+
+To add a new language:
+
+1. Copy [src/languages/_template.ts](C:/Users/DELL/Documents/GitHub/Orbit/src/languages/_template.ts) to a new locale file.
+2. Register the file in [src/languages/index.ts](C:/Users/DELL/Documents/GitHub/Orbit/src/languages/index.ts).
+3. Run `npm run i18n:check`.
+4. Review or refine the generated copy before shipping.
+
+## Notes
+
+- The app uses runtime fallback to English for any untranslated keys.
+- Translation coverage should still be reviewed by a human before release, especially for newly generated locales.

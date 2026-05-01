@@ -101,18 +101,18 @@ export default function Wallet() {
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-20 pt-16 relative">
+    <div className="relative min-h-screen bg-gray-50 pb-20 pt-10 sm:pt-12 md:pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+        <div className="mb-10 flex flex-col justify-between gap-6 md:mb-12 md:flex-row md:items-end md:gap-8">
           <div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">{t('wallet.title')}</h1>
+            <h1 className="text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">{t('wallet.title')}</h1>
             <p className="text-gray-500 mt-1 font-medium italic">{t('wallet.subtitle')}</p>
           </div>
-          <div className="flex items-center gap-4">
-             <button className="bg-gray-900 text-white px-8 py-4 rounded-2xl font-black text-sm shadow-xl shadow-gray-200 hover:bg-black transition-all flex items-center gap-2">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+             <button className="flex items-center justify-center gap-2 rounded-2xl bg-gray-900 px-6 py-4 text-sm font-black text-white shadow-xl shadow-gray-200 transition-all hover:bg-black sm:px-8">
                <ArrowUpRight className="h-4 w-4" /> {t('wallet.withdrawFunds')}
              </button>
-             <button className="bg-white border border-gray-100 p-4 rounded-2xl hover:bg-gray-50 transition-all">
+             <button className="rounded-2xl border border-gray-100 bg-white p-4 transition-all hover:bg-gray-50 sm:self-auto">
                <Download className="h-5 w-5 text-gray-400" />
              </button>
           </div>
@@ -124,8 +124,8 @@ export default function Wallet() {
           <div className="lg:col-span-8 space-y-8">
             
             {/* Balance Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-indigo-600 p-10 rounded-[3rem] text-white shadow-2xl shadow-indigo-200 relative overflow-hidden group">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+              <div className="group relative overflow-hidden rounded-[2.5rem] bg-indigo-600 p-6 text-white shadow-2xl shadow-indigo-200 sm:p-8 lg:rounded-[3rem] lg:p-10">
                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[60px] rounded-full -mr-16 -mt-16" />
                  <div className="relative z-10 space-y-8">
                    <div className="flex justify-between items-start">
@@ -136,7 +136,7 @@ export default function Wallet() {
                    </div>
                    <div>
                      <p className="text-sm font-black text-white/60 mb-1 uppercase tracking-widest">{t('wallet.availableBalance')}</p>
-                     <h3 className="text-5xl font-black tracking-tight">${balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
+                     <h3 className="text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">${balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
                    </div>
                    <div className="flex items-center justify-between pt-8 border-t border-white/10">
                       <div className="flex items-center gap-2 text-indigo-100 font-bold text-xs">
@@ -148,7 +148,7 @@ export default function Wallet() {
                  </div>
               </div>
 
-              <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm space-y-10">
+              <div className="space-y-8 rounded-[2.5rem] border border-gray-100 bg-white p-6 shadow-sm sm:p-8 lg:rounded-[3rem] lg:p-10 lg:space-y-10">
                  <div className="flex items-center justify-between">
                    <h3 className="text-xl font-black text-gray-900 tracking-tight">{t('wallet.activeEscrow')}</h3>
                    <div className="h-10 w-10 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600">
@@ -157,7 +157,7 @@ export default function Wallet() {
                  </div>
                  <div>
                    <p className="text-sm font-black text-gray-400 mb-1 uppercase tracking-widest">{t('wallet.heldInProtection')}</p>
-                   <h3 className="text-4xl font-black text-gray-900 tracking-tight">${escrow.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
+                   <h3 className="text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">${escrow.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
                  </div>
                  <div className="bg-gray-50 p-4 rounded-2xl flex items-center justify-center gap-2">
                     <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{t('wallet.releasingNote')}</span>
@@ -166,10 +166,10 @@ export default function Wallet() {
             </div>
 
             {/* Cash Flow Chart */}
-            <div className="bg-white p-12 rounded-[3.5rem] border border-gray-100 shadow-sm">
-               <div className="flex items-center justify-between mb-12">
+            <div className="rounded-[2.5rem] border border-gray-100 bg-white p-6 shadow-sm sm:p-8 lg:rounded-[3.5rem] lg:p-12">
+               <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between lg:mb-12">
                  <h3 className="text-2xl font-black text-gray-900 tracking-tight">{t('wallet.cashVelocity')}</h3>
-                 <div className="flex gap-2">
+                 <div className="flex flex-wrap gap-2">
                    <button className="px-4 py-2 bg-indigo-50 rounded-xl text-xs font-bold text-indigo-600">{t('wallet.thisMonth')}</button>
                    <button className="px-4 py-2 bg-gray-50 rounded-xl text-xs font-bold text-gray-400">{t('wallet.totalYear')}</button>
                  </div>
@@ -191,7 +191,7 @@ export default function Wallet() {
                    </AreaChart>
                  </ResponsiveContainer>
                </div>
-               <div className="mt-8 flex justify-center gap-10">
+               <div className="mt-8 flex flex-wrap justify-center gap-6 sm:gap-10">
                  <div className="flex items-center gap-3">
                    <div className="h-3 w-3 bg-emerald-500 rounded-full" />
                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{t('wallet.inflow')}</span>
@@ -208,8 +208,8 @@ export default function Wallet() {
                <h3 className="text-2xl font-black text-gray-900 tracking-tight px-4">{t('wallet.ledgerHistory')}</h3>
                <div className="space-y-4">
                  {transactions.length > 0 ? transactions.map(tx => (
-                   <div key={tx.id} className="bg-white p-6 rounded-[2.5rem] border border-gray-100 hover:shadow-lg hover:shadow-indigo-500/5 transition-all flex items-center justify-between group">
-                      <div className="flex items-center gap-6">
+                   <div key={tx.id} className="group flex flex-col gap-4 rounded-[2rem] border border-gray-100 bg-white p-5 transition-all hover:shadow-lg hover:shadow-indigo-500/5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6 sm:rounded-[2.5rem]">
+                      <div className="flex items-center gap-4 sm:gap-6">
                         <div className={cn(
                           "h-14 w-14 rounded-2xl flex items-center justify-center",
                           tx.type === 'withdrawal' ? "bg-red-50 text-red-500" : "bg-emerald-50 text-emerald-600"
@@ -221,7 +221,7 @@ export default function Wallet() {
                           <p className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest">ID: {tx.id.slice(0, 10).toUpperCase()}</p>
                         </div>
                       </div>
-                      <div className="text-right">
+                      <div className="text-left sm:text-right">
                         <p className={cn(
                           "text-xl font-black",
                           tx.type === 'withdrawal' ? "text-red-500" : "text-emerald-500"
@@ -243,7 +243,7 @@ export default function Wallet() {
           </div>
 
           {/* Right Sidebar */}
-          <div className="lg:col-span-4 space-y-8 sticky top-28">
+          <div className="space-y-8 lg:col-span-4 lg:sticky lg:top-28 lg:self-start">
              {/* Payment Methods */}
              <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
                 <div className="flex items-center justify-between mb-10">

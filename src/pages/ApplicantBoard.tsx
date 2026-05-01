@@ -92,8 +92,8 @@ export default function ApplicantBoard() {
   return (
     <div className="bg-gray-50 min-h-screen pb-24">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 py-10 shadow-sm">
-        <div className="max-w-[1600px] mx-auto px-8">
+      <div className="border-b border-gray-100 bg-white py-6 shadow-sm sm:py-8 md:py-10">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4 mb-6">
             <Link to="/client/dashboard" className="p-2 hover:bg-gray-50 rounded-xl transition-colors">
               <ChevronLeft className="h-6 w-6 text-gray-400" />
@@ -104,7 +104,7 @@ export default function ApplicantBoard() {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
+          <div className="flex flex-col items-stretch justify-between gap-4 md:flex-row md:items-center md:gap-6">
             <div className="relative w-full md:w-96">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input 
@@ -115,11 +115,11 @@ export default function ApplicantBoard() {
                 className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
               />
             </div>
-            <div className="flex items-center gap-4">
-              <div className="text-sm font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-4 py-2 rounded-xl">
+            <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 md:w-auto">
+              <div className="rounded-xl bg-gray-50 px-4 py-2 text-center text-sm font-bold uppercase tracking-widest text-gray-400">
                 {proposals.length} Total Applicants
               </div>
-              <button className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-indigo-100">
+              <button className="flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-100">
                 <Filter className="h-4 w-4" />
                 Advanced Sort
               </button>
@@ -129,10 +129,10 @@ export default function ApplicantBoard() {
       </div>
 
       {/* Kanban Board */}
-      <div className="max-w-[1600px] mx-auto px-8 py-12">
-        <div className="flex gap-8 overflow-x-auto pb-8 snap-x">
+      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 md:py-10 lg:px-8 lg:py-12">
+        <div className="flex gap-4 overflow-x-auto pb-6 snap-x sm:gap-6 md:gap-8 md:pb-8">
           {COLUMNS.map((column) => (
-            <div key={column.id} className="w-[350px] shrink-0 snap-start">
+            <div key={column.id} className="w-[300px] shrink-0 snap-start sm:w-[320px] md:w-[350px]">
               <div className="flex items-center justify-between mb-6 px-2">
                 <div className="flex items-center gap-3">
                   <h3 className="font-black text-gray-900 tracking-tight">{column.title}</h3>
@@ -165,7 +165,7 @@ export default function ApplicantBoard() {
                 </div>
               </div>
 
-              <div className="space-y-4 min-h-[500px]">
+              <div className="min-h-[420px] space-y-4 sm:min-h-[500px]">
                 {proposals
                   .filter(p => p.status === column.id)
                   .filter(p => p.freelancer?.displayName?.toLowerCase().includes(searchQuery.toLowerCase()))
