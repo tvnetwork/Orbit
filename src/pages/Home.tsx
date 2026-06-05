@@ -108,11 +108,11 @@ export default function Home() {
               <span>{t('home.heroTagline')}</span>
             </motion.div>
 
-            <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl lg:text-7xl font-sans font-bold tracking-tight text-gray-900 leading-[1.1]">
+            <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl lg:text-7xl font-sans font-bold tracking-tight text-gray-900 dark:text-white leading-[1.1]">
               {t('home.heroTitleBefore')}<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">{t('home.universeWord')}</span>{t('home.heroTitleAfter')}
             </motion.h1>
             
-            <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed px-4">
+            <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed px-4">
               {t('home.heroSubtitle')}
             </motion.p>
 
@@ -134,7 +134,7 @@ export default function Home() {
               )}
               <Link 
                 to="/jobs"
-                className="w-full sm:w-auto bg-white text-gray-900 border-2 border-gray-100 px-8 py-4 rounded-2xl font-bold text-lg hover:border-gray-300 transition-all"
+                className="w-full sm:w-auto bg-white dark:bg-slate-900 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-slate-700 px-8 py-4 rounded-2xl font-bold text-lg hover:border-gray-300 transition-all"
               >
                 {t('common.browseProjects')}
               </Link>
@@ -181,7 +181,7 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-24 relative overflow-hidden bg-white">
+      <section className="py-24 relative overflow-hidden bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -190,8 +190,8 @@ export default function Home() {
             className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16"
           >
             <div className="space-y-4">
-              <h2 className="text-4xl font-bold text-gray-900 tracking-tight">{t('home.exploreTitle')}</h2>
-              <p className="text-gray-500 max-w-xl text-lg">{t('home.exploreSubtitle')}</p>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">{t('home.exploreTitle')}</h2>
+              <p className="text-gray-500 dark:text-gray-400 max-w-xl text-lg">{t('home.exploreSubtitle')}</p>
             </div>
             <Link to="/jobs" className="group flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-700 transition-colors py-2">
               {t('home.browseAll')} <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -219,7 +219,7 @@ export default function Home() {
                 whileHover={{ y: -5, scale: 1.01 }}
                 onClick={() => window.location.href = '/jobs'}
                 className={cn(
-                  "p-8 rounded-[2rem] border border-gray-100 hover:border-indigo-200 transition-all cursor-pointer group relative overflow-hidden bg-white shadow-sm hover:shadow-2xl hover:shadow-indigo-500/5",
+                  "p-8 rounded-[2rem] border border-gray-100 dark:border-slate-700 hover:border-indigo-200 transition-all cursor-pointer group relative overflow-hidden bg-white dark:bg-slate-900 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/5",
                   cat.span
                 )}
               >
@@ -228,11 +228,11 @@ export default function Home() {
                     <cat.icon className="h-8 w-8" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors">{cat.title}</h3>
-                    <p className="text-gray-500 font-medium">{cat.count}</p>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-indigo-600 transition-colors">{cat.title}</h3>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium">{cat.count}</p>
                   </div>
                 </div>
-                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-gray-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-gray-50 dark:bg-slate-800 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </motion.div>
             ))}
           </motion.div>
@@ -240,7 +240,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-24 bg-gray-50 overflow-hidden">
+      <section className="py-24 bg-gray-50 dark:bg-slate-800 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             variants={containerVariants}
@@ -258,9 +258,9 @@ export default function Home() {
                 key={idx} 
                 variants={itemVariants}
                 whileHover={{ scale: 1.02 }}
-                className="bg-white p-8 rounded-3xl border border-gray-100 text-center space-y-2 shadow-sm shadow-gray-200/50"
+                className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-gray-100 dark:border-slate-700 text-center space-y-2 shadow-sm shadow-gray-200/50"
               >
-                <p className="text-gray-500 font-medium">{stat.label}</p>
+                <p className="text-gray-500 dark:text-gray-400 font-medium">{stat.label}</p>
                 <h3 className="text-4xl font-bold text-indigo-600 font-sans">{stat.value}</h3>
               </motion.div>
             ))}
@@ -277,8 +277,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center space-y-4 mb-20"
           >
-            <h2 className="text-4xl font-bold text-gray-900">{t('home.whyTitle')}</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">{t('home.whySubtitle')}</p>
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{t('home.whyTitle')}</h2>
+            <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">{t('home.whySubtitle')}</p>
           </motion.div>
 
           {/* New Global Feature Highlight */}
@@ -288,21 +288,21 @@ export default function Home() {
             viewport={{ once: true }}
             className="mb-24 p-1 rounded-[3rem] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500"
           >
-            <div className="bg-white rounded-[2.9rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
+            <div className="bg-white dark:bg-slate-900 rounded-[2.9rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
               <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -mr-32 -mt-32 opacity-50" />
               <div className="flex-1 space-y-8 relative z-10">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-widest">
                   <Globe className="h-4 w-4" /> Global Native support
                 </div>
-                <h3 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
+                <h3 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
                   Work in your native tongue. <span className="text-indigo-600">Collaborate globally.</span>
                 </h3>
-                <p className="text-xl text-gray-500 leading-relaxed font-medium">
-                  We've introduced support for <span className="text-gray-900 font-bold">{availableLanguages.length} live languages</span> with automatic location detection. VyntaJobs now feels local, wherever you are.
+                <p className="text-xl text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
+                  We've introduced support for <span className="text-gray-900 dark:text-white font-bold">{availableLanguages.length} live languages</span> with automatic location detection. VyntaJobs now feels local, wherever you are.
                 </p>
                 <div className="flex flex-wrap gap-4 pt-4">
                   {featuredLanguages.map((language) => (
-                    <span key={language.code} className="px-5 py-2.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-700 shadow-sm">
+                    <span key={language.code} className="px-5 py-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-gray-700 dark:text-gray-200 shadow-sm">
                       {language.name}
                     </span>
                   ))}
@@ -319,10 +319,10 @@ export default function Home() {
                     <motion.div 
                       key={i}
                       whileHover={{ scale: 1.05, y: -5 }}
-                      className="bg-gray-50 p-6 rounded-3xl border border-gray-100 shadow-sm"
+                      className="bg-gray-50 dark:bg-slate-800 p-6 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm"
                     >
                       <span className="text-3xl block mb-2">{item.flag}</span>
-                      <span className="text-sm font-bold text-gray-900">{item.label}</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">{item.label}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -360,7 +360,7 @@ export default function Home() {
                   <feat.icon className="h-8 w-8" />
                 </motion.div>
                 <h3 className="text-xl font-bold">{feat.title}</h3>
-                <p className="text-gray-500">{feat.desc}</p>
+                <p className="text-gray-500 dark:text-gray-400">{feat.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -386,7 +386,7 @@ export default function Home() {
                     </React.Fragment>
                   ))}
                 </h2>
-                <p className="text-gray-400 text-lg max-w-md leading-relaxed">
+                <p className="text-gray-400 dark:text-gray-500 text-lg max-w-md leading-relaxed">
                   {t('home.missionSubtitle')}
                 </p>
               </motion.div>
@@ -408,7 +408,7 @@ export default function Home() {
                     <span className="text-4xl font-black text-white/10 group-hover:text-indigo-500/50 transition-colors duration-500 font-sans">{s.step}</span>
                     <div className="space-y-1">
                       <h4 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">{s.title}</h4>
-                      <p className="text-gray-400 text-sm leading-relaxed max-w-sm">{s.desc}</p>
+                      <p className="text-gray-400 dark:text-gray-500 text-sm leading-relaxed max-w-sm">{s.desc}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -450,7 +450,7 @@ export default function Home() {
             className="space-y-6"
           >
             <h2 className="text-5xl font-bold tracking-tight">{t('home.readyTitle')}</h2>
-            <p className="text-xl text-gray-500">{t('home.readySubtitle')}</p>
+            <p className="text-xl text-gray-500 dark:text-gray-400">{t('home.readySubtitle')}</p>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -462,7 +462,7 @@ export default function Home() {
               {t('home.startExploring')}
             </Link>
             {!user && (
-              <button onClick={login} className="bg-white text-gray-900 border-2 border-gray-100 px-10 py-5 rounded-2xl font-bold text-xl hover:border-gray-300 transition-all">
+              <button onClick={login} className="bg-white dark:bg-slate-900 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-slate-700 px-10 py-5 rounded-2xl font-bold text-xl hover:border-gray-300 transition-all">
                 {t('home.joinNetwork')}
               </button>
             )}

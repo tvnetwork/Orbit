@@ -24,10 +24,10 @@ export default function HelpCenter() {
   ];
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen">
       {/* Hero Search */}
       <div className="bg-indigo-600 pt-32 pb-24 px-4 text-center text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white dark:bg-slate-900/10 rounded-full -mr-32 -mt-32 blur-3xl" />
         <div className="max-w-3xl mx-auto space-y-8 relative z-10">
           <motion.h1 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -37,11 +37,11 @@ export default function HelpCenter() {
             {t('help.title')}
           </motion.h1>
           <div className="relative group max-w-2xl mx-auto">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400 group-focus-within:text-indigo-600 transition-colors" />
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400 dark:text-gray-500 group-focus-within:text-indigo-600 transition-colors" />
             <input 
               type="text"
               placeholder={t('help.searchPlaceholder')}
-              className="w-full pl-16 pr-8 py-6 rounded-3xl bg-white text-gray-900 border-none focus:ring-4 focus:ring-indigo-300 transition-all text-lg shadow-xl"
+              className="w-full pl-16 pr-8 py-6 rounded-3xl bg-white dark:bg-slate-900 text-gray-900 dark:text-white border-none focus:ring-4 focus:ring-indigo-300 transition-all text-lg shadow-xl"
             />
           </div>
         </div>
@@ -50,33 +50,33 @@ export default function HelpCenter() {
       <div className="max-w-7xl mx-auto px-4 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
           {/* Link each category to its HTML guide */}
-          <a href="/public/guides/GettingStarted.html" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
+          <a href="/public/guides/GettingStarted.html" target="_blank" rel="noopener noreferrer" className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
             <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-fit group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:-rotate-6">
               <Book className="h-6 w-6" />
             </div>
             <h3 className="text-xl font-bold mt-6 mb-2">{t('help.gettingStarted')}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">{t('help.gettingStartedDesc')}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{t('help.gettingStartedDesc')}</p>
           </a>
-          <a href="/public/guides/PaymentsAndFees.html" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
+          <a href="/public/guides/PaymentsAndFees.html" target="_blank" rel="noopener noreferrer" className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
             <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-fit group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:-rotate-6">
               <FileText className="h-6 w-6" />
             </div>
             <h3 className="text-xl font-bold mt-6 mb-2">{t('help.paymentsFees')}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">{t('help.paymentsFeesDesc')}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{t('help.paymentsFeesDesc')}</p>
           </a>
-          <a href="/public/guides/SafetyAndPrivacy.html" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
+          <a href="/public/guides/SafetyAndPrivacy.html" target="_blank" rel="noopener noreferrer" className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
             <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-fit group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:-rotate-6">
               <Search className="h-6 w-6" />
             </div>
             <h3 className="text-xl font-bold mt-6 mb-2">{t('help.safetyPrivacy')}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">{t('help.safetyPrivacyDesc')}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{t('help.safetyPrivacyDesc')}</p>
           </a>
-          <a href="/public/guides/Collaboration.html" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
+          <a href="/public/guides/Collaboration.html" target="_blank" rel="noopener noreferrer" className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block">
             <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-fit group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:-rotate-6">
               <MessageCircle className="h-6 w-6" />
             </div>
             <h3 className="text-xl font-bold mt-6 mb-2">{t('help.collaboration')}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">{t('help.collaborationDesc')}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{t('help.collaborationDesc')}</p>
           </a>
         </div>
 
@@ -86,14 +86,14 @@ export default function HelpCenter() {
             {faqs.map((faq, i) => (
               <div 
                 key={i} 
-                className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all"
+                className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-all"
               >
                 <button 
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full p-6 text-left flex items-center justify-between group"
                 >
-                  <span className="font-bold text-gray-800 text-lg group-hover:text-indigo-600 transition-colors">{faq.q}</span>
-                  <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${openFaq === i ? 'rotate-180 text-indigo-600' : ''}`} />
+                  <span className="font-bold text-gray-800 dark:text-gray-100 text-lg group-hover:text-indigo-600 transition-colors">{faq.q}</span>
+                  <ChevronDown className={`h-5 w-5 text-gray-400 dark:text-gray-500 transition-transform duration-300 ${openFaq === i ? 'rotate-180 text-indigo-600' : ''}`} />
                 </button>
                 <AnimatePresence>
                   {openFaq === i && (
@@ -103,7 +103,7 @@ export default function HelpCenter() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <div className="px-6 pb-6 text-gray-600 leading-relaxed border-t border-gray-50 pt-4">
+                      <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 leading-relaxed border-t border-gray-50 dark:border-slate-800 pt-4">
                         {faq.a}
                       </div>
                     </motion.div>

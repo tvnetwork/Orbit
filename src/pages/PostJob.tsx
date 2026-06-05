@@ -111,7 +111,7 @@ export default function PostJob() {
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <AlertCircle className="h-16 w-16 text-yellow-500 mx-auto mb-6" />
         <h2 className="text-3xl font-bold">{t('postProject.clientOnly')}</h2>
-        <p className="text-gray-500 mt-2">{t('postProject.clientOnlyDesc')}</p>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">{t('postProject.clientOnlyDesc')}</p>
         <button onClick={() => navigate('/jobs')} className="mt-8 text-indigo-600 font-bold hover:underline">
           {t('postProject.backMarketplace')}
         </button>
@@ -126,23 +126,23 @@ export default function PostJob() {
   ];
 
   return (
-    <div className="bg-gray-50 min-h-screen py-20">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen py-20">
       <div className="max-w-2xl mx-auto px-4">
         {/* Progress Header */}
         <div className="flex items-center justify-between mb-16 px-12 relative">
-          <div className="absolute left-12 right-12 top-1/2 -translate-y-1/2 h-0.5 bg-gray-200 -z-10" />
+          <div className="absolute left-12 right-12 top-1/2 -translate-y-1/2 h-0.5 bg-gray-200 dark:bg-slate-700 -z-10" />
           {steps.map((s) => (
             <div key={s.number} className="flex flex-col items-center gap-3">
               <div className={cn(
                 "h-12 w-12 rounded-2xl flex items-center justify-center transition-all duration-500 font-bold",
                 step === s.number ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100 scale-110" : 
-                step > s.number ? "bg-emerald-500 text-white" : "bg-white text-gray-400 border border-gray-100"
+                step > s.number ? "bg-emerald-500 text-white" : "bg-white dark:bg-slate-900 text-gray-400 dark:text-gray-500 border border-gray-100 dark:border-slate-700"
               )}>
                 {step > s.number ? <CheckCircle2 className="h-6 w-6" /> : s.number}
               </div>
               <span className={cn(
                 "text-[10px] font-black uppercase tracking-widest",
-                step === s.number ? "text-gray-900" : "text-gray-400"
+                step === s.number ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500"
               )}>{s.title}</span>
             </div>
           ))}
@@ -152,30 +152,30 @@ export default function PostJob() {
           key={step}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white p-12 rounded-[3.5rem] shadow-xl shadow-indigo-500/5 min-h-[500px] flex flex-col"
+          className="bg-white dark:bg-slate-900 p-12 rounded-[3.5rem] shadow-xl shadow-indigo-500/5 min-h-[500px] flex flex-col"
         >
           {step === 1 && (
             <div className="space-y-10 flex-1">
               <div>
-                <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t('postProject.projectIdentity')}</h2>
-                <p className="text-gray-500 mt-1">{t('postProject.identityDesc')}</p>
+                <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{t('postProject.projectIdentity')}</h2>
+                <p className="text-gray-500 dark:text-gray-400 mt-1">{t('postProject.identityDesc')}</p>
               </div>
 
               <div className="space-y-8">
                 <div className="space-y-3">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest">{t('postProject.projectTitle')}</label>
+                  <label className="text-sm font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest">{t('postProject.projectTitle')}</label>
                   <input 
                     type="text" 
                     placeholder={t('postProject.titlePlaceholder')}
                     value={form.title}
                     onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 outline-none transition-all text-lg font-medium"
+                    className="w-full px-8 py-5 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 outline-none transition-all text-lg font-medium"
                   />
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex justify-between items-end">
-                    <label className="text-sm font-black text-gray-700 uppercase tracking-widest">{t('postProject.description')}</label>
+                    <label className="text-sm font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest">{t('postProject.description')}</label>
                     <button 
                       onClick={enhanceDescription}
                       disabled={aiLoading || !form.title || !form.description}
@@ -190,7 +190,7 @@ export default function PostJob() {
                     placeholder={t('postProject.descriptionPlaceholder')}
                     value={form.description}
                     onChange={e => setForm(prev => ({ ...prev, description: e.target.value }))}
-                    className="w-full px-8 py-6 bg-gray-50 border border-gray-100 rounded-[2.5rem] focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 outline-none transition-all leading-relaxed"
+                    className="w-full px-8 py-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2.5rem] focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 outline-none transition-all leading-relaxed"
                   />
                 </div>
               </div>
@@ -200,20 +200,20 @@ export default function PostJob() {
           {step === 2 && (
             <div className="space-y-10 flex-1">
               <div>
-                <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t('postProject.requiredExpertise')}</h2>
-                <p className="text-gray-500 mt-1">{t('postProject.expertiseDesc')}</p>
+                <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{t('postProject.requiredExpertise')}</h2>
+                <p className="text-gray-500 dark:text-gray-400 mt-1">{t('postProject.expertiseDesc')}</p>
               </div>
 
               <div className="space-y-8">
                 <form onSubmit={addSkill} className="space-y-3">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest">{t('postProject.addSkill')}</label>
+                  <label className="text-sm font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest">{t('postProject.addSkill')}</label>
                   <div className="flex gap-4">
                     <input 
                       type="text" 
                       placeholder={t('postProject.skillsPlaceholder')}
                       value={form.newSkill}
                       onChange={e => setForm(prev => ({ ...prev, newSkill: e.target.value }))}
-                      className="flex-1 px-8 py-5 bg-gray-50 border border-gray-100 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 outline-none transition-all"
+                      className="flex-1 px-8 py-5 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 outline-none transition-all"
                     />
                     <button 
                       type="submit"
@@ -234,16 +234,16 @@ export default function PostJob() {
                     </div>
                   ))}
                   {form.skills.length === 0 && (
-                    <div className="text-gray-400 text-sm font-medium italic">{t('postProject.noSkills')}</div>
+                    <div className="text-gray-400 dark:text-gray-500 text-sm font-medium italic">{t('postProject.noSkills')}</div>
                   )}
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest">{t('postProject.category')}</label>
+                  <label className="text-sm font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest">{t('postProject.category')}</label>
                   <select 
                     value={form.category}
                     onChange={e => setForm(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-3xl outline-none"
+                    className="w-full px-8 py-5 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl outline-none"
                   >
                     <option value="Development">{t('postProject.categories.development')}</option>
                     <option value="Design">{t('postProject.categories.design')}</option>
@@ -258,19 +258,19 @@ export default function PostJob() {
           {step === 3 && (
             <div className="space-y-10 flex-1">
               <div>
-                <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t('postProject.budgetEscrow')}</h2>
-                <p className="text-gray-500 mt-1">{t('postProject.budgetDesc')}</p>
+                <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{t('postProject.budgetEscrow')}</h2>
+                <p className="text-gray-500 dark:text-gray-400 mt-1">{t('postProject.budgetDesc')}</p>
               </div>
 
               <div className="space-y-12">
                 <div className="space-y-4">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest text-center block">{t('postProject.budgetType')}</label>
-                  <div className="flex p-2 bg-gray-50 rounded-[2rem] border border-gray-100">
+                  <label className="text-sm font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest text-center block">{t('postProject.budgetType')}</label>
+                  <div className="flex p-2 bg-gray-50 dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700">
                     <button 
                       onClick={() => setForm(prev => ({ ...prev, type: 'fixed' }))}
                       className={cn(
                         "flex-1 flex items-center justify-center gap-3 py-6 rounded-3xl text-sm font-bold transition-all",
-                        form.type === 'fixed' ? "bg-white shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 hover:text-gray-600"
+                        form.type === 'fixed' ? "bg-white dark:bg-slate-900 shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
                       )}
                     >
                       <DollarSign className="h-5 w-5" /> {t('postProject.fixedPrice')}
@@ -279,7 +279,7 @@ export default function PostJob() {
                       onClick={() => setForm(prev => ({ ...prev, type: 'hourly' }))}
                       className={cn(
                         "flex-1 flex items-center justify-center gap-3 py-6 rounded-3xl text-sm font-bold transition-all",
-                        form.type === 'hourly' ? "bg-white shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 hover:text-gray-600"
+                        form.type === 'hourly' ? "bg-white dark:bg-slate-900 shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
                       )}
                     >
                       <Clock className="h-5 w-5" /> {t('postProject.hourlyRate')}
@@ -288,29 +288,29 @@ export default function PostJob() {
                 </div>
 
                 <div className="space-y-4">
-                  <label className="text-sm font-black text-gray-700 uppercase tracking-widest text-center block">{t('postProject.totalBudget')}</label>
+                  <label className="text-sm font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest text-center block">{t('postProject.totalBudget')}</label>
                   <div className="relative">
-                    <DollarSign className="absolute left-8 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" />
+                    <DollarSign className="absolute left-8 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400 dark:text-gray-500" />
                     <input 
                       type="number" 
                       placeholder="0.00"
                       value={form.budget}
                       onChange={e => setForm(prev => ({ ...prev, budget: e.target.value }))}
-                      className="w-full px-16 py-8 bg-gray-50 border border-gray-100 rounded-[2.5rem] text-center text-4xl font-black focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 outline-none transition-all placeholder:text-gray-200"
+                      className="w-full px-16 py-8 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2.5rem] text-center text-4xl font-black focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 outline-none transition-all placeholder:text-gray-200"
                     />
                   </div>
-                  <p className="text-center text-xs text-gray-400 font-bold uppercase tracking-widest">{t('postProject.talentNote')}</p>
+                  <p className="text-center text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">{t('postProject.talentNote')}</p>
                 </div>
               </div>
             </div>
           )}
 
           {/* Navigation */}
-          <div className="mt-12 flex items-center gap-6 pt-12 border-t border-gray-50">
+          <div className="mt-12 flex items-center gap-6 pt-12 border-t border-gray-50 dark:border-slate-800">
             {step > 1 && (
               <button 
                 onClick={() => setStep(step - 1)}
-                className="flex items-center gap-2 px-8 py-5 rounded-3xl font-bold text-gray-500 hover:bg-gray-50 transition-all"
+                className="flex items-center gap-2 px-8 py-5 rounded-3xl font-bold text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:bg-slate-800 transition-all"
               >
                 <ChevronLeft className="h-5 w-5" /> {t('postProject.back')}
               </button>

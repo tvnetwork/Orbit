@@ -62,26 +62,26 @@ export default function TranslationPrompt() {
               </div>
               <button 
                 onClick={handleDismiss}
-                className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-1 hover:bg-white dark:bg-slate-900/10 rounded-lg transition-colors"
               >
-                <X className="h-4 w-4 text-gray-400" />
+                <X className="h-4 w-4 text-gray-400 dark:text-gray-500" />
               </button>
             </div>
 
-            <p className="text-xs text-gray-400 leading-relaxed font-medium">
+            <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed font-medium">
               We've detected your system language is {languageNames[suggestion]}. Would you like to view VyntaJobs in your native tongue?
             </p>
 
             <div className="flex gap-3">
               <button 
                 onClick={handleSwitch}
-                className="flex-1 bg-white text-gray-900 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+                className="flex-1 bg-white dark:bg-slate-900 text-gray-900 dark:text-white py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-100 dark:bg-slate-800/50 transition-all flex items-center justify-center gap-2"
               >
                 <Check className="h-3.5 w-3.5" /> Switch
               </button>
               <button 
                 onClick={handleDismiss}
-                className="flex-1 bg-white/5 text-white py-3 rounded-xl text-xs font-bold hover:bg-white/10 transition-all"
+                className="flex-1 bg-white dark:bg-slate-900/5 text-white py-3 rounded-xl text-xs font-bold hover:bg-white dark:bg-slate-900/10 transition-all"
               >
                 Keep English
               </button>

@@ -104,7 +104,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="border-b border-gray-100 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
+    <nav className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-slate-900/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center gap-2 md:gap-4">
@@ -155,7 +155,7 @@ const Navbar = () => {
                   <motion.div 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="h-9 w-9 rounded-full bg-gray-400 overflow-hidden border border-gray-200 group-hover:border-indigo-300 transition-colors ring-2 ring-transparent group-hover:ring-indigo-50 shadow-sm"
+                    className="h-9 w-9 rounded-full bg-gray-400 overflow-hidden border border-gray-200 dark:border-slate-600 group-hover:border-indigo-300 transition-colors ring-2 ring-transparent group-hover:ring-indigo-50 shadow-sm"
                   >
                     {user.photoURL ? (
                       <img src={user.photoURL} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
@@ -168,7 +168,7 @@ const Navbar = () => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={logout} 
-                  className="p-2 text-gray-400 hover:text-red-500 transition-colors hidden sm:block"
+                  className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 transition-colors hidden sm:block"
                 >
                   <LogOut className="h-5 w-5" />
                 </motion.button>
@@ -196,7 +196,7 @@ const Navbar = () => {
         <motion.div 
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mx-auto flex w-full max-w-md items-stretch justify-between gap-1 rounded-[2rem] border border-slate-200/80 dark:border-slate-700/80 bg-white/95 dark:bg-slate-800/95 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-2xl pointer-events-auto ring-1 ring-slate-900/5 transition-colors duration-200"
+          className="mx-auto flex w-full max-w-md items-stretch justify-between gap-1 rounded-[2rem] border border-slate-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-900/95 dark:bg-slate-800/95 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-2xl pointer-events-auto ring-1 ring-slate-900/5 transition-colors duration-200"
         >
           {bottomLinks.map((link) => {
             const isActive = isNavActive(location.pathname, link.to);
@@ -374,10 +374,10 @@ export default function App() {
   const authValue = { user, profile, loading, login, logout, updateRole };
 
   if (loading) return (
-    <div className="h-screen w-full flex items-center justify-center bg-gray-50">
+    <div className="h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-slate-800">
       <div className="flex flex-col items-center gap-4">
         <BrandIcon className="h-10 w-10 text-indigo-600 animate-spin" />
-        <p className="text-gray-500 font-medium font-sans">{t('common.launching')}</p>
+        <p className="text-gray-500 dark:text-gray-400 font-medium font-sans">{t('common.launching')}</p>
       </div>
     </div>
   );
@@ -393,7 +393,7 @@ export default function App() {
               <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-4">
                   <BrandIcon className="h-8 w-8 text-indigo-600 animate-spin opacity-20" />
-                  <p className="text-sm font-medium text-gray-400">{t('common.loading')}</p>
+                  <p className="text-sm font-medium text-gray-400 dark:text-gray-500">{t('common.loading')}</p>
                 </div>
               </div>
             }>
@@ -411,35 +411,35 @@ export default function App() {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6"
+                className="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6"
               >
                 <div className="text-center space-y-2">
-                  <h2 className="text-3xl font-bold text-gray-900">{t('common.welcome')}</h2>
-                  <p className="text-gray-500">{t('role.selectTitle')}</p>
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{t('common.welcome')}</h2>
+                  <p className="text-gray-500 dark:text-gray-400">{t('role.selectTitle')}</p>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   <button 
                     onClick={() => updateRole('freelancer')}
-                    className="flex items-center p-6 border-2 border-gray-100 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 transition-all text-left group"
+                    className="flex items-center p-6 border-2 border-gray-100 dark:border-slate-700 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 transition-all text-left group"
                   >
                     <div className="p-3 bg-indigo-100 rounded-xl mr-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors text-indigo-600">
                       <Briefcase className="h-6 w-6" />
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900">{t('role.freelancer')}</p>
-                      <p className="text-sm text-gray-500">{t('role.freelancerDesc')}</p>
+                      <p className="font-bold text-gray-900 dark:text-white">{t('role.freelancer')}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('role.freelancerDesc')}</p>
                     </div>
                   </button>
                   <button 
                     onClick={() => updateRole('client')}
-                    className="flex items-center p-6 border-2 border-gray-100 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 transition-all text-left group"
+                    className="flex items-center p-6 border-2 border-gray-100 dark:border-slate-700 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 transition-all text-left group"
                   >
                     <div className="p-3 bg-emerald-100 rounded-xl mr-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors text-emerald-600">
                       <PlusCircle className="h-6 w-6" />
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900">{t('role.client')}</p>
-                      <p className="text-sm text-gray-500">{t('role.clientDesc')}</p>
+                      <p className="font-bold text-gray-900 dark:text-white">{t('role.client')}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('role.clientDesc')}</p>
                     </div>
                   </button>
                 </div>

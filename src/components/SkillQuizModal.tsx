@@ -76,7 +76,7 @@ export default function SkillQuizModal({ skill, onClose, onPass }: SkillQuizModa
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Verify Skill: <span className="text-indigo-600 dark:text-indigo-400">{skill}</span>
           </h2>
-          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+          <button onClick={onClose} className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-200">
             <X className="w-6 h-6" />
           </button>
         </div>

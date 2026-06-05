@@ -6,42 +6,42 @@ export default function Terms() {
   const { t } = useTranslation();
   
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white dark:bg-slate-900 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 py-24">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="prose prose-indigo max-w-none space-y-12"
         >
-          <div className="space-y-4 border-b border-gray-100 pb-12">
-            <h1 className="text-5xl font-bold tracking-tight text-gray-900">{t('terms.title')}</h1>
+          <div className="space-y-4 border-b border-gray-100 dark:border-slate-700 pb-12">
+            <h1 className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white">{t('terms.title')}</h1>
             <p className="text-indigo-600 font-bold uppercase tracking-widest text-xs">{t('terms.updated')}: April 28, 2026</p>
           </div>
 
           <section className="space-y-6">
-            <h2 className="text-3xl font-bold text-gray-900">{t('terms.s1Title')}</h2>
-            <p className="text-gray-600 leading-relaxed text-lg">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{t('terms.s1Title')}</h2>
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
               {t('terms.s1Desc')}
             </p>
           </section>
 
-          <section className="space-y-6 p-8 bg-gray-50 rounded-3xl">
-            <h2 className="text-3xl font-bold text-gray-900">{t('terms.s2Title')}</h2>
-            <p className="text-gray-600 leading-relaxed text-lg">
+          <section className="space-y-6 p-8 bg-gray-50 dark:bg-slate-800 rounded-3xl">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{t('terms.s2Title')}</h2>
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
               {t('terms.s2Desc')}
             </p>
           </section>
 
           <section className="space-y-6">
-            <h2 className="text-3xl font-bold text-gray-900">{t('terms.s3Title')}</h2>
-            <p className="text-gray-600 leading-relaxed text-lg">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{t('terms.s3Title')}</h2>
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
               {t('terms.s3Desc')}
             </p>
           </section>
 
-          <section className="space-y-6 border-t border-gray-100 pt-12">
-            <h2 className="text-3xl font-bold text-gray-900">{t('terms.s4Title')}</h2>
-            <p className="text-gray-600 leading-relaxed text-lg">
+          <section className="space-y-6 border-t border-gray-100 dark:border-slate-700 pt-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{t('terms.s4Title')}</h2>
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
               {t('terms.s4Desc')}
             </p>
           </section>

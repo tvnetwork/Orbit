@@ -160,12 +160,12 @@ export default function ContractRoom() {
   );
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 lg:h-screen lg:overflow-hidden">
+    <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-slate-800 lg:h-screen lg:overflow-hidden">
       {/* Header */}
-      <header className="z-10 flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 bg-white px-4 py-4 sm:px-6 lg:flex-nowrap lg:items-center lg:px-8 lg:py-5 flex-shrink-0">
+      <header className="z-10 flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-4 sm:px-6 lg:flex-nowrap lg:items-center lg:px-8 lg:py-5 flex-shrink-0">
         <div className="flex min-w-0 items-center gap-3 sm:gap-4 lg:gap-6">
-          <Link to={profile?.role === 'client' ? '/client/dashboard' : '/freelancer/dashboard'} className="p-2 hover:bg-gray-50 rounded-xl transition-colors">
-            <ChevronLeft className="h-6 w-6 text-gray-400" />
+          <Link to={profile?.role === 'client' ? '/client/dashboard' : '/freelancer/dashboard'} className="p-2 hover:bg-gray-50 dark:bg-slate-800 rounded-xl transition-colors">
+            <ChevronLeft className="h-6 w-6 text-gray-400 dark:text-gray-500" />
           </Link>
           <div className="flex min-w-0 items-center gap-3 sm:gap-4">
             <div className="relative">
@@ -178,7 +178,7 @@ export default function ContractRoom() {
               <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />
             </div>
             <div className="min-w-0">
-              <h2 className="truncate text-lg font-black leading-tight tracking-tight text-gray-900 sm:text-xl">
+              <h2 className="truncate text-lg font-black leading-tight tracking-tight text-gray-900 dark:text-white sm:text-xl">
                 {contract?.otherParty?.displayName || 'Project Partner'}
               </h2>
               <div className="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-0.5">
@@ -191,8 +191,8 @@ export default function ContractRoom() {
 
         <div className="flex w-full items-center justify-between gap-3 sm:justify-end sm:gap-4 lg:w-auto lg:gap-6">
           <div className="text-right hidden md:block">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Contract Value</p>
-            <p className="text-xl font-black text-gray-900 leading-none tracking-tight">${contract?.totalAmount}</p>
+            <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-none mb-1">Contract Value</p>
+            <p className="text-xl font-black text-gray-900 dark:text-white leading-none tracking-tight">${contract?.totalAmount}</p>
           </div>
           {profile?.role === 'freelancer' && !contract?.reviewRequested && (
             <button 
@@ -214,9 +214,9 @@ export default function ContractRoom() {
           <div className="relative">
             <button 
               onClick={() => setShowMenu(!showMenu)}
-              className="p-3 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors"
+              className="p-3 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:bg-slate-800/50 rounded-2xl transition-colors"
             >
-              <MoreVertical className="h-6 w-6 text-gray-400" />
+              <MoreVertical className="h-6 w-6 text-gray-400 dark:text-gray-500" />
             </button>
             <AnimatePresence>
               {showMenu && (
@@ -225,16 +225,16 @@ export default function ContractRoom() {
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 overflow-hidden"
+                  className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-700 py-2 z-50 overflow-hidden"
                 >
                   <button 
                     onClick={() => {
                       if (contract?.jobId) window.location.href = `/jobs/${contract.jobId}`;
                       setShowMenu(false);
                     }}
-                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-3 transition-colors"
+                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-3 transition-colors"
                   >
-                    <FileText className="h-4 w-4 text-gray-400" /> View Job Original
+                    <FileText className="h-4 w-4 text-gray-400 dark:text-gray-500" /> View Job Original
                   </button>
                   <button 
                     onClick={() => {
@@ -242,11 +242,11 @@ export default function ContractRoom() {
                       if (otherId) window.location.href = `/profile/${otherId}`;
                       setShowMenu(false);
                     }}
-                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-3 transition-colors"
+                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-3 transition-colors"
                   >
-                    <ShieldCheck className="h-4 w-4 text-gray-400" /> Partner Certificate
+                    <ShieldCheck className="h-4 w-4 text-gray-400 dark:text-gray-500" /> Partner Certificate
                   </button>
-                  <div className="h-px bg-gray-50 my-1" />
+                  <div className="h-px bg-gray-50 dark:bg-slate-800 my-1" />
                   <button 
                     onClick={() => {
                       // Logic for cancel
@@ -266,7 +266,7 @@ export default function ContractRoom() {
       {/* Main Workspace */}
       <div className="flex flex-1 flex-col overflow-y-auto lg:grid lg:grid-cols-12 lg:overflow-hidden">
         {/* Left: Chat Side */}
-        <div className="col-span-12 flex min-h-[60vh] flex-col overflow-hidden border-b border-gray-100 bg-white lg:col-span-7 lg:h-full lg:border-b-0 lg:border-r">
+        <div className="col-span-12 flex min-h-[60vh] flex-col overflow-hidden border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 lg:col-span-7 lg:h-full lg:border-b-0 lg:border-r">
           <div className="flex items-center justify-center gap-2 bg-indigo-600 px-4 py-3 text-center">
             <AlertCircle className="h-4 w-4 text-white" />
             <span className="text-[10px] font-black text-white uppercase tracking-widest">Always communicate within the secure workspace for contract protection.</span>
@@ -290,7 +290,7 @@ export default function ContractRoom() {
                     "p-4 text-sm font-medium leading-relaxed shadow-sm sm:p-5 lg:p-6",
                     isMine 
                       ? "bg-indigo-600 text-white rounded-[2.5rem] rounded-tr-none" 
-                      : "bg-gray-50 text-gray-900 border border-gray-100 rounded-[2.5rem] rounded-tl-none"
+                      : "bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-white border border-gray-100 dark:border-slate-700 rounded-[2.5rem] rounded-tl-none"
                   )}>
                     {msg.text}
                   </div>
@@ -304,9 +304,9 @@ export default function ContractRoom() {
           </div>
 
           {/* Input Area */}
-          <div className="border-t border-gray-100 bg-white p-4 sm:p-6 lg:p-8">
-            <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-[2rem] border border-gray-100 bg-gray-50 p-2 shadow-sm transition-all focus-within:ring-4 focus-within:ring-indigo-50 sm:gap-4 sm:rounded-[2.5rem]">
-              <button type="button" className="p-4 text-gray-400 hover:text-indigo-600 transition-colors">
+          <div className="border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 sm:p-6 lg:p-8">
+            <form onSubmit={sendMessage} className="flex items-center gap-2 rounded-[2rem] border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 shadow-sm transition-all focus-within:ring-4 focus-within:ring-indigo-50 sm:gap-4 sm:rounded-[2.5rem]">
+              <button type="button" className="p-4 text-gray-400 dark:text-gray-500 hover:text-indigo-600 transition-colors">
                 <Paperclip className="h-6 w-6" />
               </button>
               <input 
@@ -314,7 +314,7 @@ export default function ContractRoom() {
                 placeholder="Type a secure message..."
                 value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}
-                className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-medium placeholder:text-gray-400 px-2"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-medium placeholder:text-gray-400 dark:text-gray-500 px-2"
               />
               <button 
                 type="submit"
@@ -327,7 +327,7 @@ export default function ContractRoom() {
         </div>
 
         {/* Right: Operational Side */}
-        <div className="flex flex-col bg-gray-50/50 lg:col-span-5 lg:h-full lg:overflow-hidden">
+        <div className="flex flex-col bg-gray-50 dark:bg-slate-800/50 lg:col-span-5 lg:h-full lg:overflow-hidden">
           <div className="flex-1 space-y-8 overflow-y-auto p-4 sm:p-6 lg:space-y-12 lg:p-12">
             
             {/* Escrow Status Card */}
@@ -338,12 +338,12 @@ export default function ContractRoom() {
                    <Clock className="h-5 w-5 text-indigo-400" />
                    Project Pipeline
                  </h3>
-                 <span className="text-[10px] font-black uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full">Active Engagement</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest bg-white dark:bg-slate-900/10 px-3 py-1 rounded-full">Active Engagement</span>
                </div>
                
                <div className="space-y-6">
                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-                   <div className="bg-white/5 p-6 rounded-3xl border border-white/5">
+                   <div className="bg-white dark:bg-slate-900/5 p-6 rounded-3xl border border-white/5">
                      <p className="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-1">
                        {contract?.type === 'hourly' ? 'Hourly Rate' : 'Total Escrowed'}
                      </p>
@@ -362,20 +362,20 @@ export default function ContractRoom() {
               <div className="space-y-6">
                  <div className="flex items-center justify-between">
                    <div>
-                     <h3 className="text-2xl font-black text-gray-900 tracking-tight">Time Logs</h3>
-                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Track hours worked</p>
+                     <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Time Logs</h3>
+                     <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">Track hours worked</p>
                    </div>
                  </div>
 
                  {profile?.role === 'freelancer' && (
-                   <form onSubmit={logTime} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm space-y-4">
+                   <form onSubmit={logTime} className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm space-y-4">
                      <div className="grid grid-cols-2 gap-4">
                        <input 
                          type="date" 
                          required
                          value={newTimeLog.date}
                          onChange={e => setNewTimeLog({...newTimeLog, date: e.target.value})}
-                         className="w-full bg-gray-50 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white outline-none font-medium text-sm"
+                         className="w-full bg-gray-50 dark:bg-slate-800 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white dark:bg-slate-900 outline-none font-medium text-sm"
                        />
                        <input 
                          type="number" 
@@ -384,7 +384,7 @@ export default function ContractRoom() {
                          placeholder="Hours (e.g. 2.5)"
                          value={newTimeLog.hours}
                          onChange={e => setNewTimeLog({...newTimeLog, hours: e.target.value})}
-                         className="w-full bg-gray-50 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white outline-none font-medium text-sm"
+                         className="w-full bg-gray-50 dark:bg-slate-800 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white dark:bg-slate-900 outline-none font-medium text-sm"
                        />
                      </div>
                      <input 
@@ -393,7 +393,7 @@ export default function ContractRoom() {
                        placeholder="Task description..."
                        value={newTimeLog.description}
                        onChange={e => setNewTimeLog({...newTimeLog, description: e.target.value})}
-                       className="w-full bg-gray-50 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white outline-none font-medium text-sm"
+                       className="w-full bg-gray-50 dark:bg-slate-800 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white dark:bg-slate-900 outline-none font-medium text-sm"
                      />
                      <button type="submit" className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm">
                        Log Time
@@ -403,20 +403,20 @@ export default function ContractRoom() {
 
                  <div className="space-y-3">
                    {timeLogs.map(log => (
-                     <div key={log.id} className="bg-white p-5 rounded-[1.5rem] border border-gray-100 flex items-center justify-between">
+                     <div key={log.id} className="bg-white dark:bg-slate-900 p-5 rounded-[1.5rem] border border-gray-100 dark:border-slate-700 flex items-center justify-between">
                        <div>
-                         <p className="font-bold text-gray-900">{log.description}</p>
-                         <p className="text-xs text-gray-500 font-medium mt-1">{log.date}</p>
+                         <p className="font-bold text-gray-900 dark:text-white">{log.description}</p>
+                         <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-1">{log.date}</p>
                        </div>
                        <div className="text-right">
                          <p className="font-black text-indigo-600">{log.hours} hrs</p>
-                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{log.status}</span>
+                         <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{log.status}</span>
                        </div>
                      </div>
                    ))}
                    {timeLogs.length === 0 && (
-                     <div className="bg-white border-2 border-dashed border-gray-100 rounded-[1.5rem] p-8 text-center">
-                       <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">No hours logged yet</p>
+                     <div className="bg-white dark:bg-slate-900 border-2 border-dashed border-gray-100 dark:border-slate-700 rounded-[1.5rem] p-8 text-center">
+                       <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">No hours logged yet</p>
                      </div>
                    )}
                  </div>
@@ -428,29 +428,29 @@ export default function ContractRoom() {
               <div className="space-y-6">
                <div className="flex items-center justify-between">
                  <div>
-                   <h3 className="text-2xl font-black text-gray-900 tracking-tight">Active Milestones</h3>
-                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Financial Roadmapping</p>
+                   <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Active Milestones</h3>
+                   <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">Financial Roadmapping</p>
                  </div>
                  {profile?.role === 'client' && (
-                   <button className="p-3 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all">
-                     <Plus className="h-5 w-5 text-gray-400" />
+                   <button className="p-3 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md transition-all">
+                     <Plus className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                    </button>
                  )}
                </div>
 
                <div className="space-y-4">
                  {milestones.length > 0 ? milestones.map((m, i) => (
-                   <div key={m.id} className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative group overflow-hidden">
+                   <div key={m.id} className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm relative group overflow-hidden">
                       <div className="flex items-start justify-between mb-6">
                         <div className="flex items-center gap-4">
                           <div className={cn(
                             "h-12 w-12 rounded-2xl flex items-center justify-center font-black",
-                            m.status === 'released' ? "bg-emerald-50 text-emerald-600" : "bg-gray-50 text-gray-400"
+                            m.status === 'released' ? "bg-emerald-50 text-emerald-600" : "bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-gray-500"
                           )}>
                             {m.status === 'released' ? <CheckCircle2 className="h-6 w-6" /> : i + 1}
                           </div>
                           <div>
-                            <h4 className="text-lg font-black text-gray-900 leading-tight">{m.title}</h4>
+                            <h4 className="text-lg font-black text-gray-900 dark:text-white leading-tight">{m.title}</h4>
                             <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mt-1">${m.amount}</p>
                           </div>
                         </div>
@@ -458,7 +458,7 @@ export default function ContractRoom() {
                           "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
                           m.status === 'funded' ? "bg-blue-50 text-blue-600" :
                           m.status === 'released' ? "bg-emerald-50 text-emerald-600" :
-                          "bg-gray-50 text-gray-400"
+                          "bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-gray-500"
                         )}>
                           {m.status}
                         </span>
@@ -481,8 +481,8 @@ export default function ContractRoom() {
                       )}
                    </div>
                  )) : (
-                   <div className="bg-white/50 border-2 border-dashed border-gray-200 rounded-[2.5rem] p-12 text-center">
-                     <p className="text-xs font-black text-gray-400 uppercase tracking-widest leading-loose">No roadmap defined for this contract.</p>
+                   <div className="bg-white dark:bg-slate-900/50 border-2 border-dashed border-gray-200 dark:border-slate-600 rounded-[2.5rem] p-12 text-center">
+                     <p className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-loose">No roadmap defined for this contract.</p>
                    </div>
                  )}
                </div>
@@ -490,13 +490,13 @@ export default function ContractRoom() {
             )}
 
             {/* Quick Actions / Help */}
-            <div className="bg-gray-100/50 p-8 rounded-[2.5rem] border border-gray-200/50 flex items-center gap-6">
-               <div className="h-14 w-14 bg-white rounded-2xl flex items-center justify-center shadow-sm">
-                 <FileText className="h-6 w-6 text-gray-400" />
+            <div className="bg-gray-100 dark:bg-slate-800/50/50 p-8 rounded-[2.5rem] border border-gray-200 dark:border-slate-600/50 flex items-center gap-6">
+               <div className="h-14 w-14 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center shadow-sm">
+                 <FileText className="h-6 w-6 text-gray-400 dark:text-gray-500" />
                </div>
                <div>
-                 <h4 className="font-black text-gray-900 tracking-tight leading-tight">Contract Management</h4>
-                 <p className="text-xs text-gray-500 font-medium mt-1">Need help with milestones or disputes? Contact elite support.</p>
+                 <h4 className="font-black text-gray-900 dark:text-white tracking-tight leading-tight">Contract Management</h4>
+                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-1">Need help with milestones or disputes? Contact elite support.</p>
                </div>
             </div>
           </div>

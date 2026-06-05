@@ -169,7 +169,7 @@ export default function FreelancerProfile() {
   </div>;
 
   if (!profile) return <div className="min-h-screen flex items-center justify-center">
-    <p className="text-gray-500 font-bold">{t('common.profileNotFound') || 'Profile not found.'}</p>
+    <p className="text-gray-500 dark:text-gray-400 font-bold">{t('common.profileNotFound') || 'Profile not found.'}</p>
   </div>;
 
   const stats = [
@@ -180,7 +180,7 @@ export default function FreelancerProfile() {
   ];
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-24">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen pb-24">
       {/* Cover Backdrop */}
       <div className="h-64 bg-indigo-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 opacity-80" />
@@ -188,7 +188,7 @@ export default function FreelancerProfile() {
         
         <button 
           onClick={() => navigate(-1)}
-          className="absolute top-8 left-8 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-2xl transition-all"
+          className="absolute top-8 left-8 bg-white dark:bg-slate-900/20 hover:bg-white dark:bg-slate-900/30 backdrop-blur-md text-white p-3 rounded-2xl transition-all"
         >
           <ArrowLeft className="h-6 w-6" />
         </button>
@@ -198,7 +198,7 @@ export default function FreelancerProfile() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Info Sidebar */}
           <aside className="lg:w-96 space-y-8">
-            <div className="bg-white rounded-[3rem] p-8 shadow-xl shadow-gray-200/50 border border-gray-100 flex flex-col items-center text-center">
+            <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-8 shadow-xl shadow-gray-200/50 border border-gray-100 dark:border-slate-700 flex flex-col items-center text-center">
               <div className="relative group">
                 <div className="absolute inset-0 bg-indigo-500 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity" />
                 <img 
@@ -208,14 +208,14 @@ export default function FreelancerProfile() {
                   referrerPolicy="no-referrer"
                 />
                 {profile.verificationStatus === 'verified' && (
-                  <div className="absolute bottom-4 right-4 bg-white p-2 rounded-full shadow-lg">
+                  <div className="absolute bottom-4 right-4 bg-white dark:bg-slate-900 p-2 rounded-full shadow-lg">
                     <CheckCircle2 className="h-8 w-8 text-indigo-600" />
                   </div>
                 )}
               </div>
 
               <div className="mt-8 space-y-2">
-                <h1 className="text-3xl font-black text-gray-900 tracking-tight">{profile.displayName}</h1>
+                <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{profile.displayName}</h1>
                 <p className="text-indigo-600 font-bold uppercase tracking-widest text-sm">{profile.professionalTitle || 'Elite Professional'}</p>
               </div>
 
@@ -228,20 +228,20 @@ export default function FreelancerProfile() {
                 </button>
                 <button 
                   onClick={handleChat}
-                  className="bg-gray-50 text-gray-900 font-bold py-4 rounded-2xl border border-gray-100 hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+                  className="bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-white font-bold py-4 rounded-2xl border border-gray-100 dark:border-slate-700 hover:bg-gray-100 dark:bg-slate-800/50 transition-all flex items-center justify-center gap-2"
                 >
                   <MessageSquare className="h-5 w-5" />
                   {t('profile.chat')}
                 </button>
               </div>
 
-              <div className="mt-10 pt-10 border-t border-gray-50 w-full space-y-6">
+              <div className="mt-10 pt-10 border-t border-gray-50 dark:border-slate-800 w-full space-y-6">
                 <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-3 text-gray-500">
+                  <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
                     <MapPin className="h-5 w-5" />
                     <span>{profile.location || 'Remote'}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-gray-500">
+                  <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
                     <Clock className="h-5 w-5" />
                     <span>{profile.timezone || 'Global'}</span>
                   </div>
@@ -249,43 +249,43 @@ export default function FreelancerProfile() {
                 
                 <div className="flex items-center gap-4 py-2 justify-center">
                   {profile.websiteUrl && (
-                    <a href={profile.websiteUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                      <Globe className="h-5 w-5 text-gray-700" />
+                    <a href={profile.websiteUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                      <Globe className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                     </a>
                   )}
                   {profile.githubUrl && (
-                    <a href={profile.githubUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                      <Github className="h-5 w-5 text-gray-700" />
+                    <a href={profile.githubUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                      <Github className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                     </a>
                   )}
                   {profile.linkedinUrl && (
-                    <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                      <Briefcase className="h-5 w-5 text-gray-700" />
+                    <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                      <Briefcase className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                     </a>
                   )}
                   {profile.twitterUrl && (
-                    <a href={profile.twitterUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                      <Zap className="h-5 w-5 text-gray-700" />
+                    <a href={profile.twitterUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                      <Zap className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                     </a>
                   )}
-                  <a href={`mailto:${profile.email}`} className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                    <Mail className="h-5 w-5 text-gray-700" />
+                  <a href={`mailto:${profile.email}`} className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                    <Mail className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                   </a>
                 </div>
               </div>
             </div>
 
             {/* Stats Card */}
-            <div className="bg-white rounded-[3rem] p-8 shadow-xl shadow-gray-200/50 border border-gray-100">
-              <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-8 text-center">{t('profile.performanceSnapshot')}</h3>
+            <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-8 shadow-xl shadow-gray-200/50 border border-gray-100 dark:border-slate-700">
+              <h3 className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-8 text-center">{t('profile.performanceSnapshot')}</h3>
               <div className="grid grid-cols-2 gap-8">
                 {stats.map((stat, i) => (
                   <div key={i} className="text-center space-y-1">
                     <div className="flex justify-center mb-2">
                       <stat.icon className={cn("h-6 w-6", stat.color)} />
                     </div>
-                    <div className="text-2xl font-black text-gray-900">{stat.value}</div>
-                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</div>
+                    <div className="text-2xl font-black text-gray-900 dark:text-white">{stat.value}</div>
+                    <div className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -295,20 +295,20 @@ export default function FreelancerProfile() {
           {/* Content Area */}
           <main className="flex-1 space-y-8">
             {/* Bio Card */}
-            <section className="bg-white rounded-[3rem] p-12 shadow-xl shadow-gray-200/50 border border-gray-100">
+            <section className="bg-white dark:bg-slate-900 rounded-[3rem] p-12 shadow-xl shadow-gray-200/50 border border-gray-100 dark:border-slate-700">
               <div className="flex items-center gap-3 text-indigo-600 font-bold text-xs uppercase tracking-[0.3em] mb-6">
                 <Star className="h-4 w-4" />
                 {t('profile.aboutProfessional')}
               </div>
-              <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-8 leading-tight">
+              <h2 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-8 leading-tight">
                 {t('profile.aboutSubtitle')}
               </h2>
-              <p className="text-lg text-gray-500 leading-relaxed font-sans">
+              <p className="text-lg text-gray-500 dark:text-gray-400 leading-relaxed font-sans">
                 {profile.bio || t('profile.aboutBioEmpty')}
               </p>
 
-              <div className="mt-12 pt-12 border-t border-gray-50">
-                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">{t('profile.verifiedExpertise')}</h4>
+              <div className="mt-12 pt-12 border-t border-gray-50 dark:border-slate-800">
+                <h4 className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">{t('profile.verifiedExpertise')}</h4>
                 <div className="flex flex-wrap gap-3">
                   {profile.skills?.map((skill: string) => (
                     <div key={skill} className="px-6 py-3 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center gap-3 group hover:bg-indigo-600 transition-all duration-300">
@@ -321,13 +321,13 @@ export default function FreelancerProfile() {
             </section>
 
             {/* Portfolio Grid */}
-            <section className="bg-white rounded-[3rem] p-12 shadow-xl shadow-gray-200/50 border border-gray-100">
+            <section className="bg-white dark:bg-slate-900 rounded-[3rem] p-12 shadow-xl shadow-gray-200/50 border border-gray-100 dark:border-slate-700">
               <div className="flex items-center justify-between mb-12">
                 <div className="flex items-center gap-3 text-indigo-600 font-bold text-xs uppercase tracking-[0.3em]">
                   <Globe className="h-4 w-4" />
                   {t('profile.verifiedPortfolio')}
                 </div>
-                <div className="text-xs font-bold text-gray-400">{t('profile.showingProjects', { count: profile.portfolio?.length || 0 })}</div>
+                <div className="text-xs font-bold text-gray-400 dark:text-gray-500">{t('profile.showingProjects', { count: profile.portfolio?.length || 0 })}</div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -340,7 +340,7 @@ export default function FreelancerProfile() {
                     whileHover={{ y: -8 }}
                     className="group space-y-4 block"
                   >
-                    <div className="aspect-[16/10] bg-gray-100 rounded-[2rem] overflow-hidden relative border border-gray-50 shadow-sm">
+                    <div className="aspect-[16/10] bg-gray-100 dark:bg-slate-800/50 rounded-[2rem] overflow-hidden relative border border-gray-50 dark:border-slate-800 shadow-sm">
                       <img 
                         src={project.imageUrl || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800'} 
                         className={cn(
@@ -350,31 +350,31 @@ export default function FreelancerProfile() {
                         alt={project.title}
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                        <div className="h-16 w-16 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-300">
+                        <div className="h-16 w-16 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-300">
                           <ExternalLink className="h-6 w-6 text-indigo-600" />
                         </div>
                       </div>
                     </div>
                     <div className="px-2 space-y-1">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xl font-black text-gray-900 group-hover:text-indigo-600 transition-colors">{project.title}</h4>
+                        <h4 className="text-xl font-black text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors">{project.title}</h4>
                         <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-indigo-500 transition-all" />
                       </div>
-                      <p className="text-sm text-gray-500 font-sans line-clamp-2">{project.description}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 font-sans line-clamp-2">{project.description}</p>
                     </div>
                   </motion.a>
                 ))}
               </div>
               
               {(!profile.portfolio || profile.portfolio.length === 0) && (
-                <div className="py-20 text-center border-2 border-dashed border-gray-100 rounded-[2rem]">
-                  <p className="text-gray-400 font-bold">{t('profile.noPortfolioShowcase')}</p>
+                <div className="py-20 text-center border-2 border-dashed border-gray-100 dark:border-slate-700 rounded-[2rem]">
+                  <p className="text-gray-400 dark:text-gray-500 font-bold">{t('profile.noPortfolioShowcase')}</p>
                 </div>
               )}
             </section>
 
             {/* Testimonials */}
-            <section className="bg-white rounded-[3rem] p-12 shadow-xl shadow-gray-200/50 border border-gray-100">
+            <section className="bg-white dark:bg-slate-900 rounded-[3rem] p-12 shadow-xl shadow-gray-200/50 border border-gray-100 dark:border-slate-700">
               <div className="flex items-center justify-between mb-12">
                 <div className="flex items-center gap-3 text-indigo-600 font-bold text-xs uppercase tracking-[0.3em]">
                   <Award className="h-4 w-4" />
@@ -396,9 +396,9 @@ export default function FreelancerProfile() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="mb-12 bg-gray-50 rounded-[2rem] p-8 border border-indigo-100 overflow-hidden"
+                    className="mb-12 bg-gray-50 dark:bg-slate-800 rounded-[2rem] p-8 border border-indigo-100 overflow-hidden"
                   >
-                    <h4 className="text-lg font-bold text-gray-900 mb-4">{t('profile.rateExperienceWith', { name: profile.displayName })}</h4>
+                    <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t('profile.rateExperienceWith', { name: profile.displayName })}</h4>
                     <div className="flex items-center gap-2 mb-6">
                       {[1, 2, 3, 4, 5].map(n => (
                         <button 
@@ -420,7 +420,7 @@ export default function FreelancerProfile() {
                       value={reviewComment}
                       onChange={(e) => setReviewComment(e.target.value)}
                       placeholder="Share your thoughts on the quality of work, communication, and speed..."
-                      className="w-full bg-white border border-gray-100 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-100 outline-none transition-all font-medium text-gray-700 mb-6"
+                      className="w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-100 outline-none transition-all font-medium text-gray-700 dark:text-gray-200 mb-6"
                     />
                     <button 
                       onClick={submitReview}
@@ -436,7 +436,7 @@ export default function FreelancerProfile() {
               <div className="space-y-8">
                 {reviews.filter(r => r.visible !== false || user?.uid === profile.id).map((review) => (
                   <div key={review.id} className={cn(
-                    "bg-gray-50 rounded-[2.5rem] p-10 border border-gray-100 relative",
+                    "bg-gray-50 dark:bg-slate-800 rounded-[2.5rem] p-10 border border-gray-100 dark:border-slate-700 relative",
                     review.visible === false && "opacity-60"
                   )}>
                     <div className="flex justify-between items-start mb-6">
@@ -447,7 +447,7 @@ export default function FreelancerProfile() {
                           alt=""
                         />
                         <div>
-                          <p className="font-bold text-gray-900">{review.clientName || 'Client'}</p>
+                          <p className="font-bold text-gray-900 dark:text-white">{review.clientName || 'Client'}</p>
                           <div className="flex items-center gap-1">
                             {[1, 2, 3, 4, 5].map(n => (
                               <Star 
@@ -462,7 +462,7 @@ export default function FreelancerProfile() {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{review.createdAt?.toDate().toLocaleDateString()}</p>
+                        <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{review.createdAt?.toDate().toLocaleDateString()}</p>
                         {user?.uid === profile.id && (
                           <button 
                             onClick={async () => {
@@ -480,15 +480,15 @@ export default function FreelancerProfile() {
                         )}
                       </div>
                     </div>
-                    <p className="text-gray-700 leading-relaxed italic">
+                    <p className="text-gray-700 dark:text-gray-200 leading-relaxed italic">
                       "{review.comment}"
                     </p>
                   </div>
                 ))}
                 
                 {reviews.length === 0 && (
-                  <div className="bg-gray-50 rounded-[2.5rem] p-10 border border-gray-100 relative">
-                    <p className="text-sm text-gray-500 italic text-center">{t('profile.noReviewsYet')}</p>
+                  <div className="bg-gray-50 dark:bg-slate-800 rounded-[2.5rem] p-10 border border-gray-100 dark:border-slate-700 relative">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 italic text-center">{t('profile.noReviewsYet')}</p>
                   </div>
                 )}
               </div>
@@ -511,17 +511,17 @@ export default function FreelancerProfile() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white rounded-[3rem] shadow-2xl w-full max-w-xl relative shrink-0 overflow-hidden"
+              className="bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl w-full max-w-xl relative shrink-0 overflow-hidden"
             >
               <div className="p-10">
                 <div className="flex justify-between items-start mb-8">
                   <div>
-                    <h3 className="text-2xl font-black text-gray-900 tracking-tight">{t('profile.hireFreelancer', { name: profile.displayName })}</h3>
-                    <p className="text-gray-500 font-medium">{t('profile.offerDirectDesc')}</p>
+                    <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{t('profile.hireFreelancer', { name: profile.displayName })}</h3>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium">{t('profile.offerDirectDesc')}</p>
                   </div>
                   <button 
                     onClick={() => setShowHireModal(false)}
-                    className="p-3 bg-gray-50 text-gray-400 rounded-2xl hover:bg-gray-100 transition-all"
+                    className="p-3 bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-gray-500 rounded-2xl hover:bg-gray-100 dark:bg-slate-800/50 transition-all"
                   >
                     <X className="h-6 w-6" />
                   </button>
@@ -533,18 +533,18 @@ export default function FreelancerProfile() {
                       <CheckCircle2 className="h-10 w-10" />
                     </div>
                     <div>
-                      <h4 className="text-xl font-bold text-gray-900">{t('profile.offerSent')}</h4>
-                      <p className="text-gray-500 mt-2">{t('profile.offerSentDesc')}</p>
+                      <h4 className="text-xl font-bold text-gray-900 dark:text-white">{t('profile.offerSent')}</h4>
+                      <p className="text-gray-500 dark:text-gray-400 mt-2">{t('profile.offerSentDesc')}</p>
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-6 text-left">
                     <div className="space-y-3">
-                      <label className="text-xs font-black text-gray-400 uppercase tracking-widest">{t('profile.selectJob')}</label>
+                      <label className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">{t('profile.selectJob')}</label>
                       <select 
                         value={selectedJobId}
                         onChange={(e) => setSelectedJobId(e.target.value)}
-                        className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-100 outline-none transition-all font-bold text-gray-900"
+                        className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-100 outline-none transition-all font-bold text-gray-900 dark:text-white"
                       >
                         <option value="">{t('profile.chooseJob')}</option>
                         {clientJobs.map(job => (
@@ -557,13 +557,13 @@ export default function FreelancerProfile() {
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-xs font-black text-gray-400 uppercase tracking-widest">{t('profile.offerDetails')}</label>
+                      <label className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">{t('profile.offerDetails')}</label>
                       <textarea 
                         rows={4}
                         value={offerDetails}
                         onChange={(e) => setOfferDetails(e.target.value)}
                         placeholder={t('profile.offerDetailsPlaceholder')}
-                        className="w-full bg-gray-50 border border-gray-100 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-100 outline-none transition-all font-medium text-gray-700"
+                        className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-100 outline-none transition-all font-medium text-gray-700 dark:text-gray-200"
                       />
                     </div>
 

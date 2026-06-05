@@ -77,21 +77,21 @@ export default function FreelancerProposals() {
     .filter(p => p.job?.title?.toLowerCase().includes(searchQuery.toLowerCase()));
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-800">
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
     </div>
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-20 pt-16">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen pb-20 pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">Bid Registry</h1>
-            <p className="text-gray-500 mt-1 font-medium italic">Track your proposals through the acquisition funnel.</p>
+            <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">Bid Registry</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1 font-medium italic">Track your proposals through the acquisition funnel.</p>
           </div>
           <div className="flex items-center gap-3">
-             <div className="px-6 py-3 bg-white border border-gray-100 rounded-2xl shadow-sm text-sm font-bold text-gray-900">
+             <div className="px-6 py-3 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-sm text-sm font-bold text-gray-900 dark:text-white">
                {proposals.filter(p => p.status === 'hired').length} Won
              </div>
              <div className="px-6 py-3 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-100 text-sm font-bold">
@@ -101,7 +101,7 @@ export default function FreelancerProposals() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-[2.5rem] border border-gray-100 shadow-sm mb-12 flex flex-col md:flex-row gap-6 items-center justify-between">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm mb-12 flex flex-col md:flex-row gap-6 items-center justify-between">
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide">
             {STATUS_FILTERS.map(filter => (
               <button
@@ -111,7 +111,7 @@ export default function FreelancerProposals() {
                   "px-6 py-3 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all whitespace-nowrap",
                   activeFilter === filter.id 
                     ? "bg-gray-900 text-white shadow-xl shadow-gray-200" 
-                    : "text-gray-400 hover:text-gray-900 hover:bg-gray-50"
+                    : "text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-white hover:bg-gray-50 dark:bg-slate-800"
                 )}
               >
                 {filter.label}
@@ -119,13 +119,13 @@ export default function FreelancerProposals() {
             ))}
           </div>
           <div className="relative w-full md:w-80">
-             <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+             <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
              <input 
                type="text"
                placeholder="Search registry..."
                value={searchQuery}
                onChange={(e) => setSearchQuery(e.target.value)}
-               className="w-full bg-gray-50 border border-gray-100 rounded-[2rem] pl-14 pr-6 py-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white transition-all"
+               className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2rem] pl-14 pr-6 py-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 transition-all"
              />
           </div>
         </div>
@@ -141,7 +141,7 @@ export default function FreelancerProposals() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ delay: i * 0.05 }}
-                className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all group"
+                className="bg-white dark:bg-slate-900 p-8 rounded-[3rem] border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all group"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                   <div className="lg:col-span-5 flex items-center gap-6">
@@ -149,7 +149,7 @@ export default function FreelancerProposals() {
                       <Clock className="h-8 w-8" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-gray-900 leading-tight">
+                      <h3 className="text-xl font-black text-gray-900 dark:text-white leading-tight">
                         {proposal.job?.title || 'Unknown Project'}
                       </h3>
                       <p className="text-xs font-bold text-indigo-600 mt-1 uppercase tracking-widest">
@@ -158,9 +158,9 @@ export default function FreelancerProposals() {
                     </div>
                   </div>
 
-                  <div className="lg:col-span-2 text-center lg:text-left border-l border-gray-50 lg:pl-10">
-                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Your Bid</p>
-                     <p className="text-3xl font-black text-gray-900 leading-none tracking-tight">${proposal.bidAmount}</p>
+                  <div className="lg:col-span-2 text-center lg:text-left border-l border-gray-50 dark:border-slate-800 lg:pl-10">
+                     <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Your Bid</p>
+                     <p className="text-3xl font-black text-gray-900 dark:text-white leading-none tracking-tight">${proposal.bidAmount}</p>
                   </div>
 
                   <div className="lg:col-span-3 flex justify-center lg:justify-start">
@@ -169,7 +169,7 @@ export default function FreelancerProposals() {
                       proposal.status === 'hired' ? "bg-emerald-50 text-emerald-600" :
                       proposal.status === 'rejected' ? "bg-red-50 text-red-600" :
                       proposal.status === 'shortlisted' ? "bg-blue-50 text-blue-600" :
-                      "bg-gray-50 text-gray-400"
+                      "bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-gray-500"
                     )}>
                       {proposal.status === 'hired' ? <CheckCircle2 className="h-4 w-4" /> :
                        proposal.status === 'rejected' ? <XCircle className="h-4 w-4" /> :
@@ -190,7 +190,7 @@ export default function FreelancerProposals() {
                        <div className="relative">
                           <button 
                             onClick={() => setActiveMenuId(activeMenuId === proposal.id ? null : proposal.id)}
-                            className="p-4 text-gray-300 hover:text-gray-900 transition-all"
+                            className="p-4 text-gray-300 hover:text-gray-900 dark:text-white transition-all"
                           >
                             <MoreHorizontal className="h-6 w-6" />
                           </button>
@@ -201,9 +201,9 @@ export default function FreelancerProposals() {
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 overflow-hidden"
+                                className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50 overflow-hidden"
                               >
-                                <button className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2">
+                                <button className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2">
                                   <Eye className="h-4 w-4" /> View Original Job
                                 </button>
                                 <button className="w-full text-left px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2">
@@ -221,17 +221,17 @@ export default function FreelancerProposals() {
           </AnimatePresence>
 
           {filteredProposals.length === 0 && (
-            <div className="py-32 text-center bg-white rounded-[4rem] border-2 border-dashed border-gray-100">
+            <div className="py-32 text-center bg-white dark:bg-slate-900 rounded-[4rem] border-2 border-dashed border-gray-100 dark:border-slate-700">
                <motion.div 
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 className="max-w-xs mx-auto space-y-6"
                >
-                 <div className="h-24 w-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto text-gray-200">
+                 <div className="h-24 w-24 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto text-gray-200">
                    <AlertCircle className="h-12 w-12" />
                  </div>
-                 <h3 className="text-2xl font-black text-gray-900 tracking-tight leading-none">Registry Empty</h3>
-                 <p className="text-gray-400 font-medium">No bids found matching your current filter criteria.</p>
+                 <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight leading-none">Registry Empty</h3>
+                 <p className="text-gray-400 dark:text-gray-500 font-medium">No bids found matching your current filter criteria.</p>
                  <Link to="/jobs" className="inline-block text-indigo-600 font-black underline underline-offset-8 decoration-2 hover:indigo-700 transition-colors">
                    Find Elite Projects
                  </Link>

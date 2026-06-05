@@ -14,7 +14,7 @@ export default function TrustSafety() {
   ];
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white dark:bg-slate-900 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 py-24">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
@@ -25,7 +25,7 @@ export default function TrustSafety() {
             <ShieldCheck className="h-10 w-10" />
           </div>
           <h1 className="text-5xl font-bold tracking-tight">{t('trust.title')}</h1>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
             {t('trust.subtitle')}
           </p>
         </motion.div>
@@ -39,7 +39,7 @@ export default function TrustSafety() {
                 </div>
                 <div className="space-y-4 pt-1">
                   <h3 className="text-2xl font-bold">{pillar.title}</h3>
-                  <p className="text-gray-600 text-lg leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
                     {pillar.desc}
                   </p>
                 </div>
@@ -47,7 +47,7 @@ export default function TrustSafety() {
             ))}
           </section>
 
-          <footer className="p-10 bg-gray-50 rounded-[2.5rem] border border-gray-100">
+          <footer className="p-10 bg-gray-50 dark:bg-slate-800 rounded-[2.5rem] border border-gray-100 dark:border-slate-700">
             <h4 className="font-bold text-xl mb-6">{t('trust.tipsTitle')}</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
@@ -56,7 +56,7 @@ export default function TrustSafety() {
                 t('trust.tips.t3'),
                 t('trust.tips.t4')
               ].map((tip, i) => (
-                <div key={i} className="flex gap-3 text-gray-600 font-medium">
+                <div key={i} className="flex gap-3 text-gray-600 dark:text-gray-300 font-medium">
                   <div className="h-6 w-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
                     {i + 1}
                   </div>

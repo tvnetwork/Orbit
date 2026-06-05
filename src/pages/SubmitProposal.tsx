@@ -124,15 +124,15 @@ export default function SubmitProposal() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50">
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-800">
     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
   </div>;
 
   return (
-    <div className="bg-gray-50 min-h-screen py-20 pb-40">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen py-20 pb-40">
       <div className="max-w-5xl mx-auto px-4">
         {/* Breadcrumb */}
-        <Link to={`/jobs/${jobId}`} className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-indigo-600 mb-8 transition-colors">
+        <Link to={`/jobs/${jobId}`} className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-indigo-600 mb-8 transition-colors">
           <ChevronLeft className="h-4 w-4" />
           {t('submitProposal.backToDetails')}
         </Link>
@@ -140,21 +140,21 @@ export default function SubmitProposal() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Main Form */}
           <div className="lg:col-span-8 space-y-8">
-            <div className="bg-white p-12 rounded-[3.5rem] shadow-sm border border-gray-100">
+            <div className="bg-white dark:bg-slate-900 p-12 rounded-[3.5rem] shadow-sm border border-gray-100 dark:border-slate-700">
               <div className="flex items-center gap-4 mb-12">
                 <div className="h-14 w-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-100">
                   <Send className="h-6 w-6" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-black text-gray-900 tracking-tight">{t('submitProposal.title')}</h1>
-                  <p className="text-gray-500 font-medium">{t('submitProposal.subtitle')}</p>
+                  <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{t('submitProposal.title')}</h1>
+                  <p className="text-gray-500 dark:text-gray-400 font-medium">{t('submitProposal.subtitle')}</p>
                 </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-10">
                 <div className="space-y-4">
                   <div className="flex justify-between items-end">
-                    <label className="text-sm font-black text-gray-700 uppercase tracking-widest ml-1">{t('submitProposal.coverLetter')}</label>
+                    <label className="text-sm font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest ml-1">{t('submitProposal.coverLetter')}</label>
                     <button 
                       type="button"
                       onClick={improveCoverLetter}
@@ -171,15 +171,15 @@ export default function SubmitProposal() {
                     placeholder={t('submitProposal.coverLetterPlaceholder')}
                     value={form.coverLetter}
                     onChange={e => setForm(prev => ({ ...prev, coverLetter: e.target.value }))}
-                    className="w-full px-8 py-6 bg-gray-50 border border-gray-100 rounded-[2.5rem] focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-300 transition-all leading-relaxed"
+                    className="w-full px-8 py-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2.5rem] focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 transition-all leading-relaxed"
                   />
                 </div>
 
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-xl font-black text-gray-900 tracking-tight">{t('submitProposal.milestonesTitle')}</h3>
-                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">{t('submitProposal.milestonesSubtitle')}</p>
+                      <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">{t('submitProposal.milestonesTitle')}</h3>
+                      <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">{t('submitProposal.milestonesSubtitle')}</p>
                     </div>
                     <button 
                       type="button"
@@ -196,7 +196,7 @@ export default function SubmitProposal() {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         key={m.id} 
-                        className="flex gap-4 items-start bg-gray-50 p-6 rounded-3xl border border-gray-100"
+                        className="flex gap-4 items-start bg-gray-50 dark:bg-slate-800 p-6 rounded-3xl border border-gray-100 dark:border-slate-700"
                       >
                         <div className="flex-1 space-y-4">
                            <input 
@@ -204,37 +204,37 @@ export default function SubmitProposal() {
                             placeholder={t('submitProposal.milestoneTitlePlaceholder')}
                             value={m.title}
                             onChange={e => updateMilestone(m.id, 'title', e.target.value)}
-                            className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-300"
+                            className="w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-300"
                           />
                           <div className="relative">
-                            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                             <input 
                               type="number"
                               placeholder={t('submitProposal.milestoneAmount')}
                               value={m.amount}
                               onChange={e => updateMilestone(m.id, 'amount', e.target.value)}
-                              className="w-full bg-white border border-gray-100 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-300"
+                              className="w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-300"
                             />
                           </div>
                         </div>
                         <button 
                           type="button"
                           onClick={() => removeMilestone(m.id)}
-                          className="p-3 text-gray-400 hover:text-red-500 transition-colors"
+                          className="p-3 text-gray-400 dark:text-gray-500 hover:text-red-500 transition-colors"
                         >
                           <Trash2 className="h-5 w-5" />
                         </button>
                       </motion.div>
                     ))}
                     {form.milestones.length === 0 && (
-                      <div className="text-center py-10 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-                        <p className="text-sm font-medium text-gray-400 italic">{t('submitProposal.noMilestones')}</p>
+                      <div className="text-center py-10 bg-gray-50 dark:bg-slate-800 rounded-3xl border-2 border-dashed border-gray-200 dark:border-slate-600">
+                        <p className="text-sm font-medium text-gray-400 dark:text-gray-500 italic">{t('submitProposal.noMilestones')}</p>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="pt-10 border-t border-gray-50 flex gap-4">
+                <div className="pt-10 border-t border-gray-50 dark:border-slate-800 flex gap-4">
                   <div className="flex-1">
                     <button 
                       type="submit"
@@ -253,28 +253,28 @@ export default function SubmitProposal() {
           {/* Sidebar Info */}
           <div className="lg:col-span-4 space-y-6 sticky top-28">
             <div className="bg-gray-900 text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-[60px] rounded-full -mr-16 -mt-16" />
+               <div className="absolute top-0 right-0 w-32 h-32 bg-white dark:bg-slate-900/5 blur-[60px] rounded-full -mr-16 -mt-16" />
                <h3 className="text-xl font-black mb-8">{t('submitProposal.bidSummary')}</h3>
                <div className="space-y-8">
                  <div className="space-y-3">
-                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('submitProposal.totalBidAmount')}</label>
+                   <label className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">{t('submitProposal.totalBidAmount')}</label>
                    <div className="relative">
-                     <DollarSign className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" />
+                     <DollarSign className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400 dark:text-gray-500" />
                      <input 
                        type="number"
                        value={form.bidAmount}
                        onChange={e => setForm(prev => ({ ...prev, bidAmount: e.target.value }))}
-                       className="w-full bg-white/10 border border-white/10 rounded-3xl px-16 py-6 text-3xl font-black focus:outline-none focus:ring-4 focus:ring-white/5 transition-all text-center"
+                       className="w-full bg-white dark:bg-slate-900/10 border border-white/10 rounded-3xl px-16 py-6 text-3xl font-black focus:outline-none focus:ring-4 focus:ring-white/5 transition-all text-center"
                        placeholder="0"
                      />
                    </div>
                  </div>
                  <div className="space-y-3">
-                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('submitProposal.projectDuration')}</label>
+                   <label className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">{t('submitProposal.projectDuration')}</label>
                    <select 
                      value={form.duration}
                      onChange={e => setForm(prev => ({ ...prev, duration: e.target.value }))}
-                     className="w-full bg-white/10 border border-white/10 rounded-3xl px-6 py-4 font-bold focus:outline-none focus:ring-4 focus:ring-white/5 transition-all"
+                     className="w-full bg-white dark:bg-slate-900/10 border border-white/10 rounded-3xl px-6 py-4 font-bold focus:outline-none focus:ring-4 focus:ring-white/5 transition-all"
                    >
                      <option value={t('submitProposal.durations.short')}>{t('submitProposal.durations.short')}</option>
                      <option value={t('submitProposal.durations.medium')}>{t('submitProposal.durations.medium')}</option>
@@ -286,7 +286,7 @@ export default function SubmitProposal() {
 
                <div className="mt-10 pt-10 border-t border-white/10 space-y-4">
                  <div className="flex justify-between text-sm">
-                   <span className="text-gray-400 font-medium tracking-tight">{t('submitProposal.serviceFee')}</span>
+                   <span className="text-gray-400 dark:text-gray-500 font-medium tracking-tight">{t('submitProposal.serviceFee')}</span>
                    <span className="font-bold text-red-400">-${(Number(form.bidAmount) * 0.1).toFixed(2)}</span>
                  </div>
                  <div className="flex justify-between text-lg">
@@ -296,16 +296,16 @@ export default function SubmitProposal() {
                </div>
             </div>
 
-            <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100">
-               <h4 className="text-sm font-black text-gray-900 border-b border-gray-50 pb-4 mb-4">{t('submitProposal.quickGlimpse')}</h4>
+            <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700">
+               <h4 className="text-sm font-black text-gray-900 dark:text-white border-b border-gray-50 dark:border-slate-800 pb-4 mb-4">{t('submitProposal.quickGlimpse')}</h4>
                <div className="space-y-4">
                  <div className="flex gap-4">
                    <div className="h-10 w-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 shrink-0">
                      <Briefcase className="h-5 w-5" />
                    </div>
                    <div>
-                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{t('submitProposal.fixedBudget')}</p>
-                     <p className="font-black text-gray-900 tracking-tight leading-tight">${job.budget}</p>
+                     <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-none mb-1">{t('submitProposal.fixedBudget')}</p>
+                     <p className="font-black text-gray-900 dark:text-white tracking-tight leading-tight">${job.budget}</p>
                    </div>
                  </div>
                  <div className="flex gap-4">
@@ -313,8 +313,8 @@ export default function SubmitProposal() {
                      <Clock className="h-5 w-5" />
                    </div>
                    <div>
-                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{t('submitProposal.category')}</p>
-                     <p className="font-black text-gray-900 tracking-tight leading-tight">{job.category}</p>
+                     <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-none mb-1">{t('submitProposal.category')}</p>
+                     <p className="font-black text-gray-900 dark:text-white tracking-tight leading-tight">{job.category}</p>
                    </div>
                  </div>
                </div>

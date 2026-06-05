@@ -157,7 +157,7 @@ export default function JobDetails() {
   const isDeadlinePassed = job.deadline ? new Date() > new Date(job.deadline) : false;
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen py-12">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Left Column: Job Info */}
@@ -165,24 +165,24 @@ export default function JobDetails() {
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-gray-100 shadow-xl shadow-indigo-500/5"
+            className="bg-white dark:bg-slate-900 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl shadow-indigo-500/5"
           >
             <div className="flex flex-wrap items-center gap-3 mb-6">
               <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-bold uppercase tracking-wider">{job.category}</span>
-              <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-lg text-xs font-bold uppercase tracking-wider">
+              <span className="px-3 py-1 bg-gray-100 dark:bg-slate-800/50 text-gray-500 dark:text-gray-400 rounded-lg text-xs font-bold uppercase tracking-wider">
                 {t(`jobs.status.${job.status}`)}
               </span>
             </div>
             
-            <h1 className="text-4xl font-bold text-gray-900 mb-6">{job.title}</h1>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">{job.title}</h1>
             
-            <div className="flex flex-wrap gap-8 py-8 border-y border-gray-50 mb-8">
+            <div className="flex flex-wrap gap-8 py-8 border-y border-gray-50 dark:border-slate-800 mb-8">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-emerald-50 rounded-xl text-emerald-600">
                   <DollarSign className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-bold uppercase">{t('jobs.budget')}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{t('jobs.budget')}</p>
                   <p className="text-lg font-bold">${job.budget.toLocaleString()}</p>
                 </div>
               </div>
@@ -191,7 +191,7 @@ export default function JobDetails() {
                   <Clock className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-bold uppercase">{t('jobs.budgetType')}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{t('jobs.budgetType')}</p>
                   <p className="text-lg font-bold capitalize">{job.type === 'fixed' ? t('jobs.filterFixed') : t('jobs.filterHourly')}</p>
                 </div>
               </div>
@@ -200,7 +200,7 @@ export default function JobDetails() {
                   <Calendar className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-bold uppercase">{t('jobs.posted')}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{t('jobs.posted')}</p>
                   <p className="text-lg font-bold">{formatDate(job.createdAt)}</p>
                 </div>
               </div>
@@ -210,7 +210,7 @@ export default function JobDetails() {
                     <Clock className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 font-bold uppercase">{t('jobs.duration')}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{t('jobs.duration')}</p>
                     <p className="text-lg font-bold">{job.duration}</p>
                   </div>
                 </div>
@@ -221,7 +221,7 @@ export default function JobDetails() {
                     <Clock className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 font-bold uppercase">{t('jobs.deadline')}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{t('jobs.deadline')}</p>
                     <p className={`text-lg font-bold ${isDeadlinePassed ? 'text-red-600' : ''}`}>{formatDate(job.deadline)}</p>
                   </div>
                 </div>
@@ -230,7 +230,7 @@ export default function JobDetails() {
  
             <div className="prose prose-indigo max-w-none">
               <h3 className="text-xl font-bold mb-4">{t('jobs.description')}</h3>
-              <div className="text-gray-600 leading-relaxed markdown-container">
+              <div className="text-gray-600 dark:text-gray-300 leading-relaxed markdown-container">
                 <ReactMarkdown>{job.description}</ReactMarkdown>
               </div>
             </div>
@@ -243,18 +243,18 @@ export default function JobDetails() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2 px-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2 px-2">
                 {t('jobs.proposalsCount', { count: proposals.length })}
               </h2>
               <div className="space-y-4">
                 {proposals.length === 0 ? (
-                  <div className="bg-white p-12 rounded-[2rem] text-center border border-dashed border-gray-200">
+                  <div className="bg-white dark:bg-slate-900 p-12 rounded-[2rem] text-center border border-dashed border-gray-200 dark:border-slate-600">
                     <Briefcase className="h-10 w-10 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">{t('jobs.noProposalsYet')}</p>
+                    <p className="text-gray-500 dark:text-gray-400">{t('jobs.noProposalsYet')}</p>
                   </div>
                 ) : (
               proposals.map(proposal => (
-                <div key={proposal.id} className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-4">
+                <div key={proposal.id} className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm space-y-4">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-4">
                       <div className="h-12 w-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
@@ -270,13 +270,13 @@ export default function JobDetails() {
                         <>
                           <button 
                             onClick={() => handleProposalAction(proposal.id, 'rejected')}
-                            className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 transition-colors"
                           >
                             <XCircle className="h-6 w-6" />
                           </button>
                           <button 
                             onClick={() => handleProposalAction(proposal.id, 'accepted')}
-                            className="p-2 text-gray-400 hover:text-emerald-500 transition-colors"
+                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-emerald-500 transition-colors"
                           >
                             <CheckCircle className="h-6 w-6" />
                           </button>
@@ -288,7 +288,7 @@ export default function JobDetails() {
                       )}
                     </div>
                   </div>
-                      <div className="text-gray-600 text-sm italic markdown-container">
+                      <div className="text-gray-600 dark:text-gray-300 text-sm italic markdown-container">
                         <ReactMarkdown>{proposal.coverLetter}</ReactMarkdown>
                       </div>
                     </div>
@@ -306,7 +306,7 @@ export default function JobDetails() {
             <motion.div 
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-xl shadow-indigo-500/5 sticky top-24"
+              className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl shadow-indigo-500/5 sticky top-24"
             >
               {hasApplied ? (
                 <div className="text-center py-10 space-y-4">
@@ -314,7 +314,7 @@ export default function JobDetails() {
                     <CheckCircle className="h-8 w-8" />
                   </div>
                   <h3 className="text-xl font-bold">{t('jobs.applicationSent')}</h3>
-                  <p className="text-gray-500 text-sm">{t('jobs.applicationSentDesc')}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">{t('jobs.applicationSentDesc')}</p>
                   
                   {proposals.find(p => p.freelancerId === user?.uid)?.status === 'accepted' && (
                     <motion.button
@@ -342,7 +342,7 @@ export default function JobDetails() {
                 <div className="text-center py-10 space-y-4">
                   <AlertTriangle className="h-16 w-16 text-yellow-500 mx-auto" />
                   <h3 className="text-xl font-bold">{isDeadlinePassed ? t('jobs.deadlinePassed') : t('jobs.projectClosed')}</h3>
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">
                     {isDeadlinePassed 
                       ? t('jobs.deadlinePassedDesc') 
                       : t('jobs.projectClosedDesc')}
@@ -353,25 +353,25 @@ export default function JobDetails() {
                   <h3 className="text-xl font-bold mb-6">{t('jobs.submitProposal')}</h3>
                   <form onSubmit={handleSubmitProposal} className="space-y-6">
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-gray-500 uppercase">{t('jobs.yourBid')}</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">{t('jobs.yourBid')}</label>
                       <input 
                         required
                         type="number" 
                         placeholder={job.budget.toString()}
                         value={proposalForm.bidAmount}
                         onChange={e => setProposalForm(prev => ({ ...prev, bidAmount: e.target.value }))}
-                        className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-mono"
+                        className="w-full px-6 py-4 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-mono"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-gray-500 uppercase">{t('jobs.coverLetter')}</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">{t('jobs.coverLetter')}</label>
                       <textarea 
                         required
                         rows={6}
                         placeholder={t('jobs.coverLetterPlaceholder')}
                         value={proposalForm.coverLetter}
                         onChange={e => setProposalForm(prev => ({ ...prev, coverLetter: e.target.value }))}
-                        className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-[1.5rem] focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+                        className="w-full px-6 py-4 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[1.5rem] focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
                       />
                     </div>
                     <button 
@@ -382,17 +382,17 @@ export default function JobDetails() {
                       {submitting ? <BrandIcon className="h-5 w-5 animate-pulse" /> : <Send className="h-4 w-4" />}
                       {t('jobs.sendProposal')}
                     </button>
-                    <p className="text-[10px] text-center text-gray-400">{t('jobs.serviceFeeNote')}</p>
+                    <p className="text-[10px] text-center text-gray-400 dark:text-gray-500">{t('jobs.serviceFeeNote')}</p>
                   </form>
                 </>
               )}
             </motion.div>
           )}
  
-          <div className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6 md:space-y-8">
+          <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm space-y-6 md:space-y-8">
             {freelancerProfile ? (
               <div className="space-y-4">
-                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('jobs.assignedFreelancer')}</h4>
+                <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{t('jobs.assignedFreelancer')}</h4>
                 <div className="flex items-center gap-4">
                   <div className="h-14 w-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 border border-emerald-100 overflow-hidden">
                     {freelancerProfile.photoURL ? (
@@ -402,15 +402,15 @@ export default function JobDetails() {
                     )}
                   </div>
                   <div>
-                    <Link to={`/profile/${freelancerProfile.uid}`} className="font-bold text-gray-900 leading-none mb-1 hover:text-indigo-600 transition-colors block">{freelancerProfile.displayName || t('profile.expertProfessional')}</Link>
-                    <p className="text-[10px] text-gray-500 font-mono tracking-tighter">ID: {freelancerProfile.uid.slice(0, 16)}</p>
+                    <Link to={`/profile/${freelancerProfile.uid}`} className="font-bold text-gray-900 dark:text-white leading-none mb-1 hover:text-indigo-600 transition-colors block">{freelancerProfile.displayName || t('profile.expertProfessional')}</Link>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 font-mono tracking-tighter">ID: {freelancerProfile.uid.slice(0, 16)}</p>
                   </div>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-2xl space-y-1">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase">{t('jobs.memberSince')}</p>
+                <div className="p-4 bg-gray-50 dark:bg-slate-800 rounded-2xl space-y-1">
+                  <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">{t('jobs.memberSince')}</p>
                   <div className="flex items-center text-emerald-600 gap-1 mt-0.5">
                     <Calendar className="h-3 w-3" />
-                    <span className="font-bold text-gray-900 text-sm">
+                    <span className="font-bold text-gray-900 dark:text-white text-sm">
                       {formatDate(freelancerProfile.createdAt)}
                     </span>
                   </div>
@@ -439,7 +439,7 @@ export default function JobDetails() {
               </div>
             ) : (
               <div className="space-y-4">
-                <h3 className="text-xl font-bold text-gray-900 tracking-tight">{t('jobs.projectStakeholder')}</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">{t('jobs.projectStakeholder')}</h3>
                 <div className="flex items-center gap-4">
                   <div className="h-14 w-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100 overflow-hidden">
                     {clientProfile?.photoURL ? (
@@ -449,15 +449,15 @@ export default function JobDetails() {
                     )}
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 leading-none mb-1">{clientProfile?.displayName || 'Elite Client'}</p>
-                    <p className="text-[10px] text-gray-500 font-mono tracking-tighter">ID: {job.clientId.slice(0, 16)}</p>
+                    <p className="font-bold text-gray-900 dark:text-white leading-none mb-1">{clientProfile?.displayName || 'Elite Client'}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 font-mono tracking-tighter">ID: {job.clientId.slice(0, 16)}</p>
                   </div>
                 </div>
               </div>
             )}
  
             <div className="space-y-2">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{t('jobs.verificationStatus')}</p>
+              <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{t('jobs.verificationStatus')}</p>
               <div className="flex items-center gap-2 text-emerald-600">
                 <CheckCircle className="h-4 w-4" />
                 <span className="text-sm font-bold">{t('jobs.paymentVerified')}</span>
@@ -468,7 +468,7 @@ export default function JobDetails() {
               </div>
             </div>
  
-            <button className="w-full py-4 text-sm font-bold text-gray-500 border border-gray-100 rounded-2xl hover:bg-gray-50 transition-colors">
+            <button className="w-full py-4 text-sm font-bold text-gray-500 dark:text-gray-400 border border-gray-100 dark:border-slate-700 rounded-2xl hover:bg-gray-50 dark:bg-slate-800 transition-colors">
               {t('jobs.viewHistory')}
             </button>
           </div>

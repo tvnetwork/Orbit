@@ -33,11 +33,11 @@ export default function LanguageSwitcher() {
     <div className="relative">
       <button
         onClick={toggleOpen}
-        className="flex items-center gap-2 px-4 py-2 bg-white rounded-2xl border border-gray-100 hover:border-indigo-300 transition-all text-sm font-bold text-gray-900 shadow-sm"
+        className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-700 hover:border-indigo-300 transition-all text-sm font-bold text-gray-900 dark:text-white shadow-sm"
       >
         <span className="text-lg opacity-80">{currentLanguage.flag}</span>
         <span className="hidden sm:inline">{currentLanguage.name}</span>
-        <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`h-4 w-4 text-gray-400 dark:text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       <AnimatePresence>
@@ -51,18 +51,18 @@ export default function LanguageSwitcher() {
               initial={{ opacity: 0, y: 10, scale: 0.95, filter: 'blur(10px)' }}
               animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
               exit={{ opacity: 0, y: 10, scale: 0.95, filter: 'blur(10px)' }}
-              className="absolute right-0 mt-3 w-64 bg-white rounded-[2rem] shadow-2xl border border-gray-100 z-[120] flex flex-col max-h-[480px] overflow-hidden"
+              className="absolute right-0 mt-3 w-64 bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-slate-700 z-[120] flex flex-col max-h-[480px] overflow-hidden"
             >
-              <div className="p-4 border-b border-gray-50 bg-gray-50/50">
+              <div className="p-4 border-b border-gray-50 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50">
                 <div className="relative group">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-indigo-600 transition-colors" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 group-focus-within:text-indigo-600 transition-colors" />
                   <input 
                     autoFocus
                     type="text"
                     placeholder="Search languages..."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-300 transition-all font-medium"
+                    className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-300 transition-all font-medium"
                   />
                 </div>
               </div>
@@ -76,7 +76,7 @@ export default function LanguageSwitcher() {
                       className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all text-sm font-bold ${
                         activeCode === lang.code 
                           ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' 
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                          : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 hover:text-gray-900 dark:text-white'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -87,7 +87,7 @@ export default function LanguageSwitcher() {
                     </button>
                   ))
                 ) : (
-                  <div className="py-8 text-center text-gray-400 text-xs font-bold uppercase tracking-widest">
+                  <div className="py-8 text-center text-gray-400 dark:text-gray-500 text-xs font-bold uppercase tracking-widest">
                     No languages found
                   </div>
                 )}

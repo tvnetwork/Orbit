@@ -143,18 +143,18 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
             animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
             exit={inline ? { opacity: 0 } : { opacity: 0, y: 40, scale: 0.9, filter: 'blur(10px)' }}
             className={cn(
-              "bg-white border border-gray-100 overflow-hidden flex flex-col pointer-events-auto",
+              "bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col pointer-events-auto",
               inline ? "w-full h-full rounded-[2.5rem]" : "w-[90vw] sm:w-[400px] rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(79,70,229,0.25)] mb-6 h-[600px]"
             )}
           >
             {/* Header */}
             <div className="bg-indigo-600 p-8 text-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white dark:bg-slate-900/10 rounded-full -mr-16 -mt-16 blur-2xl" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-indigo-400/20 rounded-full -ml-12 -mb-12 blur-xl" />
               
               <div className="flex items-center justify-between relative z-10">
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20">
+                  <div className="h-12 w-12 bg-white dark:bg-slate-900/20 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20">
                     <Bot className="h-6 w-6" />
                   </div>
                   <div>
@@ -169,13 +169,13 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={() => setIsMinimized(true)}
-                      className="p-2 hover:bg-white/20 rounded-xl transition-all duration-300"
+                      className="p-2 hover:bg-white dark:bg-slate-900/20 rounded-xl transition-all duration-300"
                     >
                       <Minus className="h-5 w-5" />
                     </button>
                     <button 
                       onClick={() => setIsOpen(false)}
-                      className="p-2 hover:bg-white/20 rounded-xl transition-all duration-300"
+                      className="p-2 hover:bg-white dark:bg-slate-900/20 rounded-xl transition-all duration-300"
                     >
                       <X className="h-5 w-5" />
                     </button>
@@ -187,7 +187,7 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
             {/* Messages */}
             <div 
               ref={scrollRef}
-              className="flex-1 overflow-y-auto p-8 space-y-6 bg-gray-50/30 scroll-smooth"
+              className="flex-1 overflow-y-auto p-8 space-y-6 bg-gray-50 dark:bg-slate-800/30 scroll-smooth"
             >
               {messages.map((msg) => (
                 <motion.div 
@@ -203,18 +203,18 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
                     "px-5 py-4 rounded-[1.5rem] text-sm leading-relaxed max-w-[90%] shadow-sm",
                     msg.sender === 'user' 
                       ? "bg-indigo-600 text-white rounded-br-none" 
-                      : "bg-white border border-gray-100 text-gray-800 rounded-bl-none"
+                      : "bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-gray-800 dark:text-gray-100 rounded-bl-none"
                   )}>
                     {msg.text}
                   </div>
-                  <span className="text-[10px] text-gray-400 font-bold uppercase mt-2 px-1 tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase mt-2 px-1 tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
                     {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </motion.div>
               ))}
               {isTyping && (
                 <div className="flex items-start">
-                  <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm flex gap-1 items-center">
+                  <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm flex gap-1 items-center">
                     <div className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                     <div className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                     <div className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -224,14 +224,14 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
             </div>
 
             {/* Input */}
-            <div className="p-6 bg-white border-t border-gray-50">
+            <div className="p-6 bg-white dark:bg-slate-900 border-t border-gray-50 dark:border-slate-800">
               <form onSubmit={handleSend} className="flex gap-3">
                 <input 
                   type="text"
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   placeholder={t('help.chatPlaceholder')}
-                  className="flex-1 bg-gray-50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white focus:border-indigo-200 outline-none transition-all text-sm font-medium"
+                  className="flex-1 bg-gray-50 dark:bg-slate-800 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-200 outline-none transition-all text-sm font-medium"
                 />
                 <button 
                   type="submit"
@@ -258,7 +258,7 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
             className={cn(
               "h-16 w-16 rounded-[2rem] flex items-center justify-center shadow-[0_20px_50px_rgba(79,70,229,0.3)] transition-all duration-500 pointer-events-auto",
               isOpen && !isMinimized 
-                ? "bg-white text-indigo-600 rotate-180 opacity-0 pointer-events-none translate-y-12" 
+                ? "bg-white dark:bg-slate-900 text-indigo-600 rotate-180 opacity-0 pointer-events-none translate-y-12" 
                 : "bg-indigo-600 text-white translate-y-0 shadow-indigo-200"
             )}
           >

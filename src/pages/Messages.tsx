@@ -201,27 +201,27 @@ export default function Messages() {
   };
 
   return (
-    <div className="relative flex min-h-[calc(100vh-64px)] bg-white md:h-[calc(100vh-64px)] md:overflow-hidden">
+    <div className="relative flex min-h-[calc(100vh-64px)] bg-white dark:bg-slate-900 md:h-[calc(100vh-64px)] md:overflow-hidden">
       
       {/* Sidebar */}
       <div className={cn(
-        "w-full md:w-80 lg:w-96 border-r border-gray-100 flex flex-col shrink-0 transition-all duration-300",
+        "w-full md:w-80 lg:w-96 border-r border-gray-100 dark:border-slate-700 flex flex-col shrink-0 transition-all duration-300",
         selectedChatId ? "hidden md:flex" : "flex"
       )}>
-        <div className="p-6 border-b border-gray-100">
+        <div className="p-6 border-b border-gray-100 dark:border-slate-700">
           <h1 className="text-2xl font-bold mb-4">{t('messages.title')}</h1>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <input 
               type="text" 
               placeholder={t('messages.searchPlaceholder')}
-              className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-all"
             />
           </div>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <div className="px-6 py-4 bg-gray-50/50">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{t('messages.yourInbox')}</p>
+          <div className="px-6 py-4 bg-gray-50 dark:bg-slate-800/50">
+            <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">{t('messages.yourInbox')}</p>
           </div>
 
           <div className="divide-y divide-gray-50">
@@ -238,27 +238,27 @@ export default function Messages() {
                     selectedChatId === chat.id ? "bg-indigo-50" : ""
                   )}
                 >
-                  <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                  <div className="h-12 w-12 rounded-full bg-gray-100 dark:bg-slate-800/50 flex items-center justify-center shrink-0 overflow-hidden">
                     {otherProfile?.photoURL ? (
                       <img src={otherProfile.photoURL} alt="" className="h-full w-full object-cover" />
                     ) : (
-                      <UserIcon className="h-6 w-6 text-gray-400" />
+                      <UserIcon className="h-6 w-6 text-gray-400 dark:text-gray-500" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start mb-1">
-                      <p className="font-bold text-gray-900 truncate">
+                      <p className="font-bold text-gray-900 dark:text-white truncate">
                         {otherProfile?.displayName || `${t('messages.userId')}: ${otherAuthorId?.slice(0, 8)}`}
                       </p>
-                      <p className="text-[10px] text-gray-400 uppercase font-bold">{chat.updatedAt ? formatTime(chat.updatedAt) : ''}</p>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold">{chat.updatedAt ? formatTime(chat.updatedAt) : ''}</p>
                     </div>
-                    <p className="text-sm text-gray-500 truncate">{chat.lastMessage || t('messages.noMessages')}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{chat.lastMessage || t('messages.noMessages')}</p>
                   </div>
                 </button>
               )
             })}
             {chats.length === 0 && (
-              <div className="p-12 text-center text-gray-400 text-sm italic">
+              <div className="p-12 text-center text-gray-400 dark:text-gray-500 text-sm italic">
                 {t('messages.noChats')}
               </div>
             )}
@@ -268,17 +268,17 @@ export default function Messages() {
 
       {/* Main Chat Area */}
       <div className={cn(
-        "flex-1 flex flex-col bg-gray-50/30 transition-all duration-300",
+        "flex-1 flex flex-col bg-gray-50 dark:bg-slate-800/30 transition-all duration-300",
         !selectedChatId ? "hidden md:flex" : "flex"
       )}>
         {selectedChatId ? (
           <>
             {/* Header */}
-            <div className="h-20 bg-white border-b border-gray-100 px-4 md:px-8 flex items-center justify-between shrink-0 relative">
+            <div className="h-20 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-700 px-4 md:px-8 flex items-center justify-between shrink-0 relative">
               <div className="flex items-center gap-2 md:gap-4">
                 <button 
                   onClick={() => setSelectedChatId(null)}
-                  className="p-2 -ml-2 text-gray-400 hover:text-gray-900 md:hidden"
+                  className="p-2 -ml-2 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-white md:hidden"
                 >
                   <ArrowLeft className="h-6 w-6" />
                 </button>
@@ -297,7 +297,7 @@ export default function Messages() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-bold text-gray-900 truncate text-sm md:text-base">
+                  <p className="font-bold text-gray-900 dark:text-white truncate text-sm md:text-base">
                     {isCommunity ? t('messages.communityForum') : (resolvedProfiles[selectedChat?.participantIds?.find(id => id !== user?.uid) || '']?.displayName || `${t('messages.userId')}: ${selectedChat?.participantIds?.find(id => id !== user?.uid)?.slice(0, 8)}`)}
                   </p>
                   <div className="flex items-center gap-1.5">
@@ -311,10 +311,10 @@ export default function Messages() {
             <div className="flex items-center gap-1 md:gap-2">
                 {!isCommunity && (
                   <>
-                    <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all hidden sm:block">
+                    <button className="p-2 text-gray-400 dark:text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all hidden sm:block">
                       <Phone className="h-5 w-5" />
                     </button>
-                    <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all hidden sm:block">
+                    <button className="p-2 text-gray-400 dark:text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all hidden sm:block">
                       <Video className="h-5 w-5" />
                     </button>
                   </>
@@ -322,7 +322,7 @@ export default function Messages() {
                 <div className="relative">
                   <button 
                     onClick={() => setShowMenu(showMenu === 'chat' ? null : 'chat')}
-                    className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
+                    className="p-2 text-gray-400 dark:text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
                   >
                     <MoreHorizontal className="h-5 w-5" />
                   </button>
@@ -334,7 +334,7 @@ export default function Messages() {
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50"
+                        className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50"
                       >
                         {!isCommunity && (
                           <button 
@@ -343,7 +343,7 @@ export default function Messages() {
                               if (otherId) window.location.href = `/profile/${otherId}`;
                               setShowMenu(null);
                             }}
-                            className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2"
+                            className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2"
                           >
                             <UserIcon className="h-4 w-4" /> View Profile
                           </button>
@@ -353,11 +353,11 @@ export default function Messages() {
                             // Implement clear chat logic if needed
                             setShowMenu(null);
                           }}
-                          className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2"
+                          className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2"
                         >
                           <Search className="h-4 w-4" /> Search History
                         </button>
-                        <div className="h-px bg-gray-50 my-1" />
+                        <div className="h-px bg-gray-50 dark:bg-slate-800 my-1" />
                         <button 
                           onClick={() => {
                             // Implement report/block logic
@@ -391,11 +391,11 @@ export default function Messages() {
                     )}
                   >
                     {showAvatar && (
-                      <div className="h-10 w-10 rounded-xl bg-gray-100 overflow-hidden shrink-0 shadow-sm">
+                      <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-slate-800/50 overflow-hidden shrink-0 shadow-sm">
                         {msg.senderPhoto ? (
                           <img src={msg.senderPhoto} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
                         ) : (
-                          <UserIcon className="h-full w-full p-2 text-gray-400" />
+                          <UserIcon className="h-full w-full p-2 text-gray-400 dark:text-gray-500" />
                         )}
                       </div>
                     )}
@@ -404,7 +404,7 @@ export default function Messages() {
                       isMine ? "items-end" : "items-start"
                     )}>
                       {!isMine && isCommunity && (
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">
+                        <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">
                           {msg.senderName}
                         </p>
                       )}
@@ -412,13 +412,13 @@ export default function Messages() {
                         "max-w-[85vw] px-4 py-3 rounded-[1.5rem] shadow-sm sm:max-w-md sm:px-6 sm:py-4 sm:rounded-[2rem]",
                         isMine 
                           ? "bg-indigo-600 text-white rounded-br-none" 
-                          : "bg-white border border-gray-100 text-gray-900 rounded-bl-none"
+                          : "bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-gray-900 dark:text-white rounded-bl-none"
                       )}>
                         <div className="markdown-container text-sm leading-relaxed">
                           <ReactMarkdown>{msg.text}</ReactMarkdown>
                         </div>
                       </div>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase mt-2 mx-2">
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase mt-2 mx-2">
                         {msg.createdAt ? formatTime(msg.createdAt) : ''}
                       </p>
                     </div>
@@ -429,7 +429,7 @@ export default function Messages() {
             </div>
 
             {/* Input */}
-            <div className="border-t border-gray-100 bg-white p-4 sm:p-6 md:p-8">
+            <div className="border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 sm:p-6 md:p-8">
               <form onSubmit={handleSendMessage} className="mx-auto flex max-w-5xl gap-3 sm:gap-4">
                 <div className="flex-1 relative group">
                   <input 
@@ -437,7 +437,7 @@ export default function Messages() {
                     value={newMessage}
                     onChange={e => setNewMessage(e.target.value)}
                     placeholder={isCommunity ? "Share something with the community..." : t('messages.messagePlaceholder')}
-                    className="w-full rounded-[1.5rem] border border-gray-100 bg-gray-50 px-5 py-4 text-sm shadow-inner outline-none transition-all focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100 sm:px-8 sm:py-5 sm:rounded-[2rem]"
+                    className="w-full rounded-[1.5rem] border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-5 py-4 text-sm shadow-inner outline-none transition-all focus:border-indigo-400 focus:bg-white dark:bg-slate-900 focus:ring-4 focus:ring-indigo-100 sm:px-8 sm:py-5 sm:rounded-[2rem]"
                   />
                 </div>
                 <motion.button 
@@ -461,8 +461,8 @@ export default function Messages() {
             <div className="h-24 w-24 bg-indigo-50 text-indigo-200 rounded-[3rem] flex items-center justify-center mb-8 shadow-inner">
               <MessageSquareIcon className="h-12 w-12" />
             </div>
-            <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t('messages.yourInbox')}</h2>
-            <p className="text-gray-500 max-w-sm mt-4 leading-relaxed">{t('messages.selectConversation')}</p>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{t('messages.yourInbox')}</h2>
+            <p className="text-gray-500 dark:text-gray-400 max-w-sm mt-4 leading-relaxed">{t('messages.selectConversation')}</p>
             
             <button 
               onClick={() => setSelectedChatId('community')}

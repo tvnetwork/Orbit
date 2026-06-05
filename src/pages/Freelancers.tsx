@@ -148,32 +148,32 @@ export default function Freelancers() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-24">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen pb-24">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 pt-16 pb-12">
+      <div className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-700 pt-16 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-1">
-              <h1 className="text-4xl font-black text-gray-900 tracking-tight">{t('freelancers.title')}</h1>
-              <p className="text-gray-500 font-medium font-sans">{t('freelancers.subtitle')}</p>
+              <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">{t('freelancers.title')}</h1>
+              <p className="text-gray-500 dark:text-gray-400 font-medium font-sans">{t('freelancers.subtitle')}</p>
             </div>
             
             <div className="flex items-center gap-3">
               {(selectedSkills.length > 0 || selectedLanguages.length > 0 || selectedCategories.length > 0 || selectedTimezones.length > 0 || searchQuery || maxRate < 500) && (
                 <button 
                   onClick={clearFilters}
-                  className="text-xs font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-widest px-4 py-2 flex items-center gap-2 transition-colors"
+                  className="text-xs font-bold text-gray-400 dark:text-gray-500 hover:text-indigo-600 uppercase tracking-widest px-4 py-2 flex items-center gap-2 transition-colors"
                 >
                   <X className="h-4 w-4" />
                   {t('freelancers.clearFilters')}
                 </button>
               )}
-              <div className="flex bg-gray-50 p-1.5 rounded-2xl border border-gray-100">
+              <div className="flex bg-gray-50 dark:bg-slate-800 p-1.5 rounded-2xl border border-gray-100 dark:border-slate-700">
                 <button 
                   onClick={() => setViewMode('grid')}
                   className={cn(
                     "p-2.5 rounded-xl transition-all",
-                    viewMode === 'grid' ? "bg-white text-indigo-600 shadow-sm" : "text-gray-400 hover:text-gray-600"
+                    viewMode === 'grid' ? "bg-white dark:bg-slate-900 text-indigo-600 shadow-sm" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
                   )}
                 >
                   <LayoutGrid className="h-5 w-5" />
@@ -182,7 +182,7 @@ export default function Freelancers() {
                   onClick={() => setViewMode('list')}
                   className={cn(
                     "p-2.5 rounded-xl transition-all",
-                    viewMode === 'list' ? "bg-white text-indigo-600 shadow-sm" : "text-gray-400 hover:text-gray-600"
+                    viewMode === 'list' ? "bg-white dark:bg-slate-900 text-indigo-600 shadow-sm" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
                   )}
                 >
                   <List className="h-5 w-5" />
@@ -200,13 +200,13 @@ export default function Freelancers() {
           </div>
 
           <div className="mt-10 relative">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
             <input 
               type="text"
               placeholder={t('freelancers.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-100 rounded-[2rem] pl-16 pr-8 py-5 text-lg focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-300 transition-all font-medium"
+              className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2rem] pl-16 pr-8 py-5 text-lg focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-300 transition-all font-medium"
             />
           </div>
         </div>
@@ -218,18 +218,18 @@ export default function Freelancers() {
           <aside className={cn(
             "lg:w-80 space-y-10 shrink-0",
             !showFilters && "hidden lg:block",
-            showFilters && "fixed inset-0 z-50 bg-white p-8 overflow-y-auto lg:relative lg:p-0 lg:bg-transparent"
+            showFilters && "fixed inset-0 z-50 bg-white dark:bg-slate-900 p-8 overflow-y-auto lg:relative lg:p-0 lg:bg-transparent"
           )}>
             <div className="flex lg:hidden justify-between items-center mb-8">
               <h2 className="text-2xl font-bold">Filters</h2>
-              <button onClick={() => setShowFilters(false)} className="p-2 bg-gray-100 rounded-xl">
+              <button onClick={() => setShowFilters(false)} className="p-2 bg-gray-100 dark:bg-slate-800/50 rounded-xl">
                 <X className="h-6 w-6" />
               </button>
             </div>
 
             {/* Categories */}
             <div className="space-y-6">
-              <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+              <h3 className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-2">
                 <LayoutGrid className="h-4 w-4" /> {t('freelancers.professionalArea')}
               </h3>
               <div className="space-y-2">
@@ -241,7 +241,7 @@ export default function Freelancers() {
                       "w-full text-left px-5 py-3 rounded-2xl text-sm font-bold transition-all border flex justify-between items-center",
                       selectedCategories.includes(cat)
                         ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
-                        : "bg-white text-gray-600 border-gray-200 hover:border-indigo-200"
+                        : "bg-white dark:bg-slate-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-indigo-200"
                     )}
                   >
                     {cat}
@@ -254,7 +254,7 @@ export default function Freelancers() {
             {/* Hourly Rate */}
             <div className="space-y-6">
               <div className="flex justify-between items-center">
-                <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                <h3 className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-2">
                   <DollarSign className="h-4 w-4" /> {t('freelancers.maxRate')}
                 </h3>
                 <span className="text-sm font-bold text-indigo-600">${maxRate}/hr</span>
@@ -266,9 +266,9 @@ export default function Freelancers() {
                 step="5"
                 value={maxRate}
                 onChange={(e) => setMaxRate(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
               />
-              <div className="flex justify-between text-[10px] font-bold text-gray-400">
+              <div className="flex justify-between text-[10px] font-bold text-gray-400 dark:text-gray-500">
                 <span>$10</span>
                 <span>$500+</span>
               </div>
@@ -276,7 +276,7 @@ export default function Freelancers() {
 
             {/* Skill Stack */}
             <div className="space-y-6">
-              <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+              <h3 className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-2">
                 <Cpu className="h-4 w-4" /> {t('freelancers.skillStack')}
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -288,7 +288,7 @@ export default function Freelancers() {
                       "px-4 py-2 rounded-xl text-xs font-bold transition-all border",
                       selectedSkills.includes(skill)
                         ? "bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-100"
-                        : "bg-white text-gray-600 border-gray-100 hover:border-indigo-200"
+                        : "bg-white dark:bg-slate-900 text-gray-600 dark:text-gray-300 border-gray-100 dark:border-slate-700 hover:border-indigo-200"
                     )}
                   >
                     {skill}
@@ -299,7 +299,7 @@ export default function Freelancers() {
 
             {/* Timezone */}
             <div className="space-y-6">
-              <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+              <h3 className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-2">
                 <Globe className="h-4 w-4" /> {t('freelancers.timezone')}
               </h3>
               <div className="grid grid-cols-2 gap-2">
@@ -311,7 +311,7 @@ export default function Freelancers() {
                       "px-4 py-3 rounded-xl border text-left text-xs font-bold transition-all flex justify-between items-center group",
                       selectedTimezones.includes(tz)
                         ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100"
-                        : "bg-white text-gray-600 border-gray-100 hover:border-indigo-200"
+                        : "bg-white dark:bg-slate-900 text-gray-600 dark:text-gray-300 border-gray-100 dark:border-slate-700 hover:border-indigo-200"
                     )}
                   >
                     {tz}
@@ -327,7 +327,7 @@ export default function Freelancers() {
 
             {/* Languages */}
             <div className="space-y-6">
-              <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+              <h3 className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-2">
                 <Languages className="h-4 w-4" /> {t('freelancers.languages')}
               </h3>
               <div className="space-y-3">
@@ -337,12 +337,12 @@ export default function Freelancers() {
                       onClick={() => toggleFilter(selectedLanguages, setSelectedLanguages, lang)}
                       className={cn(
                         "h-5 w-5 rounded-md border-2 transition-all flex items-center justify-center",
-                        selectedLanguages.includes(lang) ? "border-indigo-600 bg-indigo-600" : "border-gray-200 group-hover:border-indigo-300"
+                        selectedLanguages.includes(lang) ? "border-indigo-600 bg-indigo-600" : "border-gray-200 dark:border-slate-600 group-hover:border-indigo-300"
                       )}
                     >
                       {selectedLanguages.includes(lang) && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}
                     </div>
-                    <span className="text-sm font-medium text-gray-600 group-hover:text-gray-900">{lang}</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:text-white">{lang}</span>
                   </label>
                 ))}
               </div>
@@ -372,7 +372,7 @@ export default function Freelancers() {
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ delay: i * 0.05 }}
                     className={cn(
-                      "group bg-white rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden relative",
+                      "group bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden relative",
                       viewMode === 'list' && "flex flex-col md:flex-row h-full"
                     )}
                   >
@@ -400,10 +400,10 @@ export default function Freelancers() {
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent" />
                       
                       <div className="absolute bottom-6 left-6 flex items-center gap-2">
-                        <div className="flex items-center gap-1 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
+                        <div className="flex items-center gap-1 bg-white dark:bg-slate-900/90 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
                           <Star className="h-3 w-3 text-orange-500 fill-orange-500" />
-                          <span className="text-xs font-black text-gray-900">{talent.rating || '5.0'}</span>
-                          <span className="text-xs font-bold text-gray-600">({talent.completedJobs || 0})</span>
+                          <span className="text-xs font-black text-gray-900 dark:text-white">{talent.rating || '5.0'}</span>
+                          <span className="text-xs font-bold text-gray-600 dark:text-gray-300">({talent.completedJobs || 0})</span>
                         </div>
                         <div className="bg-indigo-600/90 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-black">
                           ${talent.hourlyRate || 50}/hr
@@ -416,13 +416,13 @@ export default function Freelancers() {
                       <div className="space-y-6">
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <h3 className="text-2xl font-black text-gray-900 tracking-tight">{talent.displayName}</h3>
+                            <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{talent.displayName}</h3>
                             {talent.verificationStatus === 'verified' && <CheckCircle2 className="h-5 w-5 text-indigo-500" />}
                           </div>
                           <p className="text-sm font-bold text-indigo-600 uppercase tracking-widest">{talent.professionalTitle || 'Elite Freelancer'}</p>
                         </div>
 
-                        <div className="flex flex-wrap gap-4 text-xs font-bold text-gray-400 uppercase tracking-widest">
+                        <div className="flex flex-wrap gap-4 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
                           <div className="flex items-center gap-1.5">
                             <MapPin className="h-3.5 w-3.5" />
                             {talent.location || 'Remote'}
@@ -437,23 +437,23 @@ export default function Freelancers() {
                           </div>
                         </div>
 
-                        <p className="text-gray-500 text-sm leading-relaxed line-clamp-2">
+                        <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-2">
                           {talent.bio || 'Professional creator and innovator dedicated to excellence.'}
                         </p>
 
                         <div className="flex flex-wrap gap-2">
                           {talent.skills?.map(skill => (
-                            <span key={skill} className="px-3 py-1 bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-lg border border-gray-100">
+                            <span key={skill} className="px-3 py-1 bg-gray-50 dark:bg-slate-800 text-gray-500 dark:text-gray-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-gray-100 dark:border-slate-700">
                               {skill}
                             </span>
                           ))}
                         </div>
                       </div>
 
-                      <div className="mt-10 pt-8 border-t border-gray-50">
+                      <div className="mt-10 pt-8 border-t border-gray-50 dark:border-slate-800">
                         <Link 
                           to={`/freelancer/${talent.id}`}
-                          className="w-full bg-gray-50 text-gray-900 py-4 rounded-2xl font-bold text-sm border border-gray-100 hover:bg-gray-900 hover:text-white hover:shadow-xl hover:shadow-gray-900/10 transition-all flex items-center justify-center gap-2 group/btn"
+                          className="w-full bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-white py-4 rounded-2xl font-bold text-sm border border-gray-100 dark:border-slate-700 hover:bg-gray-900 hover:text-white hover:shadow-xl hover:shadow-gray-900/10 transition-all flex items-center justify-center gap-2 group/btn"
                         >
                           {t('freelancers.viewProfile')}
                           <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -465,8 +465,8 @@ export default function Freelancers() {
               </AnimatePresence>
 
               {filteredTalents.length === 0 && !loading && (
-                <div className="col-span-full py-20 text-center bg-white rounded-[2.5rem] border-2 border-dashed border-gray-100">
-                  <p className="text-gray-400 font-bold">{t('freelancers.noResults')}</p>
+                <div className="col-span-full py-20 text-center bg-white dark:bg-slate-900 rounded-[2.5rem] border-2 border-dashed border-gray-100 dark:border-slate-700">
+                  <p className="text-gray-400 dark:text-gray-500 font-bold">{t('freelancers.noResults')}</p>
                 </div>
               )}
             </div>
@@ -477,7 +477,7 @@ export default function Freelancers() {
                 <button 
                   onClick={() => fetchTalents(true)}
                   disabled={loadingMore}
-                  className="flex items-center gap-2 bg-white border border-gray-100 px-8 py-4 rounded-2xl font-bold text-gray-600 hover:bg-gray-50 transition-all group disabled:opacity-50"
+                  className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 px-8 py-4 rounded-2xl font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 transition-all group disabled:opacity-50"
                 >
                   <Zap className={cn("h-5 w-5 text-orange-400 transition-transform", loadingMore && "animate-pulse")} />
                   {loadingMore ? 'Loading...' : t('freelancers.loadMore')}

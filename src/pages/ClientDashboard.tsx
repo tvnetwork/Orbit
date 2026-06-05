@@ -130,13 +130,13 @@ export default function ClientDashboard() {
   ];
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-24 relative">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen pb-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">{t('dashboard.clientTitle')}</h1>
-            <p className="text-gray-500 font-medium font-sans mt-1 text-lg">{t('dashboard.clientSubtitle')}</p>
+            <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">{t('dashboard.clientTitle')}</h1>
+            <p className="text-gray-500 dark:text-gray-400 font-medium font-sans mt-1 text-lg">{t('dashboard.clientSubtitle')}</p>
           </div>
           <Link 
             to="/post-job"
@@ -156,14 +156,14 @@ export default function ClientDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               className={cn(
-                "bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 relative group overflow-hidden"
+                "bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-slate-700 relative group overflow-hidden"
               )}
             >
               <div className={cn("inline-flex p-4 rounded-2xl mb-6", card.bg)}>
                 <card.icon className={cn("h-6 w-6", card.color)} />
               </div>
-              <div className="text-4xl font-black text-gray-900 mb-1">{card.value}</div>
-              <div className="text-sm font-bold text-gray-400 uppercase tracking-widest">{card.label}</div>
+              <div className="text-4xl font-black text-gray-900 dark:text-white mb-1">{card.value}</div>
+              <div className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{card.label}</div>
             </motion.div>
           ))}
         </div>
@@ -171,9 +171,9 @@ export default function ClientDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main List */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100">
+            <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 shadow-sm border border-gray-100 dark:border-slate-700">
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-black text-gray-900">{t('dashboard.myProjects')}</h2>
+                <h2 className="text-2xl font-black text-gray-900 dark:text-white">{t('dashboard.myProjects')}</h2>
                 <button className="text-indigo-600 font-bold text-sm flex items-center gap-1 hover:underline">
                   {t('dashboard.viewAll')} <ChevronRight className="h-4 w-4" />
                 </button>
@@ -181,12 +181,12 @@ export default function ClientDashboard() {
 
               <div className="space-y-6">
                 {jobs.map((job) => (
-                    <div className="flex items-center justify-between p-6 rounded-2xl border border-gray-50 hover:border-indigo-100 hover:bg-gray-50 transition-all group">
+                    <div className="flex items-center justify-between p-6 rounded-2xl border border-gray-50 dark:border-slate-800 hover:border-indigo-100 hover:bg-gray-50 dark:bg-slate-800 transition-all group">
                       <Link 
                         to={`/client/job/${job.id}/applicants`}
                         className="flex items-center gap-6 flex-1 min-w-0"
                       >
-                        <div className="h-12 w-12 bg-gray-100 rounded-xl flex items-center justify-center font-bold text-gray-400 overflow-hidden">
+                        <div className="h-12 w-12 bg-gray-100 dark:bg-slate-800/50 rounded-xl flex items-center justify-center font-bold text-gray-400 dark:text-gray-500 overflow-hidden">
                           {job.assignedFreelancer ? (
                             <img src={job.assignedFreelancer.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.assignedFreelancer.displayName)}`} className="h-full w-full object-cover" alt="" />
                           ) : (
@@ -194,14 +194,14 @@ export default function ClientDashboard() {
                           )}
                         </div>
                         <div className="min-w-0">
-                          <h3 className="text-lg font-black text-gray-900 group-hover:text-indigo-600 transition-colors truncate">{job.title}</h3>
+                          <h3 className="text-lg font-black text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors truncate">{job.title}</h3>
                           <div className="flex items-center gap-4 mt-1">
                             {job.assignedFreelancer ? (
                                <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest flex items-center gap-1.5 whitespace-nowrap">
                                  <CheckCircle2 className="h-3.5 w-3.5" /> Assigned to {job.assignedFreelancer.displayName}
                                </span>
                             ) : (
-                              <span className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5 whitespace-nowrap">
+                              <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-1.5 whitespace-nowrap">
                                 <Clock className="h-3.5 w-3.5" /> {new Date(job.createdAt?.seconds * 1000).toLocaleDateString()}
                               </span>
                             )}
@@ -209,7 +209,7 @@ export default function ClientDashboard() {
                               "px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest",
                               job.status === 'open' ? "bg-emerald-50 text-emerald-600" : 
                               job.status === 'in_progress' ? "bg-blue-50 text-blue-600" :
-                              "bg-gray-100 text-gray-500"
+                              "bg-gray-100 dark:bg-slate-800/50 text-gray-500 dark:text-gray-400"
                             )}>
                               {job.status}
                             </span>
@@ -218,8 +218,8 @@ export default function ClientDashboard() {
                       </Link>
                       <div className="flex items-center gap-4 ml-4">
                         <div className="text-right hidden sm:block">
-                          <div className="text-sm font-black text-gray-900">${job.budget}</div>
-                          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Fixed Price</div>
+                          <div className="text-sm font-black text-gray-900 dark:text-white">${job.budget}</div>
+                          <div className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Fixed Price</div>
                         </div>
                         <div className="relative">
                           <button 
@@ -227,7 +227,7 @@ export default function ClientDashboard() {
                               e.preventDefault();
                               setActiveMenuId(activeMenuId === job.id ? null : job.id);
                             }}
-                            className="p-3 hover:bg-white rounded-xl text-gray-300 hover:text-gray-900 transition-all"
+                            className="p-3 hover:bg-white dark:bg-slate-900 rounded-xl text-gray-300 hover:text-gray-900 dark:text-white transition-all"
                           >
                             <MoreHorizontal className="h-5 w-5" />
                           </button>
@@ -238,18 +238,18 @@ export default function ClientDashboard() {
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 overflow-hidden text-left"
+                                className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50 overflow-hidden text-left"
                               >
                                 <Link 
                                   to={`/jobs/${job.id}`}
-                                  className="w-full px-4 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2"
+                                  className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2"
                                 >
                                   <Eye className="h-4 w-4" /> View Public
                                 </Link>
-                                <button className="w-full px-4 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2">
+                                <button className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2">
                                   <Edit className="h-4 w-4" /> Edit Job
                                 </button>
-                                <div className="h-px bg-gray-50 my-1" />
+                                <div className="h-px bg-gray-50 dark:bg-slate-800 my-1" />
                                 <button className="w-full px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 flex items-center gap-2">
                                   <Trash2 className="h-4 w-4" /> Close Posting
                                 </button>
@@ -262,8 +262,8 @@ export default function ClientDashboard() {
                 ))}
 
                 {jobs.length === 0 && !loading && (
-                  <div className="py-20 text-center border-2 border-dashed border-gray-100 rounded-3xl">
-                    <p className="text-gray-400 font-bold mb-4">{t('dashboard.noJobsPosted')}</p>
+                  <div className="py-20 text-center border-2 border-dashed border-gray-100 dark:border-slate-700 rounded-3xl">
+                    <p className="text-gray-400 dark:text-gray-500 font-bold mb-4">{t('dashboard.noJobsPosted')}</p>
                     <Link to="/post-job" className="text-indigo-600 font-bold hover:underline">{t('dashboard.startFirstProject')}</Link>
                   </div>
                 )}
@@ -278,41 +278,41 @@ export default function ClientDashboard() {
               <h3 className="text-lg font-black mb-6">Quick Insights</h3>
               <div className="space-y-6">
                 {recentProposals.map(proposal => (
-                  <Link key={proposal.id} to={`/client/job/${proposal.jobId}/applicants`} className="flex items-start gap-4 hover:bg-white/5 p-2 rounded-xl transition-all">
+                  <Link key={proposal.id} to={`/client/job/${proposal.jobId}/applicants`} className="flex items-start gap-4 hover:bg-white dark:bg-slate-900/5 p-2 rounded-xl transition-all">
                     <div className="h-10 w-10 bg-indigo-500 rounded-xl flex items-center justify-center shrink-0">
                       <AlertCircle className="h-5 w-5" />
                     </div>
                     <div>
                       <p className="text-sm font-bold truncate max-w-[180px]">New proposal for "{proposal.jobTitle || 'Job'}"</p>
-                      <p className="text-xs text-gray-400 mt-1">Review application from elite talent</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Review application from elite talent</p>
                     </div>
                   </Link>
                 ))}
                 {recentProposals.length === 0 && (
-                  <p className="text-xs text-gray-400 italic">No new insights yet.</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 italic">No new insights yet.</p>
                 )}
               </div>
             </div>
 
             {/* Recommended Talent */}
-            <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
-              <h3 className="text-lg font-black text-gray-900 mb-6">{t('dashboard.topTalent')}</h3>
+            <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 shadow-sm border border-gray-100 dark:border-slate-700">
+              <h3 className="text-lg font-black text-gray-900 dark:text-white mb-6">{t('dashboard.topTalent')}</h3>
               <div className="space-y-6">
                 {topTalent.map(talent => (
-                  <Link key={talent.id} to={`/freelancer/${talent.id}`} className="flex items-center gap-4 hover:bg-gray-50 p-2 rounded-xl transition-all">
+                  <Link key={talent.id} to={`/freelancer/${talent.id}`} className="flex items-center gap-4 hover:bg-gray-50 dark:bg-slate-800 p-2 rounded-xl transition-all">
                     <img 
                       src={talent.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(talent.displayName || 'T')}`} 
                       className="h-12 w-12 rounded-full border-2 border-indigo-50 object-cover" 
                       alt=""
                     />
                     <div>
-                      <div className="text-sm font-black text-gray-900 truncate max-w-[150px]">{talent.displayName}</div>
+                      <div className="text-sm font-black text-gray-900 dark:text-white truncate max-w-[150px]">{talent.displayName}</div>
                       <div className="text-xs font-bold text-indigo-600 uppercase tracking-widest">{talent.professionalTitle || 'Elite Expert'}</div>
                     </div>
                   </Link>
                 ))}
               </div>
-              <Link to="/freelancers" className="w-full mt-8 block text-center py-4 bg-gray-50 rounded-2xl text-sm font-black text-gray-900 hover:bg-gray-100 transition-all border border-gray-100">
+              <Link to="/freelancers" className="w-full mt-8 block text-center py-4 bg-gray-50 dark:bg-slate-800 rounded-2xl text-sm font-black text-gray-900 dark:text-white hover:bg-gray-100 dark:bg-slate-800/50 transition-all border border-gray-100 dark:border-slate-700">
                 {t('dashboard.browseTalent')}
               </Link>
             </div>

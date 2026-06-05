@@ -39,17 +39,17 @@ export default function Contact() {
 
   if (submitted) {
     return (
-      <div className="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+      <div className="bg-gray-50 dark:bg-slate-800 min-h-screen flex items-center justify-center p-4">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-lg space-y-6 rounded-[2.5rem] bg-white p-8 text-center shadow-xl sm:p-12 sm:rounded-[3rem]"
+          className="max-w-lg space-y-6 rounded-[2.5rem] bg-white dark:bg-slate-900 p-8 text-center shadow-xl sm:p-12 sm:rounded-[3rem]"
         >
           <div className="h-20 w-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 mx-auto">
             <CheckCircle2 className="h-10 w-10" />
           </div>
           <h2 className="text-3xl font-bold">{t('contact.thankYouTitle', { defaultValue: 'Message Transmitted' })}</h2>
-          <p className="text-gray-500 leading-relaxed">{t('contact.thankYouDesc', { defaultValue: 'Your request has been logged in our secure support matrix. A Vynta specialist will analyze and respond shortly.' })}</p>
+          <p className="text-gray-500 dark:text-gray-400 leading-relaxed">{t('contact.thankYouDesc', { defaultValue: 'Your request has been logged in our secure support matrix. A Vynta specialist will analyze and respond shortly.' })}</p>
           <button 
             onClick={() => setSubmitted(false)}
             className="w-full py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-black transition-all"
@@ -62,7 +62,7 @@ export default function Contact() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
           <motion.div 
@@ -71,28 +71,28 @@ export default function Contact() {
             className="space-y-8 md:space-y-12"
           >
             <div className="space-y-6">
-              <h1 className="text-4xl font-bold leading-none tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">{t('contact.heroTitle')}</h1>
-              <p className="max-w-lg text-lg leading-relaxed text-gray-500 md:text-xl">
+              <h1 className="text-4xl font-bold leading-none tracking-tight text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">{t('contact.heroTitle')}</h1>
+              <p className="max-w-lg text-lg leading-relaxed text-gray-500 dark:text-gray-400 md:text-xl">
                 {t('contact.heroSubtitle')}
               </p>
             </div>
 
             <div className="space-y-8">
               <div className="flex items-start gap-4 sm:gap-6">
-                <div className="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 text-indigo-600">
+                <div className="p-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 text-indigo-600">
                   <Mail className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-400">{t('contact.emailLabel')}</p>
+                  <p className="text-sm font-medium text-gray-400 dark:text-gray-500">{t('contact.emailLabel')}</p>
                   <p className="text-lg font-bold">support@orbit.global</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 sm:gap-6">
-                <div className="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 text-purple-600">
+                <div className="p-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 text-purple-600">
                   <MapPin className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-400">{t('contact.hqLabel')}</p>
+                  <p className="text-sm font-medium text-gray-400 dark:text-gray-500">{t('contact.hqLabel')}</p>
                   <p className="text-lg font-bold">One Infinity Loop, San Francisco</p>
                 </div>
               </div>
@@ -115,7 +115,7 @@ export default function Contact() {
                     <p className="text-indigo-100 opacity-80 text-sm">{t('contact.liveSupportDesc')}</p>
                     <button 
                       onClick={() => setShowChat(true)}
-                      className="w-full bg-white text-indigo-600 py-4 rounded-xl font-bold shadow-lg shadow-indigo-900/20 hover:bg-gray-50 transition-all active:scale-95"
+                      className="w-full bg-white dark:bg-slate-900 text-indigo-600 py-4 rounded-xl font-bold shadow-lg shadow-indigo-900/20 hover:bg-gray-50 dark:bg-slate-800 transition-all active:scale-95"
                     >
                       {t('contact.startChat')}
                     </button>
@@ -145,50 +145,50 @@ export default function Contact() {
             onSubmit={handleSubmit}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6 rounded-[2.5rem] border border-gray-100 bg-white p-6 shadow-xl shadow-gray-200/50 sm:space-y-8 sm:p-8 lg:rounded-[3rem] lg:p-12"
+            className="space-y-6 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-xl shadow-gray-200/50 sm:space-y-8 sm:p-8 lg:rounded-[3rem] lg:p-12"
           >
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700">{t('contact.firstName')}</label>
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('contact.firstName')}</label>
                 <input 
                   required
                   type="text" 
                   value={form.firstName}
                   onChange={e => setForm(prev => ({ ...prev, firstName: e.target.value }))}
-                  className="w-full px-6 py-4 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium" 
+                  className="w-full px-6 py-4 rounded-xl bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium" 
                   placeholder={t('contact.placeholderFirstName')} 
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700">{t('contact.lastName')}</label>
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('contact.lastName')}</label>
                 <input 
                   required
                   type="text" 
                   value={form.lastName}
                   onChange={e => setForm(prev => ({ ...prev, lastName: e.target.value }))}
-                  className="w-full px-6 py-4 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium" 
+                  className="w-full px-6 py-4 rounded-xl bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium" 
                   placeholder={t('contact.placeholderLastName')} 
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700">{t('contact.emailAddress')}</label>
+              <label className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('contact.emailAddress')}</label>
               <input 
                 required
                 type="email" 
                 value={form.email}
                 onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full px-6 py-4 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium" 
+                className="w-full px-6 py-4 rounded-xl bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium" 
                 placeholder={t('contact.placeholderEmail')} 
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700">{t('contact.subject')}</label>
+              <label className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('contact.subject')}</label>
               <div className="relative">
                 <select 
                   value={form.subject}
                   onChange={e => setForm(prev => ({ ...prev, subject: e.target.value }))}
-                  className="w-full px-6 py-4 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium appearance-none"
+                  className="w-full px-6 py-4 rounded-xl bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium appearance-none"
                 >
                   <option>{t('contact.subjects.general')}</option>
                   <option>{t('contact.subjects.support')}</option>
@@ -198,13 +198,13 @@ export default function Contact() {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700">{t('contact.message')}</label>
+              <label className="text-sm font-bold text-gray-700 dark:text-gray-200">{t('contact.message')}</label>
               <textarea 
                 required
                 rows={6} 
                 value={form.message}
                 onChange={e => setForm(prev => ({ ...prev, message: e.target.value }))}
-                className="w-full px-6 py-4 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium resize-none shadow-inner" 
+                className="w-full px-6 py-4 rounded-xl bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-600 transition-all font-medium resize-none shadow-inner" 
                 placeholder={t('contact.placeholderMessage')} 
               />
             </div>

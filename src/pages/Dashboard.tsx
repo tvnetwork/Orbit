@@ -146,7 +146,7 @@ export default function Dashboard() {
     : activeJobs.filter(j => j.status === 'in_progress' || j.status === 'completed').reduce((sum, j) => sum + j.budget, 0);
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen py-12">
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -169,7 +169,7 @@ export default function Dashboard() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link to={profile?.role === 'client' ? '/post-job' : '/jobs'} className="bg-white text-indigo-600 px-6 py-3 rounded-2xl font-bold hover:bg-indigo-50 transition-all flex items-center justify-center gap-2">
+                <Link to={profile?.role === 'client' ? '/post-job' : '/jobs'} className="bg-white dark:bg-slate-900 text-indigo-600 px-6 py-3 rounded-2xl font-bold hover:bg-indigo-50 transition-all flex items-center justify-center gap-2">
                   {profile?.role === 'client' ? t('dashboard.postNewProject') : t('dashboard.findNewProjects')} <ArrowRight className="h-4 w-4" />
                 </Link>
               </motion.div>
@@ -194,14 +194,14 @@ export default function Dashboard() {
               key={idx} 
               variants={itemVariants} 
               whileHover={{ y: -5 }}
-              className="bg-white p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-gray-100 shadow-sm flex flex-col sm:flex-row items-center gap-4 group transition-all hover:shadow-xl hover:shadow-indigo-500/5 text-center sm:text-left"
+              className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex flex-col sm:flex-row items-center gap-4 group transition-all hover:shadow-xl hover:shadow-indigo-500/5 text-center sm:text-left"
             >
               <div className={`p-3 ${stat.bg} ${stat.color} rounded-xl group-hover:scale-110 transition-transform`}>
                 <stat.icon className="h-5 w-5 md:h-6 md:w-6" />
               </div>
               <div>
-                <p className="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-wider">{stat.label}</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900 leading-tight">{stat.value}</p>
+                <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">{stat.label}</p>
+                <p className="text-lg md:text-xl font-bold text-gray-900 dark:text-white leading-tight">{stat.value}</p>
               </div>
             </motion.div>
           ))}
@@ -210,12 +210,12 @@ export default function Dashboard() {
         {/* Analytics Section */}
         <motion.div 
           variants={itemVariants} 
-          className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm"
+          className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm"
         >
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">{t('dashboard.activityOverview')}</h2>
-              <p className="text-sm text-gray-500">{t('dashboard.engagementTrend')}</p>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('dashboard.activityOverview')}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('dashboard.engagementTrend')}</p>
             </div>
             <div className="flex items-center gap-2 text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl font-bold text-xs uppercase font-mono">
               <BrandIcon className="h-4 w-4" />
@@ -271,9 +271,9 @@ export default function Dashboard() {
         {/* Tables Section */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Active Work / Proposals */}
-          <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
-            <div className="p-8 border-b border-gray-50 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-gray-900">
+          <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+            <div className="p-8 border-b border-gray-50 dark:border-slate-800 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 {profile?.role === 'client' ? t('dashboard.myProjects') : t('dashboard.myApplications')}
               </h2>
               <Link to="/jobs" className="text-sm text-indigo-600 font-bold hover:underline transition-colors font-mono uppercase tracking-tighter">{t('dashboard.viewAll')}</Link>
@@ -281,14 +281,14 @@ export default function Dashboard() {
             <div className="divide-y divide-gray-50">
               {profile?.role === 'client' ? (
                 activeJobs.length > 0 ? activeJobs.map(job => (
-                  <Link key={job.id} to={`/jobs/${job.id}`} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors group">
+                  <Link key={job.id} to={`/jobs/${job.id}`} className="p-6 flex items-center justify-between hover:bg-gray-50 dark:bg-slate-800 transition-colors group">
                     <div className="flex items-center gap-4">
-                      <div className="p-3 bg-gray-50 rounded-xl text-gray-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                      <div className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl text-gray-400 dark:text-gray-500 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
                         <Briefcase className="h-5 w-5" />
                       </div>
                       <div>
-                        <p className="font-bold text-gray-900 line-clamp-1">{job.title}</p>
-                        <p className="text-xs text-gray-400 font-mono italic">{formatDate(job.createdAt)} • ${job.budget.toLocaleString()}</p>
+                        <p className="font-bold text-gray-900 dark:text-white line-clamp-1">{job.title}</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 font-mono italic">{formatDate(job.createdAt)} • ${job.budget.toLocaleString()}</p>
                       </div>
                     </div>
                     <motion.span 
@@ -299,27 +299,27 @@ export default function Dashboard() {
                     </motion.span>
                   </Link>
                 )) : (
-                  <div className="p-12 text-center text-gray-400 text-sm italic py-20">{t('dashboard.noJobs')}</div>
+                  <div className="p-12 text-center text-gray-400 dark:text-gray-500 text-sm italic py-20">{t('dashboard.noJobs')}</div>
                 )
               ) : (
                 proposals.length > 0 ? proposals.map(proposal => {
                   const correlatedJob = activeJobs.find(j => j.id === proposal.jobId);
                   return (
-                    <Link key={proposal.id} to={`/jobs/${proposal.jobId}`} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors group">
+                    <Link key={proposal.id} to={`/jobs/${proposal.jobId}`} className="p-6 flex items-center justify-between hover:bg-gray-50 dark:bg-slate-800 transition-colors group">
                       <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-xl transition-colors ${proposal.status === 'accepted' ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-50 text-gray-400 group-hover:bg-indigo-50 group-hover:text-indigo-600'}`}>
+                        <div className={`p-3 rounded-xl transition-colors ${proposal.status === 'accepted' ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-gray-500 group-hover:bg-indigo-50 group-hover:text-indigo-600'}`}>
                           <FileText className="h-5 w-5" />
                         </div>
                         <div>
-                          <p className="font-bold text-gray-900 line-clamp-1">{correlatedJob?.title || 'Loading Project...'}</p>
-                          <p className="text-xs text-gray-400 font-mono tracking-tight italic">Bid: ${proposal.bidAmount} • {formatDate(proposal.createdAt)}</p>
+                          <p className="font-bold text-gray-900 dark:text-white line-clamp-1">{correlatedJob?.title || 'Loading Project...'}</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500 font-mono tracking-tight italic">Bid: ${proposal.bidAmount} • {formatDate(proposal.createdAt)}</p>
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-1">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                           proposal.status === 'accepted' ? 'bg-emerald-100 text-emerald-700' : 
                           proposal.status === 'pending' ? 'bg-yellow-50 text-yellow-700' : 
-                          'bg-gray-100 text-gray-600'
+                          'bg-gray-100 dark:bg-slate-800/50 text-gray-600 dark:text-gray-300'
                         }`}>
                           {proposal.status}
                         </span>
@@ -333,15 +333,15 @@ export default function Dashboard() {
                     </Link>
                   );
                 }) : (
-                  <div className="p-12 text-center text-gray-400 text-sm italic py-20">{t('dashboard.noProposals')}</div>
+                  <div className="p-12 text-center text-gray-400 dark:text-gray-500 text-sm italic py-20">{t('dashboard.noProposals')}</div>
                 )
               )}
             </div>
           </div>
 
           {/* Activity Feed */}
-          <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-8 font-sans">
+          <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm p-8">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-8 font-sans">
               {profile?.role === 'client' ? t('dashboard.recentProposals') : t('dashboard.recentNotifications')}
             </h2>
             <div className="space-y-8">
@@ -360,10 +360,10 @@ export default function Dashboard() {
                         <FileText className="h-6 w-6 text-indigo-600" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm text-gray-900">
+                        <p className="text-sm text-gray-900 dark:text-white">
                           {t('dashboard.newProposalFor')} <span className="font-bold">"{job?.title}"</span> {t('dashboard.proposalFrom')} <span className="text-indigo-600 font-bold uppercase tracking-tighter text-[10px]">User {p.freelancerId.slice(0, 5)}</span>
                         </p>
-                        <p className="text-[10px] text-gray-400 font-mono italic">{t('jobs.budget')}: ${p.bidAmount} • {formatDate(p.createdAt)}</p>
+                        <p className="text-[10px] text-gray-400 dark:text-gray-500 font-mono italic">{t('jobs.budget')}: ${p.bidAmount} • {formatDate(p.createdAt)}</p>
                       </div>
                     </motion.div>
                   );
@@ -383,10 +383,10 @@ export default function Dashboard() {
                       <CheckCircle className="h-6 w-6 text-emerald-600" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm text-gray-900">
+                      <p className="text-sm text-gray-900 dark:text-white">
                         {t('dashboard.proposalAccepted', { title: job?.title })} <span className="text-emerald-600 font-bold uppercase tracking-tighter text-xs">{t('dashboard.acceptedStatus')}</span>
                       </p>
-                      <p className="text-[10px] text-gray-400 font-mono italic">{t('dashboard.waitingInMessages')}</p>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 font-mono italic">{t('dashboard.waitingInMessages')}</p>
                     </div>
                   </motion.div>
                 );

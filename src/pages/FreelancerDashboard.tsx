@@ -121,28 +121,28 @@ export default function FreelancerDashboard() {
   }, [user]);
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-800">
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
     </div>
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-20 pt-10 relative">
+    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen pb-20 pt-10 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Welcome Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">{t('dashboard.freelancerTitle')}</h1>
-            <p className="text-gray-500 mt-1 font-medium">{t('dashboard.freelancerSubtitle')}</p>
+            <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">{t('dashboard.freelancerTitle')}</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1 font-medium">{t('dashboard.freelancerSubtitle')}</p>
           </div>
           <div className="flex items-center gap-4">
-            <Link to="/wallet" className="bg-white border border-gray-100 p-4 rounded-3xl flex items-center gap-4 hover:shadow-lg transition-all pr-8">
+            <Link to="/wallet" className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 p-4 rounded-3xl flex items-center gap-4 hover:shadow-lg transition-all pr-8">
               <div className="h-12 w-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
                 <DollarSign className="h-6 w-6" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('dashboard.availableBalance')}</p>
-                <p className="text-xl font-black text-gray-900">${balance.toLocaleString()}</p>
+                <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">{t('dashboard.availableBalance')}</p>
+                <p className="text-xl font-black text-gray-900 dark:text-white">${balance.toLocaleString()}</p>
               </div>
             </Link>
           </div>
@@ -161,13 +161,13 @@ export default function FreelancerDashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm"
+              className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm"
             >
               <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center mb-6", `bg-${stat.color}-50 text-${stat.color}-600`)}>
                 <stat.icon className="h-6 w-6" />
               </div>
-              <p className="text-xs font-black text-gray-400 uppercase tracking-widest leading-none mb-2">{stat.label}</p>
-              <h3 className="text-3xl font-black text-gray-900 leading-none">{stat.value}</h3>
+              <p className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-none mb-2">{stat.label}</p>
+              <h3 className="text-3xl font-black text-gray-900 dark:text-white leading-none">{stat.value}</h3>
             </motion.div>
           ))}
         </div>
@@ -175,11 +175,11 @@ export default function FreelancerDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Earnings Chart */}
           <div className="lg:col-span-2 space-y-8 relative">
-            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-gray-100 dark:border-slate-700 shadow-sm">
               <div className="flex items-center justify-between mb-10">
-                <h3 className="text-xl font-black text-gray-900 tracking-tight">{t('dashboard.earningsFlow')}</h3>
+                <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">{t('dashboard.earningsFlow')}</h3>
                 <div className="flex gap-2">
-                  <button className="px-4 py-2 bg-gray-50 rounded-xl text-xs font-bold text-gray-500">{t('jobs.filterHourly')}</button>
+                  <button className="px-4 py-2 bg-gray-50 dark:bg-slate-800 rounded-xl text-xs font-bold text-gray-500 dark:text-gray-400">{t('jobs.filterHourly')}</button>
                   <button className="px-4 py-2 bg-indigo-50 rounded-xl text-xs font-bold text-indigo-600">{t('common.viewMarket')}</button>
                 </div>
               </div>
@@ -225,7 +225,7 @@ export default function FreelancerDashboard() {
             {/* Active Contracts List */}
             <div className="space-y-6">
               <div className="flex items-center justify-between px-4">
-                <h3 className="text-xl font-black text-gray-900 tracking-tight">{t('dashboard.ongoingEngagements')}</h3>
+                <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">{t('dashboard.ongoingEngagements')}</h3>
                 <Link to="/freelancer/contracts" className="text-sm font-bold text-indigo-600 hover:underline">{t('dashboard.viewAll')}</Link>
               </div>
               <div className="space-y-4">
@@ -233,19 +233,19 @@ export default function FreelancerDashboard() {
                   <Link 
                     key={contract.id}
                     to={`/contract/${contract.id}`} 
-                    className="flex items-center justify-between p-6 bg-white border border-gray-100 rounded-[2rem] hover:shadow-xl hover:shadow-indigo-500/5 transition-all group"
+                    className="flex items-center justify-between p-6 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-[2rem] hover:shadow-xl hover:shadow-indigo-500/5 transition-all group"
                   >
                     <div className="flex items-center gap-6">
                       <div className="h-14 w-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
                         <Zap className="h-6 w-6" />
                       </div>
                       <div>
-                        <h4 className="font-black text-gray-900 leading-tight">{contract.jobTitle || 'Active Engagement'}</h4>
-                        <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest">Ongoing Project</p>
+                        <h4 className="font-black text-gray-900 dark:text-white leading-tight">{contract.jobTitle || 'Active Engagement'}</h4>
+                        <p className="text-xs font-bold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-widest">Ongoing Project</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-black text-gray-900">${contract.totalAmount}</p>
+                      <p className="text-lg font-black text-gray-900 dark:text-white">${contract.totalAmount}</p>
                       <div className="flex items-center gap-1.5 text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1">
                         <CheckCircle2 className="h-3 w-3" />
                         In Progress
@@ -254,7 +254,7 @@ export default function FreelancerDashboard() {
                   </Link>
                 )) : (
                   <div className="space-y-6">
-                    <div className="bg-white p-12 text-center rounded-[3rem] border border-gray-100 italic text-gray-400 font-medium">
+                    <div className="bg-white dark:bg-slate-900 p-12 text-center rounded-[3rem] border border-gray-100 dark:border-slate-700 italic text-gray-400 dark:text-gray-500 font-medium">
                       {t('dashboard.noActiveContracts')}
                     </div>
                     <div className="flex justify-center">
@@ -272,17 +272,17 @@ export default function FreelancerDashboard() {
           <div className="space-y-8">
             {/* Quick Actions */}
             <div className="bg-gray-900 text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[60px] rounded-full -mr-16 -mt-16" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white dark:bg-slate-900/10 blur-[60px] rounded-full -mr-16 -mt-16" />
               <h3 className="text-xl font-black mb-6 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-orange-400" />
                 {t('dashboard.quickActions')}
               </h3>
               <div className="space-y-3">
-                <Link to="/jobs" className="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 rounded-2xl transition-all border border-white/10">
+                <Link to="/jobs" className="flex items-center justify-between p-5 bg-white dark:bg-slate-900/10 hover:bg-white dark:bg-slate-900/20 rounded-2xl transition-all border border-white/10">
                   <span className="font-bold">{t('dashboard.browseJobs')}</span>
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
-                <Link to="/profile" className="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 rounded-2xl transition-all border border-white/10">
+                <Link to="/profile" className="flex items-center justify-between p-5 bg-white dark:bg-slate-900/10 hover:bg-white dark:bg-slate-900/20 rounded-2xl transition-all border border-white/10">
                   <span className="font-bold">{t('dashboard.optimizeProfile')}</span>
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
@@ -294,12 +294,12 @@ export default function FreelancerDashboard() {
             </div>
 
             {/* Recent Proposals */}
-            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
-              <h3 className="text-xl font-black text-gray-900 tracking-tight mb-8">{t('dashboard.pipelineTracker')}</h3>
+            <div className="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-gray-100 dark:border-slate-700 shadow-sm">
+              <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight mb-8">{t('dashboard.pipelineTracker')}</h3>
               <div className="space-y-8">
                 {proposals.length > 0 ? proposals.map((proposal, i) => (
                   <div key={proposal.id} className="relative pl-8">
-                    {i !== proposals.length - 1 && <div className="absolute left-[3px] top-6 bottom-0 w-0.5 bg-gray-100" />}
+                    {i !== proposals.length - 1 && <div className="absolute left-[3px] top-6 bottom-0 w-0.5 bg-gray-100 dark:bg-slate-800/50" />}
                     <div className={cn(
                       "absolute left-0 top-1.5 h-2 w-2 rounded-full",
                       proposal.status === 'hired' ? "bg-emerald-500 shadow-[0_0_10px_#10b981]" : 
@@ -307,7 +307,7 @@ export default function FreelancerDashboard() {
                     )} />
                     <div className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                        <span className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">
                           {new Date(proposal.createdAt?.toDate()).toLocaleDateString()}
                         </span>
                         <span className={cn(
@@ -319,14 +319,14 @@ export default function FreelancerDashboard() {
                           {proposal.status}
                         </span>
                       </div>
-                      <p className="font-bold text-gray-900 text-sm leading-tight line-clamp-1">{proposal.jobTitle || 'Job Application'}</p>
+                      <p className="font-bold text-gray-900 dark:text-white text-sm leading-tight line-clamp-1">{proposal.jobTitle || 'Job Application'}</p>
                     </div>
                   </div>
                 )) : (
-                  <p className="text-sm text-gray-400 font-medium italic">No recent proposals.</p>
+                  <p className="text-sm text-gray-400 dark:text-gray-500 font-medium italic">No recent proposals.</p>
                 )}
               </div>
-              <Link to="/freelancer/proposals" className="w-full mt-10 py-4 border border-gray-100 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all block text-center">
+              <Link to="/freelancer/proposals" className="w-full mt-10 py-4 border border-gray-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 transition-all block text-center">
                 {t('dashboard.viewPipeline')}
               </Link>
             </div>
