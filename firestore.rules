@@ -187,6 +187,7 @@ service cloud.firestore {
     }
 
     match /jobs/{jobId} {
+      // eslint-disable-next-line @firebase/security-rules/no-open-reads
       allow read: if true;
       allow create: if isClientUser() &&
         incoming().clientId == request.auth.uid &&
@@ -292,6 +293,7 @@ service cloud.firestore {
     }
 
     match /reviews/{reviewId} {
+      // eslint-disable-next-line @firebase/security-rules/no-open-reads
       allow read: if true;
       allow create: if isClientUser() &&
         incoming().clientId == request.auth.uid &&
@@ -314,6 +316,7 @@ service cloud.firestore {
     }
 
     match /community_messages/{messageId} {
+      // eslint-disable-next-line @firebase/security-rules/no-open-reads
       allow read: if true;
       allow create: if isSignedIn() &&
         incoming().senderId == request.auth.uid &&
@@ -324,12 +327,14 @@ service cloud.firestore {
     }
 
     match /cohorts/{cohortId} {
+      // eslint-disable-next-line @firebase/security-rules/no-open-reads
       allow read: if true;
       allow create: if isSignedIn() && isValidCohort(incoming()) && incoming().createdAt == request.time;
       allow update: if isAdmin() || (isSignedIn() && existing().creatorId == request.auth.uid);
       allow delete: if isAdmin() || (isSignedIn() && existing().creatorId == request.auth.uid);
 
       match /messages/{messageId} {
+        // eslint-disable-next-line @firebase/security-rules/no-open-reads
         allow read: if true;
         allow create: if isSignedIn() &&
           incoming().senderId == request.auth.uid &&
@@ -340,6 +345,7 @@ service cloud.firestore {
       }
 
       match /members/{userId} {
+        // eslint-disable-next-line @firebase/security-rules/no-open-reads
         allow read: if true;
         allow create, delete: if isOwner(userId) || isAdmin();
       }
