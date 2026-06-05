@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import PageTransition from './components/PageTransition';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import ThemeToggle from './components/ThemeToggle';
 import { 
   Briefcase, 
   Search, 
@@ -103,7 +104,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+    <nav className="border-b border-gray-100 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center gap-2 md:gap-4">
@@ -116,7 +117,7 @@ const Navbar = () => {
               >
                 <BrandIcon className="h-5 w-5 md:h-6 md:w-6 text-white" />
               </motion.div>
-              <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900">{t('common.brandName')}</span>
+              <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-200">{t('common.brandName')}</span>
             </Link>
           </div>
 
@@ -128,7 +129,7 @@ const Navbar = () => {
                 className="relative px-4 py-2 group"
               >
                 <span className={`text-sm font-bold transition-colors duration-200 ${
-                  location.pathname === link.to ? 'text-indigo-600' : 'text-gray-500 group-hover:text-gray-900'
+                  location.pathname === link.to ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'
                 }`}>
                   {link.label}
                 </span>
@@ -147,6 +148,7 @@ const Navbar = () => {
             <div className="hidden sm:block">
               <LanguageSwitcher />
             </div>
+            <ThemeToggle />
             {user ? (
               <div className="flex items-center gap-2 md:gap-4">
                 <Link to="/profile" className="flex items-center gap-2 group">
@@ -194,7 +196,7 @@ const Navbar = () => {
         <motion.div 
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mx-auto flex w-full max-w-md items-stretch justify-between gap-1 rounded-[2rem] border border-slate-200/80 bg-white/95 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-2xl pointer-events-auto ring-1 ring-slate-900/5"
+          className="mx-auto flex w-full max-w-md items-stretch justify-between gap-1 rounded-[2rem] border border-slate-200/80 dark:border-slate-700/80 bg-white/95 dark:bg-slate-800/95 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-2xl pointer-events-auto ring-1 ring-slate-900/5 transition-colors duration-200"
         >
           {bottomLinks.map((link) => {
             const isActive = isNavActive(location.pathname, link.to);
@@ -384,7 +386,7 @@ export default function App() {
     <AuthContext.Provider value={authValue}>
       <BrowserRouter>
         <ScrollToTop />
-        <div className="min-h-screen bg-white font-sans selection:bg-indigo-100 selection:text-indigo-900">
+        <div className="min-h-screen bg-white dark:bg-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 transition-colors duration-200">
           <Navbar />
           <main className="flex-grow pb-24 md:pb-0">
             <React.Suspense fallback={

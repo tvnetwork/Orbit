@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { UserRole } from '../types';
 import { cn } from '../lib/utils';
+import SkillQuizModal from '../components/SkillQuizModal';
 
 export default function Profile() {
   const { user, profile, updateRole } = useAuth();
@@ -44,7 +45,9 @@ export default function Profile() {
     twitterUrl: profile?.twitterUrl || '',
     websiteUrl: profile?.websiteUrl || '',
     portfolio: profile?.portfolio || [],
+    verifiedSkills: profile?.verifiedSkills || [],
   });
+  const [quizSkill, setQuizSkill] = useState<string | null>(null);
   const [newSkill, setNewSkill] = useState('');
   const [saved, setSaved] = useState(false);
   const portfolioRef = useRef<HTMLDivElement>(null);
@@ -73,6 +76,7 @@ export default function Profile() {
         twitterUrl: form.twitterUrl,
         websiteUrl: form.websiteUrl,
         portfolio: form.portfolio,
+        verifiedSkills: form.verifiedSkills,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -102,6 +106,7 @@ export default function Profile() {
           twitterUrl: profile?.twitterUrl || '',
           websiteUrl: profile?.websiteUrl || '',
           portfolio: profile?.portfolio || [],
+          verifiedSkills: profile?.verifiedSkills || [],
         });
 
     if (!hasChanged) return;
@@ -126,6 +131,7 @@ export default function Profile() {
         twitterUrl: profile.twitterUrl || '',
         websiteUrl: profile.websiteUrl || '',
         portfolio: profile.portfolio || [],
+        verifiedSkills: profile.verifiedSkills || [],
       });
     }
   }, [profile]);
@@ -141,7 +147,19 @@ export default function Profile() {
   };
 
   const removeSkill = (skill: string) => {
-    setForm(prev => ({ ...prev, skills: prev.skills.filter(s => s !== skill) }));
+    setForm(prev => ({ 
+      ...prev, 
+      skills: prev.skills.filter(s => s !== skill),
+      verifiedSkills: prev.verifiedSkills.filter(s => s !== skill)
+    }));
+  };
+
+  const handlePassSkill = (skill: string) => {
+    setForm(prev => ({
+      ...prev,
+      verifiedSkills: [...prev.verifiedSkills, skill]
+    }));
+    setQuizSkill(null);
   };
 
   const handleSwitchRole = async (role: UserRole) => {
@@ -546,25 +564,48 @@ export default function Profile() {
                   </div>
                   <div className="flex flex-wrap gap-3">
                     <AnimatePresence mode="popLayout">
-                      {form.skills.map(skill => (
-                        <motion.div 
-                          key={skill} 
-                          initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                          animate={{ opacity: 1, scale: 1, y: 0 }}
-                          exit={{ opacity: 0, scale: 0.9, x: -10 }}
-                          transition={{ type: "spring", damping: 20, stiffness: 300 }}
-                          className="bg-white text-indigo-700 px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-3 group/tag cursor-default border border-gray-100 shadow-sm hover:border-indigo-200 hover:shadow-md transition-all"
-                        >
-                          {skill}
-                          <button 
-                            type="button" 
-                            onClick={() => removeSkill(skill)} 
-                            className="text-gray-300 hover:text-red-500 transition-colors"
+                      {form.skills.map(skill => {
+                        const isVerified = form.verifiedSkills?.includes(skill);
+                        return (
+                          <motion.div 
+                            key={skill} 
+                            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, x: -10 }}
+                            transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                            className={cn(
+                              "px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-3 group/tag border shadow-sm transition-all",
+                              isVerified 
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
+                                : "bg-white text-indigo-700 border-gray-100 hover:border-indigo-200 hover:shadow-md"
+                            )}
                           >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </motion.div>
-                      ))}
+                            <span className="flex items-center gap-1.5">
+                              {skill}
+                              {isVerified && <CheckCircle className="h-4 w-4 text-emerald-500" />}
+                            </span>
+                            {!isVerified && (
+                              <button
+                                type="button"
+                                onClick={() => setQuizSkill(skill)}
+                                className="text-[10px] uppercase tracking-wider bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded hover:bg-indigo-200 transition-colors"
+                              >
+                                Verify
+                              </button>
+                            )}
+                            <button 
+                              type="button" 
+                              onClick={() => removeSkill(skill)} 
+                              className={cn(
+                                "transition-colors ml-1",
+                                isVerified ? "text-emerald-300 hover:text-red-500" : "text-gray-300 hover:text-red-500"
+                              )}
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </motion.div>
+                        );
+                      })}
                     </AnimatePresence>
                     {form.skills.length === 0 && (
                       <div className="w-full py-8 text-center border-2 border-dashed border-gray-100 rounded-3xl">
@@ -787,6 +828,14 @@ export default function Profile() {
           </div>
         )}
       </AnimatePresence>
+
+      {quizSkill && (
+        <SkillQuizModal 
+          skill={quizSkill} 
+          onClose={() => setQuizSkill(null)} 
+          onPass={handlePassSkill} 
+        />
+      )}
     </div>
   );
 }

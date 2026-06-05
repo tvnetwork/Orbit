@@ -37,6 +37,8 @@ export default function ContractRoom() {
   const [contract, setContract] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [milestones, setMilestones] = useState<any[]>([]);
+  const [timeLogs, setTimeLogs] = useState<any[]>([]);
+  const [newTimeLog, setNewTimeLog] = useState({ date: '', hours: '', description: '' });
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
@@ -75,10 +77,16 @@ export default function ContractRoom() {
       setMilestones(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
 
+    // Fetch Time Logs
+    const timeLogsUnsub = onSnapshot(collection(db, 'contracts', contractId, 'timeLogs'), (snap) => {
+      setTimeLogs(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+
     return () => {
       contractUnsub();
       messagesUnsub();
       milestonesUnsub();
+      timeLogsUnsub();
     };
   }, [contractId, user]);
 
@@ -121,6 +129,25 @@ export default function ContractRoom() {
       await updateDoc(doc(db, 'contracts', contractId!, 'milestones', milestoneId), {
         status: 'funded'
       });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const logTime = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTimeLog.date || !newTimeLog.hours || !newTimeLog.description || !contractId || !user) return;
+    try {
+      await addDoc(collection(db, 'contracts', contractId, 'timeLogs'), {
+        freelancerId: user.uid,
+        contractId: contractId,
+        date: newTimeLog.date,
+        hours: Number(newTimeLog.hours),
+        description: newTimeLog.description,
+        status: 'logged',
+        createdAt: serverTimestamp()
+      });
+      setNewTimeLog({ date: '', hours: '', description: '' });
     } catch (error) {
       console.error(error);
     }
@@ -317,8 +344,10 @@ export default function ContractRoom() {
                <div className="space-y-6">
                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
                    <div className="bg-white/5 p-6 rounded-3xl border border-white/5">
-                     <p className="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-1">Total Escrowed</p>
-                     <p className="text-2xl font-black">${contract?.totalAmount}</p>
+                     <p className="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-1">
+                       {contract?.type === 'hourly' ? 'Hourly Rate' : 'Total Escrowed'}
+                     </p>
+                     <p className="text-2xl font-black">${contract?.type === 'hourly' ? contract?.hourlyRate || '0' : contract?.totalAmount}</p>
                    </div>
                    <div className="bg-emerald-500/10 p-6 rounded-3xl border border-emerald-500/20">
                      <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">Paid to Date</p>
@@ -328,8 +357,75 @@ export default function ContractRoom() {
                </div>
             </div>
 
-            {/* Milestones Area */}
-            <div className="space-y-6">
+            {/* Time Tracking Area (Hourly) */}
+            {contract?.type === 'hourly' && (
+              <div className="space-y-6">
+                 <div className="flex items-center justify-between">
+                   <div>
+                     <h3 className="text-2xl font-black text-gray-900 tracking-tight">Time Logs</h3>
+                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Track hours worked</p>
+                   </div>
+                 </div>
+
+                 {profile?.role === 'freelancer' && (
+                   <form onSubmit={logTime} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm space-y-4">
+                     <div className="grid grid-cols-2 gap-4">
+                       <input 
+                         type="date" 
+                         required
+                         value={newTimeLog.date}
+                         onChange={e => setNewTimeLog({...newTimeLog, date: e.target.value})}
+                         className="w-full bg-gray-50 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white outline-none font-medium text-sm"
+                       />
+                       <input 
+                         type="number" 
+                         required
+                         min="0.1" step="0.1"
+                         placeholder="Hours (e.g. 2.5)"
+                         value={newTimeLog.hours}
+                         onChange={e => setNewTimeLog({...newTimeLog, hours: e.target.value})}
+                         className="w-full bg-gray-50 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white outline-none font-medium text-sm"
+                       />
+                     </div>
+                     <input 
+                       type="text" 
+                       required
+                       placeholder="Task description..."
+                       value={newTimeLog.description}
+                       onChange={e => setNewTimeLog({...newTimeLog, description: e.target.value})}
+                       className="w-full bg-gray-50 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white outline-none font-medium text-sm"
+                     />
+                     <button type="submit" className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm">
+                       Log Time
+                     </button>
+                   </form>
+                 )}
+
+                 <div className="space-y-3">
+                   {timeLogs.map(log => (
+                     <div key={log.id} className="bg-white p-5 rounded-[1.5rem] border border-gray-100 flex items-center justify-between">
+                       <div>
+                         <p className="font-bold text-gray-900">{log.description}</p>
+                         <p className="text-xs text-gray-500 font-medium mt-1">{log.date}</p>
+                       </div>
+                       <div className="text-right">
+                         <p className="font-black text-indigo-600">{log.hours} hrs</p>
+                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{log.status}</span>
+                       </div>
+                     </div>
+                   ))}
+                   {timeLogs.length === 0 && (
+                     <div className="bg-white border-2 border-dashed border-gray-100 rounded-[1.5rem] p-8 text-center">
+                       <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">No hours logged yet</p>
+                     </div>
+                   )}
+                 </div>
+              </div>
+            )}
+
+            {/* Milestones Area (Fixed) */}
+            {contract?.type !== 'hourly' && (
+              <div className="space-y-6">
                <div className="flex items-center justify-between">
                  <div>
                    <h3 className="text-2xl font-black text-gray-900 tracking-tight">Active Milestones</h3>
@@ -391,6 +487,7 @@ export default function ContractRoom() {
                  )}
                </div>
             </div>
+            )}
 
             {/* Quick Actions / Help */}
             <div className="bg-gray-100/50 p-8 rounded-[2.5rem] border border-gray-200/50 flex items-center gap-6">

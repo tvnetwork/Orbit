@@ -87,6 +87,7 @@ service cloud.firestore {
         isOptionalShortString(data, 'twitterUrl', 500) &&
         isOptionalShortString(data, 'websiteUrl', 500) &&
         isOptionalList(data, 'skills', 50) &&
+        isOptionalList(data, 'verifiedSkills', 50) &&
         isOptionalList(data, 'languages', 30) &&
         (!data.keys().hasAny(['portfolio']) || data.portfolio is list) &&
         (!data.keys().hasAny(['hourlyRate']) || (data.hourlyRate is number && data.hourlyRate >= 0)) &&
@@ -272,6 +273,25 @@ service cloud.firestore {
         isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.clientId) ||
         isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.freelancerId)
       );
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        (
+          isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.clientId) ||
+          isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.freelancerId)
+        )
+      );
+    }
+
+    match /contracts/{contractId}/timeLogs/{timeLogId} {
+      allow read: if isSignedIn() && (
+        isAdmin() ||
+        isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.clientId) ||
+        isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.freelancerId)
+      );
+      allow create: if isSignedIn() && 
+        isOwner(get(/databases/$(database)/documents/contracts/$(contractId)).data.freelancerId) &&
+        incoming().freelancerId == request.auth.uid &&
+        incoming().contractId == contractId;
       allow update: if isAdmin() || (
         isSignedIn() &&
         (

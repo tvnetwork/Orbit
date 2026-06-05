@@ -17,6 +17,7 @@ export interface UserProfile {
   professionalTitle?: string;
   bio?: string;
   skills?: string[];
+  verifiedSkills?: string[];
   location?: string;
   hourlyRate?: number;
   timezone?: string;
@@ -56,6 +57,17 @@ export interface Proposal {
   coverLetter: string;
   bidAmount: number;
   status: 'pending' | 'accepted' | 'rejected' | 'withdrawn';
+  createdAt: any;
+}
+
+export interface TimeLog {
+  id: string;
+  contractId: string;
+  freelancerId: string;
+  description: string;
+  date: string;
+  hours: number;
+  status: 'logged' | 'approved' | 'disputed';
   createdAt: any;
 }
 
