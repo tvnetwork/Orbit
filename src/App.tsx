@@ -104,8 +104,9 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-slate-900/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <>
+      <nav className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center gap-2 md:gap-4">
             <Link to="/" className="flex items-center gap-2 group">
@@ -187,16 +188,14 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+    </nav>
 
-
-
-
-      {/* Modern Floating Bottom Navigation */}
+    {/* Modern Floating Bottom Navigation */}
       <div className="md:hidden fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pointer-events-none">
         <motion.div 
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mx-auto flex w-full max-w-md items-stretch justify-between gap-1 rounded-[2rem] border border-slate-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-900/95 dark:bg-slate-800/95 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-2xl pointer-events-auto ring-1 ring-slate-900/5 transition-colors duration-200"
+          className="mx-auto flex w-full max-w-md items-stretch justify-between gap-1 rounded-[2rem] border border-slate-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-900/95 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-2xl pointer-events-auto ring-1 ring-slate-900/5 transition-colors duration-200"
         >
           {bottomLinks.map((link) => {
             const isActive = isNavActive(location.pathname, link.to);
@@ -206,18 +205,18 @@ const Navbar = () => {
                 to={link.to}
                 className={cn(
                   "relative flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[1.35rem] px-2 py-2.5 text-center transition-all duration-300",
-                  isActive ? "text-indigo-700" : "text-slate-500 hover:text-slate-700"
+                  isActive ? "text-indigo-700 dark:text-indigo-400" : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                 )}
               >
                 {isActive && (
                   <motion.div 
                     layoutId="activeTab"
-                    className="absolute inset-0 -z-10 rounded-[1.35rem] bg-gradient-to-b from-indigo-50 to-white"
+                    className="absolute inset-0 -z-10 rounded-[1.35rem] bg-gradient-to-b from-indigo-50 to-white dark:from-indigo-900/20 dark:to-slate-800/50"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
                 <link.icon className={cn("h-5 w-5 transition-transform duration-300", isActive && "scale-110")} />
-                <span className={cn("max-w-full truncate text-[11px] font-semibold leading-none", isActive && "text-indigo-700")}>
+                <span className={cn("max-w-full truncate text-[11px] font-semibold leading-none", isActive && "text-indigo-700 dark:text-indigo-400")}>
                   {link.label}
                 </span>
               </Link>
@@ -225,7 +224,7 @@ const Navbar = () => {
           })}
         </motion.div>
       </div>
-    </nav>
+    </>
   );
 };
 
