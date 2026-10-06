@@ -105,20 +105,20 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
+      <nav className="border-b border-white/[0.08] bg-black/85 backdrop-blur-xl sticky top-0 z-50 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+        <div className="flex justify-between h-14 items-center">
           <div className="flex items-center gap-2 md:gap-4">
-            <Link to="/" className="flex items-center gap-2 group">
-              <motion.div 
-                whileHover={{ rotate: 180, scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                className="p-1.5 md:p-2 bg-indigo-600 rounded-lg md:rounded-xl shadow-lg shadow-indigo-100"
-              >
-                <BrandIcon className="h-5 w-5 md:h-6 md:w-6 text-white" />
-              </motion.div>
-              <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-200">{t('common.brandName')}</span>
+            <Link to="/" className="flex items-center gap-2.5 group select-none">
+              <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center border border-white/20">
+                <BrandIcon className="h-4 w-4 text-white" />
+              </div>
+              <span className="font-medium text-white text-sm tracking-tight flex items-center gap-2">
+                <span>Kontyra VyntaJobs</span>
+                <span className="hidden sm:inline-block text-[10px] font-mono uppercase bg-white/[0.06] text-white/50 px-2 py-0.5 rounded-full border border-white/[0.08]">
+                  Talent
+                </span>
+              </span>
             </Link>
           </div>
 
