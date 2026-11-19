@@ -28,13 +28,23 @@ import {
   FileText
 } from 'lucide-react';
 import { cn } from './lib/utils';
+import AuthModal from './components/AuthModal';
+import { 
+  handleKontyraSSOCallback, 
+  initiateKontyraSSO, 
+  getStoredKontyraSession, 
+  clearStoredKontyraSession, 
+  KontyraSSOUser 
+} from './lib/kontyraSso';
 
 // Context
 interface AuthContextType {
-  user: FirebaseUser | null;
+  user: FirebaseUser | KontyraSSOUser | null;
   profile: UserProfile | null;
   loading: boolean;
-  login: () => Promise<void>;
+  login: () => void;
+  loginWithGoogleAuth: () => Promise<void>;
+  loginWithKontyra: () => void;
   logout: () => Promise<void>;
   updateRole: (role: UserRole) => Promise<void>;
 }
@@ -66,12 +76,8 @@ const Navbar = () => {
     }
   }, [user, location.pathname]);
 
-  const handleLogin = async () => {
-    try {
-      await login();
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+  const handleLogin = () => {
+    login();
   };
 
   const navLinks = [
@@ -100,7 +106,12 @@ const Navbar = () => {
     { to: "/jobs", icon: Search, label: t('nav.marketplace') },
     mobilePrimaryLink,
     mobileSocialLink,
-    { to: user ? "/profile" : "/login", icon: user ? UserIcon : LogOut, label: user ? t('profile.title') : t('common.login') }
+    { 
+      to: user ? "/profile" : "#", 
+      onClick: user ? undefined : handleLogin, 
+      icon: user ? UserIcon : LogOut, 
+      label: user ? t('profile.title') : t('common.login') 
+    }
   ];
 
   return (
@@ -199,6 +210,20 @@ const Navbar = () => {
         >
           {bottomLinks.map((link) => {
             const isActive = isNavActive(location.pathname, link.to);
+            if (link.onClick) {
+              return (
+                <button
+                  key={link.label}
+                  onClick={link.onClick}
+                  className="relative flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[1.35rem] px-2 py-2.5 text-center transition-all duration-300 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+                >
+                  <link.icon className="h-5 w-5 transition-transform duration-300" />
+                  <span className="max-w-full truncate text-[11px] font-semibold leading-none">
+                    {link.label}
+                  </span>
+                </button>
+              );
+            }
             return (
               <Link 
                 key={link.to} 
@@ -294,54 +319,133 @@ const AnimatedRoutes = () => {
           <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
           <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
           <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
+          <Route path="/login" element={<LoginRedirect />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
   );
 };
 
+const LoginRedirect = () => {
+  useEffect(() => {
+    initiateKontyraSSO('vyntajobs');
+  }, []);
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+      <div className="flex flex-col items-center gap-4">
+        <BrandIcon className="h-8 w-8 text-indigo-600 animate-spin" />
+        <p className="text-sm font-medium text-slate-500">Redirecting to Kontyra Identity SSO...</p>
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
-  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [user, setUser] = useState<FirebaseUser | KontyraSSOUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { t } = useTranslation();
 
+  // Listen to profile whenever user changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
-        const docRef = doc(db, 'users', user.uid);
-        
-        // Update lastActive once on login
-        updateDoc(docRef, { lastActive: serverTimestamp() }).catch(console.error);
+    if (!user) {
+      setProfile(null);
+      return;
+    }
 
-        // Real-time listener for profile
-        const unsubProfile = onSnapshot(docRef, (docSnap) => {
-          if (docSnap.exists()) {
-            setProfile(docSnap.data() as UserProfile);
-          } else {
-            setProfile(null);
-          }
-          setLoading(false);
-        }, (error) => {
-          console.error("Profile listen error:", error);
-          setLoading(false);
-        });
+    const docRef = doc(db, 'users', user.uid);
+    updateDoc(docRef, { lastActive: serverTimestamp() }).catch(console.error);
 
-        return () => unsubProfile();
+    const unsubProfile = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setProfile(docSnap.data() as UserProfile);
       } else {
         setProfile(null);
-        setLoading(false);
       }
+      setLoading(false);
+    }, (error) => {
+      console.error("Profile listen error:", error);
+      setLoading(false);
     });
-    return unsubscribe;
+
+    return () => unsubProfile();
+  }, [user?.uid]);
+
+  // Handle SSO callback and Firebase auth state
+  useEffect(() => {
+    let isMounted = true;
+
+    async function initAuth() {
+      try {
+        // 1. Check for incoming Kontyra SSO callback in URL
+        const ssoUser = await handleKontyraSSOCallback();
+        if (ssoUser && isMounted) {
+          setUser(ssoUser);
+          setLoading(false);
+          return;
+        }
+
+        // 2. Check for stored Kontyra session
+        const storedSso = getStoredKontyraSession();
+        if (storedSso && isMounted && !auth.currentUser) {
+          setUser(storedSso);
+          setLoading(false);
+        }
+      } catch (err) {
+        console.warn("SSO Init Error:", err);
+      }
+
+      // 3. Listen to Firebase auth state
+      const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+        if (!isMounted) return;
+        if (fbUser) {
+          setUser(fbUser);
+        } else {
+          const currentSso = getStoredKontyraSession();
+          if (currentSso) {
+            setUser(currentSso);
+          } else {
+            setUser(null);
+          }
+        }
+        setLoading(false);
+      });
+
+      return unsubscribe;
+    }
+
+    let unsub: (() => void) | undefined;
+    initAuth().then((u) => { unsub = u; });
+
+    return () => {
+      isMounted = false;
+      if (unsub) unsub();
+    };
   }, []);
 
-  const login = async () => {
-    await loginWithGoogle();
+  const login = () => {
+    setIsAuthModalOpen(true);
+  };
+
+  const loginWithGoogleAuth = async () => {
+    try {
+      await loginWithGoogle();
+      setIsAuthModalOpen(false);
+    } catch (err) {
+      console.error("Google login failed:", err);
+    }
+  };
+
+  const loginWithKontyra = () => {
+    setIsAuthModalOpen(false);
+    initiateKontyraSSO('vyntajobs');
   };
 
   const logout = async () => {
+    clearStoredKontyraSession();
+    setUser(null);
+    setProfile(null);
     await auth.signOut();
   };
 
@@ -370,7 +474,16 @@ export default function App() {
     }
   };
 
-  const authValue = { user, profile, loading, login, logout, updateRole };
+  const authValue = { 
+    user, 
+    profile, 
+    loading, 
+    login, 
+    loginWithGoogleAuth, 
+    loginWithKontyra, 
+    logout, 
+    updateRole 
+  };
 
   if (loading) return (
     <div className="h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-slate-800">
@@ -387,6 +500,12 @@ export default function App() {
         <ScrollToTop />
         <div className="min-h-screen bg-white dark:bg-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 transition-colors duration-200">
           <Navbar />
+          <AuthModal 
+            isOpen={isAuthModalOpen} 
+            onClose={() => setIsAuthModalOpen(false)} 
+            onGoogleLogin={loginWithGoogleAuth} 
+            loading={loading} 
+          />
           <main className="flex-grow pb-24 md:pb-0">
             <React.Suspense fallback={
               <div className="flex items-center justify-center min-h-[60vh]">
