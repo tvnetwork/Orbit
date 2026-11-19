@@ -127,30 +127,60 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
     console.warn('Could not clean SSO URL params:', err);
   }
 
-  let resolvedEmail = ssoEmailParam || '';
-  let resolvedUid = ssoUidParam || '';
-  let resolvedName = ssoNameParam || '';
-  let resolvedPhoto = ssoPhotoParam || '';
+  const decoded = tokenParam ? decodeJwtPayload(tokenParam) : null;
+  const emailFromJwt =
+    decoded?.email ||
+    decoded?.claims?.email ||
+    decoded?.claims?.claims?.email ||
+    decoded?.user?.email ||
+    decoded?.data?.email ||
+    decoded?.identity?.email;
+
+  const nameFromJwt =
+    decoded?.fullName ||
+    decoded?.name ||
+    decoded?.displayName ||
+    decoded?.claims?.fullName ||
+    decoded?.claims?.name;
+
+  const uidFromJwt =
+    decoded?.uid ||
+    decoded?.sub ||
+    decoded?.user_id ||
+    decoded?.userId ||
+    decoded?.claims?.uid;
+
+  const photoFromJwt =
+    decoded?.picture ||
+    decoded?.photoURL ||
+    decoded?.photoUrl ||
+    decoded?.claims?.picture;
+
+  let resolvedEmail = ssoEmailParam || emailFromJwt || '';
+  let resolvedUid = ssoUidParam || uidFromJwt || '';
+  let resolvedName = ssoNameParam || nameFromJwt || '';
+  let resolvedPhoto = ssoPhotoParam || photoFromJwt || '';
 
   // Attempt Firebase Custom Token sign-in first if a token is provided
   if (tokenParam) {
     try {
       const cred = await signInWithCustomToken(auth, tokenParam);
       if (cred.user) {
+        resolvedUid = cred.user.uid || resolvedUid;
         resolvedEmail = cred.user.email || resolvedEmail;
-        resolvedUid = cred.user.uid;
         resolvedName = cred.user.displayName || resolvedName;
         resolvedPhoto = cred.user.photoURL || resolvedPhoto;
+
+        try {
+          const idTokenResult = await cred.user.getIdTokenResult();
+          const claimEmail = idTokenResult.claims.email as string;
+          if (claimEmail && !resolvedEmail) {
+            resolvedEmail = claimEmail;
+          }
+        } catch {}
       }
     } catch (fbErr) {
-      console.log('Firebase Custom Token exchange bypassed; decoding cross-project claims:', fbErr);
-      const decoded = decodeJwtPayload(tokenParam);
-      if (decoded) {
-        resolvedEmail = decoded.email || decoded.claims?.email || resolvedEmail;
-        resolvedUid = decoded.uid || decoded.sub || decoded.user_id || resolvedUid;
-        resolvedName = decoded.name || decoded.displayName || decoded.claims?.name || resolvedName;
-        resolvedPhoto = decoded.picture || decoded.photoURL || resolvedPhoto;
-      }
+      console.log('Firebase Custom Token exchange skipped (cross-project):', fbErr);
     }
   }
 
@@ -158,45 +188,71 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
     return null;
   }
 
-  const normalizedEmail = (resolvedEmail || 'user@kontyra.internal').toLowerCase().trim();
-  let finalUid = resolvedUid || `kontyra_${normalizedEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
-  let finalName = resolvedName || normalizedEmail.split('@')[0] || 'Kontyra Talent';
+  const normalizedEmail = (resolvedEmail || '').toLowerCase().trim();
+  let canonicalUid = resolvedUid || (normalizedEmail ? `kontyra_${normalizedEmail.replace(/[^a-zA-Z0-9]/g, '_')}` : 'kontyra_user');
+  let canonicalProfile: UserProfile | null = null;
 
-  // 1. Search for an existing user account created with this email
-  let existingUserDocId: string | null = null;
-  let existingUserProfile: UserProfile | null = null;
+  // 1. Search for any existing user account created with this email
+  if (normalizedEmail) {
+    try {
+      const q1 = query(
+        collection(db, 'users'),
+        where('email', '==', normalizedEmail)
+      );
+      const snap1 = await getDocs(q1);
+      let docsList = [...snap1.docs];
 
-  try {
-    const emailQ = query(
-      collection(db, 'users'),
-      where('email', '==', normalizedEmail),
-      limit(1)
-    );
-    const snap = await getDocs(emailQ);
-    if (!snap.empty) {
-      const matchDoc = snap.docs[0];
-      existingUserDocId = matchDoc.id;
-      existingUserProfile = matchDoc.data() as UserProfile;
-      console.log(`Recognized existing account for email ${normalizedEmail} with UID: ${existingUserDocId}`);
+      if (resolvedEmail && resolvedEmail.trim() !== normalizedEmail) {
+        const q2 = query(
+          collection(db, 'users'),
+          where('email', '==', resolvedEmail.trim())
+        );
+        const snap2 = await getDocs(q2);
+        for (const d of snap2.docs) {
+          if (!docsList.some(existing => existing.id === d.id)) {
+            docsList.push(d);
+          }
+        }
+      }
+
+      if (docsList.length > 0) {
+        // Sort candidate docs so that the original user account is chosen:
+        // Prioritize documents with admin/client role, completed jobs, skills, or non-kontyra UID
+        docsList.sort((a, b) => {
+          const aData = a.data() as UserProfile;
+          const bData = b.data() as UserProfile;
+          const score = (p: UserProfile, id: string) => {
+            let s = 0;
+            if (p.role === 'admin') s += 200;
+            if (p.role === 'client') s += 100;
+            if (p.completedJobs && p.completedJobs > 0) s += 20;
+            if (p.skills && p.skills.length > 0) s += 15;
+            if (p.hourlyRate) s += 10;
+            if (!id.startsWith('kontyra_') && !id.startsWith('usr_')) s += 50;
+            return s;
+          };
+          return score(bData, b.id) - score(aData, a.id);
+        });
+
+        const bestDoc = docsList[0];
+        canonicalUid = bestDoc.id;
+        canonicalProfile = bestDoc.data() as UserProfile;
+        console.log(`Recognized existing account for email ${normalizedEmail} with UID: ${canonicalUid}`);
+      }
+    } catch (err) {
+      console.warn('Could not query existing account by email:', err);
     }
-  } catch (err) {
-    console.warn('Could not query existing account by email:', err);
   }
 
-  // If existing user account exists, adopt its canonical UID and profile data!
-  if (existingUserDocId) {
-    finalUid = existingUserDocId;
-    if (existingUserProfile) {
-      finalName = existingUserProfile.displayName || finalName;
-      resolvedPhoto = existingUserProfile.photoURL || resolvedPhoto;
-    }
-  }
+  const finalUid = canonicalUid;
+  const finalName = canonicalProfile?.displayName || resolvedName || (normalizedEmail ? normalizedEmail.split('@')[0] : 'Kontyra Talent');
+  const finalPhoto = canonicalProfile?.photoURL || resolvedPhoto;
 
   const sessionUser: KontyraSSOUser = {
     uid: finalUid,
     email: normalizedEmail,
     displayName: finalName,
-    photoURL: resolvedPhoto,
+    photoURL: finalPhoto,
     emailVerified: true,
     isKontyraSSO: true,
     providerData: [
@@ -229,7 +285,7 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
         uid: finalUid,
         email: normalizedEmail,
         displayName: finalName,
-        photoURL: resolvedPhoto || undefined,
+        photoURL: finalPhoto || undefined,
         role: 'freelancer',
         verificationStatus: 'verified',
         rating: 5.0,
@@ -241,8 +297,6 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
   } catch (fsErr) {
     console.warn('Could not sync Kontyra profile to Firestore:', fsErr);
   }
-
-  return sessionUser;
 
   return sessionUser;
 }

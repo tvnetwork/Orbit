@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Orbit } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export default function Footer() {
@@ -12,18 +12,13 @@ export default function Footer() {
         {/* Brand Column */}
         <div className="md:col-span-2 space-y-5">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-white/[0.08] flex items-center justify-center p-1.5 shadow-sm border border-white/[0.1]">
-              <img src="/kontyra-gradient.svg" alt="Kontyra" className="w-full h-full object-contain" />
+            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30">
+              <Orbit className="h-4 w-4" />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold tracking-tight text-white">Kontyra VyntaJobs</span>
-              <span className="text-[10px] font-mono uppercase bg-white/[0.08] text-white/70 px-2 py-0.5 rounded-full border border-white/[0.1]">
-                Talent
-              </span>
-            </div>
+            <span className="text-xl font-bold tracking-tight text-white">{t('common.brandName')}</span>
           </div>
           <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-            Building Innovations, Leading Technology. Elite global talent marketplace and milestone escrow platform powered by the Kontyra Ecosystem.
+            {t('common.tagline', { defaultValue: 'Elite global marketplace for jobs, talent, and projects. Find or post jobs, connect with top talent worldwide.' })}
           </p>
           <div className="flex items-center gap-2 text-xs font-mono text-slate-500">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>

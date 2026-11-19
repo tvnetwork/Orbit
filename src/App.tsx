@@ -135,14 +135,11 @@ const Navbar = () => {
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center gap-2 md:gap-4">
             <Link to="/" className="flex items-center gap-2.5 group select-none">
-              <div className="w-8 h-8 rounded-xl bg-slate-900/5 dark:bg-white/[0.06] flex items-center justify-center p-1.5 shadow-sm border border-slate-200/80 dark:border-white/[0.08] group-hover:scale-105 transition-transform">
-                <img src="/kontyra-gradient.svg" alt="Kontyra" className="w-full h-full object-contain" />
+              <div className="w-8 h-8 rounded-xl bg-indigo-600 dark:bg-indigo-500/20 flex items-center justify-center text-white dark:text-indigo-400 shadow-sm shadow-indigo-500/20 border border-indigo-600/20 dark:border-indigo-500/30 group-hover:scale-105 transition-transform">
+                <BrandIcon className="h-4 w-4" />
               </div>
               <span className="font-semibold text-slate-900 dark:text-white text-base tracking-tight flex items-center gap-2">
-                <span>Kontyra VyntaJobs</span>
-                <span className="hidden sm:inline-block text-[10px] font-mono uppercase bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-white/60 px-2 py-0.5 rounded-full border border-slate-200 dark:border-white/[0.08]">
-                  Talent
-                </span>
+                <span>{t('common.brandName')}</span>
               </span>
             </Link>
           </div>
@@ -376,37 +373,75 @@ export default function App() {
       if (!user) return;
       let targetUid = user.uid;
 
-      // 1. Check if user profile exists directly under targetUid
-      const directRef = doc(db, 'users', targetUid);
-      const directSnap = await getDoc(directRef).catch(() => null);
+      // Extract effective email from user, Firebase token claims, or stored SSO session
+      let effectiveEmail = user.email || '';
+      if (!effectiveEmail && 'getIdTokenResult' in user) {
+        try {
+          const res = await (user as FirebaseUser).getIdTokenResult();
+          effectiveEmail = (res.claims.email as string) || '';
+        } catch {}
+      }
+      if (!effectiveEmail) {
+        const stored = getStoredKontyraSession();
+        if (stored?.email) effectiveEmail = stored.email;
+      }
 
-      if (!directSnap || !directSnap.exists()) {
-        // 2. If not found by UID, search by email to find existing account
-        if (user.email) {
-          try {
-            const emailQ = query(
+      // 1. Search for existing canonical user account by email to bind existing client/admin/freelancer roles
+      if (effectiveEmail) {
+        try {
+          const normEmail = effectiveEmail.toLowerCase().trim();
+          const emailQ = query(
+            collection(db, 'users'),
+            where('email', '==', normEmail)
+          );
+          const querySnap = await getDocs(emailQ);
+          let candidateDocs = [...querySnap.docs];
+
+          if (effectiveEmail.trim() !== normEmail) {
+            const rawQ = query(
               collection(db, 'users'),
-              where('email', '==', user.email.toLowerCase().trim()),
-              limit(1)
+              where('email', '==', effectiveEmail.trim())
             );
-            const querySnap = await getDocs(emailQ);
-            if (!querySnap.empty) {
-              const matchedDoc = querySnap.docs[0];
-              targetUid = matchedDoc.id;
-              console.log(`Recognized existing account for email ${user.email} under canonical UID: ${targetUid}`);
-
-              // If current session UID was a temporary SSO placeholder, update it to canonical UID
-              if (user.uid !== targetUid) {
-                const updatedSession = { ...user, uid: targetUid };
-                setUser(updatedSession as any);
-                try {
-                  localStorage.setItem(KONTYRA_STORAGE_KEY, JSON.stringify(updatedSession));
-                } catch {}
+            const rawSnap = await getDocs(rawQ);
+            for (const d of rawSnap.docs) {
+              if (!candidateDocs.some(existing => existing.id === d.id)) {
+                candidateDocs.push(d);
               }
             }
-          } catch (e) {
-            console.warn("Could not query existing profile by email:", e);
           }
+
+          if (candidateDocs.length > 0) {
+            candidateDocs.sort((a, b) => {
+              const aData = a.data() as UserProfile;
+              const bData = b.data() as UserProfile;
+              const score = (p: UserProfile, id: string) => {
+                let s = 0;
+                if (p.role === 'admin') s += 200;
+                if (p.role === 'client') s += 100;
+                if (p.completedJobs && p.completedJobs > 0) s += 20;
+                if (p.skills && p.skills.length > 0) s += 15;
+                if (p.hourlyRate) s += 10;
+                if (!id.startsWith('kontyra_') && !id.startsWith('usr_')) s += 50;
+                return s;
+              };
+              return score(bData, b.id) - score(aData, a.id);
+            });
+
+            const bestDoc = candidateDocs[0];
+            targetUid = bestDoc.id;
+            console.log(`Recognized existing account for email ${effectiveEmail} under canonical UID: ${targetUid}`);
+
+            // If current session UID was a temporary SSO placeholder, update it to canonical UID
+            if (user.uid !== targetUid) {
+              const updatedSession = { ...user, uid: targetUid };
+              setUser(updatedSession as any);
+              try {
+                localStorage.setItem(KONTYRA_STORAGE_KEY, JSON.stringify(updatedSession));
+              } catch {}
+            }
+          }
+        } catch (e) {
+          console.warn("Could not query existing profile by email:", e);
         }
       }
 
