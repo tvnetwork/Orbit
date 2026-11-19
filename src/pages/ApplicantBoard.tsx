@@ -95,7 +95,7 @@ export default function ApplicantBoard() {
       <div className="border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 py-6 shadow-sm sm:py-8 md:py-10">
         <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4 mb-6">
-            <Link to="/client/dashboard" className="p-2 hover:bg-gray-50 dark:bg-slate-800 rounded-xl transition-colors">
+            <Link to="/client/dashboard" className="p-2 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-xl transition-colors">
               <ChevronLeft className="h-6 w-6 text-gray-400 dark:text-gray-500" />
             </Link>
             <div>
@@ -143,7 +143,7 @@ export default function ApplicantBoard() {
                 <div className="relative">
                   <button 
                     onClick={() => setActiveMenuId(activeMenuId === column.id ? null : column.id)}
-                    className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300 p-1"
+                    className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 p-1"
                   >
                     <MoreHorizontal className="h-5 w-5" />
                   </button>
@@ -156,9 +156,9 @@ export default function ApplicantBoard() {
                         exit={{ opacity: 0, y: 5, scale: 0.95 }}
                         className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50 overflow-hidden"
                       >
-                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800">Sort by Rating</button>
-                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800">Sort by Budget</button>
-                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800">Bulk Actions</button>
+                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800">Sort by Rating</button>
+                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800">Sort by Budget</button>
+                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800">Bulk Actions</button>
                       </motion.div>
                     )}
                   </AnimatePresence>

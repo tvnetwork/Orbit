@@ -176,7 +176,7 @@ export default function Community() {
                   onClick={() => navigate('/community')}
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all",
-                    !selectedCohortId ? "bg-indigo-50 text-indigo-600" : "text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:bg-slate-800"
+                    !selectedCohortId ? "bg-indigo-50 text-indigo-600" : "text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-slate-800"
                   )}
                 >
                   <Globe className="h-4 w-4" />
@@ -184,7 +184,7 @@ export default function Community() {
                 </button>
                 <button 
                   onClick={() => navigate('/groups')}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:bg-slate-800 transition-all"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all"
                 >
                   <Users className="h-4 w-4" />
                   All Cohorts
@@ -291,7 +291,7 @@ export default function Community() {
                         value={newMessage}
                         onChange={e => setNewMessage(e.target.value)}
                         placeholder="Broadcast to the domain masters..."
-                        className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2rem] px-8 py-5 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 transition-all shadow-inner"
+                        className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2rem] px-8 py-5 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-300 transition-all shadow-inner"
                       />
                    </div>
                    <button 

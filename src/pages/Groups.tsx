@@ -178,7 +178,7 @@ export default function Groups() {
            </div>
            <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
              <button className="rounded-2xl bg-gray-900 px-6 py-3 text-[10px] font-black uppercase tracking-widest text-white">{t('groups.allCohorts')}</button>
-             <button className="rounded-2xl bg-white dark:bg-slate-900 px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 transition-all hover:text-gray-900 dark:text-white">{t('groups.featuredOnly')}</button>
+             <button className="rounded-2xl bg-white dark:bg-slate-900 px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 transition-all hover:text-gray-900 dark:hover:text-white">{t('groups.featuredOnly')}</button>
            </div>
         </div>
 
@@ -319,7 +319,7 @@ export default function Groups() {
                       <button 
                         type="button" 
                         onClick={() => setIsCreating(false)}
-                        className="px-8 py-4 text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest hover:text-gray-900 dark:text-white"
+                        className="px-8 py-4 text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest hover:text-gray-900 dark:hover:text-white"
                       >
                         {t('groups.discard')}
                       </button>

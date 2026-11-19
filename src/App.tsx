@@ -105,17 +105,17 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="border-b border-white/[0.08] bg-black/85 backdrop-blur-xl sticky top-0 z-50 transition-colors duration-200">
+      <nav className="border-b border-slate-200/80 dark:border-white/[0.08] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-14 items-center">
+        <div className="flex justify-between h-16 items-center">
           <div className="flex items-center gap-2 md:gap-4">
             <Link to="/" className="flex items-center gap-2.5 group select-none">
-              <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center border border-white/20">
-                <BrandIcon className="h-4 w-4 text-white" />
+              <div className="w-8 h-8 rounded-xl bg-indigo-600 dark:bg-indigo-500/20 flex items-center justify-center text-white dark:text-indigo-400 shadow-sm shadow-indigo-500/20 border border-indigo-600/20 dark:border-indigo-500/30">
+                <BrandIcon className="h-4 w-4" />
               </div>
-              <span className="font-medium text-white text-sm tracking-tight flex items-center gap-2">
+              <span className="font-semibold text-slate-900 dark:text-white text-base tracking-tight flex items-center gap-2">
                 <span>Kontyra VyntaJobs</span>
-                <span className="hidden sm:inline-block text-[10px] font-mono uppercase bg-white/[0.06] text-white/50 px-2 py-0.5 rounded-full border border-white/[0.08]">
+                <span className="hidden sm:inline-block text-[10px] font-mono uppercase bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-white/60 px-2 py-0.5 rounded-full border border-slate-200 dark:border-white/[0.08]">
                   Talent
                 </span>
               </span>
@@ -127,17 +127,17 @@ const Navbar = () => {
               <Link 
                 key={link.to}
                 to={link.to} 
-                className="relative px-4 py-2 group"
+                className="relative px-3.5 py-2 group rounded-lg"
               >
-                <span className={`text-sm font-bold transition-colors duration-200 ${
-                  location.pathname === link.to ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'
+                <span className={`text-sm font-medium transition-colors duration-200 ${
+                  location.pathname === link.to ? 'text-indigo-600 dark:text-indigo-400 font-semibold' : 'text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:hover:group-hover:text-white'
                 }`}>
                   {link.label}
                 </span>
                 {location.pathname === link.to && (
                   <motion.div 
                     layoutId="nav-underline"
-                    className="absolute bottom-0 left-4 right-4 h-0.5 bg-indigo-600 rounded-full"
+                    className="absolute bottom-0 left-3 right-3 h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -156,12 +156,12 @@ const Navbar = () => {
                   <motion.div 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="h-9 w-9 rounded-full bg-gray-400 overflow-hidden border border-gray-200 dark:border-slate-600 group-hover:border-indigo-300 transition-colors ring-2 ring-transparent group-hover:ring-indigo-50 shadow-sm"
+                    className="h-9 w-9 rounded-full bg-slate-300 dark:bg-slate-700 overflow-hidden border border-slate-200 dark:border-slate-600 group-hover:border-indigo-400 transition-colors ring-2 ring-transparent group-hover:ring-indigo-100 dark:group-hover:hover:group-hover:ring-indigo-950 shadow-sm"
                   >
                     {user.photoURL ? (
                       <img src={user.photoURL} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
                     ) : (
-                      <UserIcon className="h-full w-full p-1.5 text-white" />
+                      <UserIcon className="h-full w-full p-1.5 text-slate-600 dark:text-slate-300" />
                     )}
                   </motion.div>
                 </Link>
@@ -169,7 +169,7 @@ const Navbar = () => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={logout} 
-                  className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 transition-colors hidden sm:block"
+                  className="p-2 text-slate-400 dark:text-slate-500 hover:text-red-500 transition-colors hidden sm:block"
                 >
                   <LogOut className="h-5 w-5" />
                 </motion.button>
@@ -179,7 +179,7 @@ const Navbar = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLogin}
-                className="bg-indigo-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-indigo-700 transition-all shadow-sm shadow-indigo-100 disabled:opacity-50"
+                className="bg-indigo-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-indigo-700 transition-all shadow-sm shadow-indigo-600/20 disabled:opacity-50"
                 disabled={loading}
               >
                 {t('common.login')}
@@ -195,7 +195,7 @@ const Navbar = () => {
         <motion.div 
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mx-auto flex w-full max-w-md items-stretch justify-between gap-1 rounded-[2rem] border border-slate-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-900/95 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-2xl pointer-events-auto ring-1 ring-slate-900/5 transition-colors duration-200"
+          className="mx-auto flex w-full max-w-md items-stretch justify-between gap-1 rounded-[2rem] border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-slate-950/90 p-2 shadow-xl shadow-slate-900/10 dark:shadow-black/50 backdrop-blur-2xl pointer-events-auto ring-1 ring-slate-900/5 dark:ring-white/5 transition-colors duration-200"
         >
           {bottomLinks.map((link) => {
             const isActive = isNavActive(location.pathname, link.to);
@@ -205,18 +205,18 @@ const Navbar = () => {
                 to={link.to}
                 className={cn(
                   "relative flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[1.35rem] px-2 py-2.5 text-center transition-all duration-300",
-                  isActive ? "text-indigo-700 dark:text-indigo-400" : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                  isActive ? "text-indigo-600 dark:text-indigo-400 font-semibold" : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-400 dark:hover:text-slate-200"
                 )}
               >
                 {isActive && (
                   <motion.div 
                     layoutId="activeTab"
-                    className="absolute inset-0 -z-10 rounded-[1.35rem] bg-gradient-to-b from-indigo-50 to-white dark:from-indigo-900/20 dark:to-slate-800/50"
+                    className="absolute inset-0 -z-10 rounded-[1.35rem] bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-800/40"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
                 <link.icon className={cn("h-5 w-5 transition-transform duration-300", isActive && "scale-110")} />
-                <span className={cn("max-w-full truncate text-[11px] font-semibold leading-none", isActive && "text-indigo-700 dark:text-indigo-400")}>
+                <span className={cn("max-w-full truncate text-[11px] font-semibold leading-none", isActive && "text-indigo-600 dark:text-indigo-400")}>
                   {link.label}
                 </span>
               </Link>

@@ -171,7 +171,7 @@ export default function SubmitProposal() {
                     placeholder={t('submitProposal.coverLetterPlaceholder')}
                     value={form.coverLetter}
                     onChange={e => setForm(prev => ({ ...prev, coverLetter: e.target.value }))}
-                    className="w-full px-8 py-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2.5rem] focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 transition-all leading-relaxed"
+                    className="w-full px-8 py-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2.5rem] focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-300 transition-all leading-relaxed"
                   />
                 </div>
 

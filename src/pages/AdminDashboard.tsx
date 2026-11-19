@@ -189,7 +189,7 @@ export default function AdminDashboard() {
                 className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                   activeTab === tab 
                     ? 'bg-gray-900 text-white shadow-lg' 
-                    : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300'
+                    : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
                 }`}
               >
                 {tab === 'support' ? t('admin.support') : tab}
@@ -272,7 +272,7 @@ export default function AdminDashboard() {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {filteredUsers.map(user => (
-                    <tr key={user.uid} className="hover:bg-gray-50 dark:bg-slate-800/50 transition-colors group">
+                    <tr key={user.uid} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors group">
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
                           <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}`} className="h-10 w-10 rounded-xl" alt="" />
@@ -311,10 +311,10 @@ export default function AdminDashboard() {
                                 exit={{ opacity: 0, y: 5, scale: 0.95 }}
                                 className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50 text-left"
                               >
-                                <button className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2">
+                                <button className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2">
                                   <Shield className="h-3.5 w-3.5" /> {t('admin.suspendAccount')}
                                 </button>
-                                <button className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2">
+                                <button className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2">
                                   <FileText className="h-3.5 w-3.5" /> {t('admin.viewActivity')}
                                 </button>
                                 <button 
@@ -346,7 +346,7 @@ export default function AdminDashboard() {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {filteredJobs.map(job => (
-                    <tr key={job.id} className="hover:bg-gray-50 dark:bg-slate-800/50 transition-colors group">
+                    <tr key={job.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors group">
                       <td className="px-8 py-6">
                         <p className="font-bold text-gray-900 dark:text-white">{job.title}</p>
                         <p className="text-xs text-gray-400 dark:text-gray-500 line-clamp-1">{job.description}</p>
@@ -378,7 +378,7 @@ export default function AdminDashboard() {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {filteredCohorts.map(cohort => (
-                    <tr key={cohort.id} className="hover:bg-gray-50 dark:bg-slate-800/50 transition-colors">
+                    <tr key={cohort.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
                       <td className="px-8 py-6">
                         <p className="font-black text-gray-900 dark:text-white">{cohort.name}</p>
                         <p className="text-xs text-gray-400 dark:text-gray-500">{cohort.description}</p>

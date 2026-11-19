@@ -164,7 +164,7 @@ export default function ContractRoom() {
       {/* Header */}
       <header className="z-10 flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-4 sm:px-6 lg:flex-nowrap lg:items-center lg:px-8 lg:py-5 flex-shrink-0">
         <div className="flex min-w-0 items-center gap-3 sm:gap-4 lg:gap-6">
-          <Link to={profile?.role === 'client' ? '/client/dashboard' : '/freelancer/dashboard'} className="p-2 hover:bg-gray-50 dark:bg-slate-800 rounded-xl transition-colors">
+          <Link to={profile?.role === 'client' ? '/client/dashboard' : '/freelancer/dashboard'} className="p-2 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-xl transition-colors">
             <ChevronLeft className="h-6 w-6 text-gray-400 dark:text-gray-500" />
           </Link>
           <div className="flex min-w-0 items-center gap-3 sm:gap-4">
@@ -214,7 +214,7 @@ export default function ContractRoom() {
           <div className="relative">
             <button 
               onClick={() => setShowMenu(!showMenu)}
-              className="p-3 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:bg-slate-800/50 rounded-2xl transition-colors"
+              className="p-3 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-800/50 rounded-2xl transition-colors"
             >
               <MoreVertical className="h-6 w-6 text-gray-400 dark:text-gray-500" />
             </button>
@@ -232,7 +232,7 @@ export default function ContractRoom() {
                       if (contract?.jobId) window.location.href = `/jobs/${contract.jobId}`;
                       setShowMenu(false);
                     }}
-                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-3 transition-colors"
+                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-colors"
                   >
                     <FileText className="h-4 w-4 text-gray-400 dark:text-gray-500" /> View Job Original
                   </button>
@@ -242,7 +242,7 @@ export default function ContractRoom() {
                       if (otherId) window.location.href = `/profile/${otherId}`;
                       setShowMenu(false);
                     }}
-                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-3 transition-colors"
+                    className="w-full text-left px-4 py-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-colors"
                   >
                     <ShieldCheck className="h-4 w-4 text-gray-400 dark:text-gray-500" /> Partner Certificate
                   </button>
@@ -375,7 +375,7 @@ export default function ContractRoom() {
                          required
                          value={newTimeLog.date}
                          onChange={e => setNewTimeLog({...newTimeLog, date: e.target.value})}
-                         className="w-full bg-gray-50 dark:bg-slate-800 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white dark:bg-slate-900 outline-none font-medium text-sm"
+                         className="w-full bg-gray-50 dark:bg-slate-800 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white dark:focus:bg-slate-900 outline-none font-medium text-sm"
                        />
                        <input 
                          type="number" 
@@ -384,7 +384,7 @@ export default function ContractRoom() {
                          placeholder="Hours (e.g. 2.5)"
                          value={newTimeLog.hours}
                          onChange={e => setNewTimeLog({...newTimeLog, hours: e.target.value})}
-                         className="w-full bg-gray-50 dark:bg-slate-800 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white dark:bg-slate-900 outline-none font-medium text-sm"
+                         className="w-full bg-gray-50 dark:bg-slate-800 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white dark:focus:bg-slate-900 outline-none font-medium text-sm"
                        />
                      </div>
                      <input 
@@ -393,7 +393,7 @@ export default function ContractRoom() {
                        placeholder="Task description..."
                        value={newTimeLog.description}
                        onChange={e => setNewTimeLog({...newTimeLog, description: e.target.value})}
-                       className="w-full bg-gray-50 dark:bg-slate-800 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white dark:bg-slate-900 outline-none font-medium text-sm"
+                       className="w-full bg-gray-50 dark:bg-slate-800 border border-transparent px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-100 focus:bg-white dark:focus:bg-slate-900 outline-none font-medium text-sm"
                      />
                      <button type="submit" className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm">
                        Log Time

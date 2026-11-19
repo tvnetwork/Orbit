@@ -278,11 +278,11 @@ export default function FreelancerDashboard() {
                 {t('dashboard.quickActions')}
               </h3>
               <div className="space-y-3">
-                <Link to="/jobs" className="flex items-center justify-between p-5 bg-white dark:bg-slate-900/10 hover:bg-white dark:bg-slate-900/20 rounded-2xl transition-all border border-white/10">
+                <Link to="/jobs" className="flex items-center justify-between p-5 bg-white dark:bg-slate-900/10 hover:bg-white dark:hover:bg-slate-900/20 rounded-2xl transition-all border border-white/10">
                   <span className="font-bold">{t('dashboard.browseJobs')}</span>
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
-                <Link to="/profile" className="flex items-center justify-between p-5 bg-white dark:bg-slate-900/10 hover:bg-white dark:bg-slate-900/20 rounded-2xl transition-all border border-white/10">
+                <Link to="/profile" className="flex items-center justify-between p-5 bg-white dark:bg-slate-900/10 hover:bg-white dark:hover:bg-slate-900/20 rounded-2xl transition-all border border-white/10">
                   <span className="font-bold">{t('dashboard.optimizeProfile')}</span>
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
@@ -326,7 +326,7 @@ export default function FreelancerDashboard() {
                   <p className="text-sm text-gray-400 dark:text-gray-500 font-medium italic">No recent proposals.</p>
                 )}
               </div>
-              <Link to="/freelancer/proposals" className="w-full mt-10 py-4 border border-gray-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 transition-all block text-center">
+              <Link to="/freelancer/proposals" className="w-full mt-10 py-4 border border-gray-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all block text-center">
                 {t('dashboard.viewPipeline')}
               </Link>
             </div>

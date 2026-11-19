@@ -112,7 +112,7 @@ export default function Wallet() {
              <button className="flex items-center justify-center gap-2 rounded-2xl bg-gray-900 px-6 py-4 text-sm font-black text-white shadow-xl shadow-gray-200 transition-all hover:bg-black sm:px-8">
                <ArrowUpRight className="h-4 w-4" /> {t('wallet.withdrawFunds')}
              </button>
-             <button className="rounded-2xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 transition-all hover:bg-gray-50 dark:bg-slate-800 sm:self-auto">
+             <button className="rounded-2xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 transition-all hover:bg-gray-50 dark:hover:bg-slate-800 sm:self-auto">
                <Download className="h-5 w-5 text-gray-400 dark:text-gray-500" />
              </button>
           </div>
@@ -253,7 +253,7 @@ export default function Wallet() {
                   </button>
                 </div>
                 <div className="space-y-6">
-                   <div className="p-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl flex items-center gap-6 group cursor-pointer hover:bg-white dark:bg-slate-900 hover:border-indigo-200 transition-all">
+                   <div className="p-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl flex items-center gap-6 group cursor-pointer hover:bg-white dark:hover:bg-slate-900 hover:border-indigo-200 transition-all">
                       <div className="h-12 w-12 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center text-gray-400 dark:text-gray-500 group-hover:text-indigo-600 shadow-sm transition-colors">
                         <Building2 className="h-6 w-6" />
                       </div>
@@ -263,7 +263,7 @@ export default function Wallet() {
                       </div>
                       <div className="h-2 w-2 bg-emerald-500 rounded-full" />
                    </div>
-                   <div className="p-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl flex items-center gap-6 group cursor-pointer hover:bg-white dark:bg-slate-900 hover:border-indigo-200 transition-all opacity-60">
+                   <div className="p-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl flex items-center gap-6 group cursor-pointer hover:bg-white dark:hover:bg-slate-900 hover:border-indigo-200 transition-all opacity-60">
                       <div className="h-12 w-12 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center text-gray-400 dark:text-gray-500 shadow-sm">
                         <CreditCard className="h-6 w-6" />
                       </div>

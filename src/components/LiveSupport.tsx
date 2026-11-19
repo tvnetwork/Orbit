@@ -169,13 +169,13 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={() => setIsMinimized(true)}
-                      className="p-2 hover:bg-white dark:bg-slate-900/20 rounded-xl transition-all duration-300"
+                      className="p-2 hover:bg-white dark:hover:bg-slate-900/20 rounded-xl transition-all duration-300"
                     >
                       <Minus className="h-5 w-5" />
                     </button>
                     <button 
                       onClick={() => setIsOpen(false)}
-                      className="p-2 hover:bg-white dark:bg-slate-900/20 rounded-xl transition-all duration-300"
+                      className="p-2 hover:bg-white dark:hover:bg-slate-900/20 rounded-xl transition-all duration-300"
                     >
                       <X className="h-5 w-5" />
                     </button>
@@ -231,7 +231,7 @@ export default function LiveSupport({ inline = false }: LiveSupportProps) {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   placeholder={t('help.chatPlaceholder')}
-                  className="flex-1 bg-gray-50 dark:bg-slate-800 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-200 outline-none transition-all text-sm font-medium"
+                  className="flex-1 bg-gray-50 dark:bg-slate-800 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-200 outline-none transition-all text-sm font-medium"
                 />
                 <button 
                   type="submit"

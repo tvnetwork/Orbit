@@ -315,7 +315,7 @@ export default function Profile() {
                               "relative flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold transition-all z-10",
                               profile?.role === role 
                                 ? "text-gray-900 dark:text-white" 
-                                : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
+                                : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                             )}
                           >
                             {role === 'freelancer' ? <Zap className="h-3.5 w-3.5" /> : <Target className="h-3.5 w-3.5" />}
@@ -373,7 +373,7 @@ export default function Profile() {
                     <div className="flex flex-wrap items-center gap-2">
                       <Link 
                         to={`/profile/${user?.uid}`}
-                        className="bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 px-5 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-gray-100 dark:bg-slate-800/50 transition-all border border-gray-100 dark:border-slate-700 text-[10px] uppercase tracking-widest whitespace-nowrap"
+                        className="bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 px-5 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-all border border-gray-100 dark:border-slate-700 text-[10px] uppercase tracking-widest whitespace-nowrap"
                       >
                         <LinkIcon className="h-3.5 w-3.5" />
                         View Public
@@ -432,7 +432,7 @@ export default function Profile() {
                       type="text" 
                       value={form.displayName}
                       onChange={e => setForm(prev => ({ ...prev, displayName: e.target.value }))}
-                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white placeholder:text-gray-300"
+                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white placeholder:text-gray-300"
                       placeholder={t('profile.fullNamePlaceholder')}
                     />
                   </div>
@@ -444,7 +444,7 @@ export default function Profile() {
                       type="text" 
                       value={form.professionalTitle}
                       onChange={e => setForm(prev => ({ ...prev, professionalTitle: e.target.value }))}
-                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white placeholder:text-gray-300"
+                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white placeholder:text-gray-300"
                       placeholder={t('profile.professionalTitlePlaceholder') || "e.g. Senior Fullstack Developer"}
                     />
                   </div>
@@ -463,7 +463,7 @@ export default function Profile() {
                           type="url" 
                           value={form.websiteUrl}
                           onChange={e => setForm(prev => ({ ...prev, websiteUrl: e.target.value }))}
-                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
+                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
                           placeholder="https://yourwebsite.com"
                         />
                       </div>
@@ -476,7 +476,7 @@ export default function Profile() {
                           type="url" 
                           value={form.githubUrl}
                           onChange={e => setForm(prev => ({ ...prev, githubUrl: e.target.value }))}
-                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
+                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
                           placeholder="https://github.com/username"
                         />
                       </div>
@@ -494,7 +494,7 @@ export default function Profile() {
                           type="url" 
                           value={form.linkedinUrl}
                           onChange={e => setForm(prev => ({ ...prev, linkedinUrl: e.target.value }))}
-                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
+                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
                           placeholder="https://linkedin.com/in/username"
                         />
                       </div>
@@ -507,7 +507,7 @@ export default function Profile() {
                           type="url" 
                           value={form.twitterUrl}
                           onChange={e => setForm(prev => ({ ...prev, twitterUrl: e.target.value }))}
-                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
+                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
                           placeholder="https://x.com/username"
                         />
                       </div>
@@ -523,7 +523,7 @@ export default function Profile() {
                     type="text" 
                     value={form.location}
                     onChange={e => setForm(prev => ({ ...prev, location: e.target.value }))}
-                    className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white placeholder:text-gray-300"
+                    className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white placeholder:text-gray-300"
                     placeholder={t('profile.locationPlaceholder') || "e.g. London, UK / Remote"}
                   />
                 </div>
@@ -537,7 +537,7 @@ export default function Profile() {
                     value={form.bio}
                     onChange={e => setForm(prev => ({ ...prev, bio: e.target.value }))}
                     placeholder={t('profile.bioPlaceholder')}
-                    className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-8 py-6 rounded-[2rem] focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-500 outline-none transition-all text-base leading-relaxed text-gray-700 dark:text-gray-200 shadow-inner"
+                    className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-8 py-6 rounded-[2rem] focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all text-base leading-relaxed text-gray-700 dark:text-gray-200 shadow-inner"
                   />
                 </div>
 
@@ -555,7 +555,7 @@ export default function Profile() {
                       value={newSkill}
                       onChange={e => setNewSkill(e.target.value)}
                       onKeyDown={addSkill}
-                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700 px-8 py-5 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white"
+                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700 px-8 py-5 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white"
                     />
                     <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-2">
                        <kbd className="hidden sm:inline-flex px-1.5 py-0.5 bg-gray-100 dark:bg-slate-800/50 text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-slate-600 rounded text-[10px] font-black leading-none">ENTER</kbd>
@@ -640,7 +640,7 @@ export default function Profile() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {form.portfolio.map((item) => (
-                  <div key={item.id} className="group relative bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 border border-transparent hover:border-indigo-100 hover:bg-white dark:bg-slate-900 hover:shadow-lg transition-all flex flex-col">
+                  <div key={item.id} className="group relative bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 border border-transparent hover:border-indigo-100 hover:bg-white dark:hover:bg-slate-900 hover:shadow-lg transition-all flex flex-col">
                     <button 
                       onClick={(e) => {
                         e.preventDefault();
@@ -691,7 +691,7 @@ export default function Profile() {
                     ? "bg-emerald-50 border-emerald-100 hover:bg-emerald-100" 
                     : profile?.verificationStatus === 'pending'
                     ? "bg-amber-50 border-amber-100 cursor-default"
-                    : "bg-gray-50 dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:bg-gray-100 dark:bg-slate-800/50"
+                    : "bg-gray-50 dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800/50"
                  )}
                >
                  <div className={cn(
@@ -754,7 +754,7 @@ export default function Profile() {
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white leading-none">{t('profile.addPortfolioProject')}</h3>
                   <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider">{t('profile.showcaseAchievement')}</p>
                 </div>
-                <button onClick={() => setShowPortfolioModal(false)} className="p-2.5 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:bg-slate-800/50 rounded-xl transition-colors">
+                <button onClick={() => setShowPortfolioModal(false)} className="p-2.5 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-800/50 rounded-xl transition-colors">
                   <X className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                 </button>
               </div>
@@ -769,7 +769,7 @@ export default function Profile() {
                       type="text" 
                       value={newPortfolioItem.title}
                       onChange={e => setNewPortfolioItem(prev => ({ ...prev, title: e.target.value }))}
-                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent focus:border-indigo-500 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 outline-none transition-all font-medium text-gray-900 dark:text-white"
+                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent focus:border-indigo-500 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-medium text-gray-900 dark:text-white"
                       placeholder="e.g. Vynta Finance App"
                     />
                   </div>
@@ -781,7 +781,7 @@ export default function Profile() {
                       rows={4}
                       value={newPortfolioItem.description}
                       onChange={e => setNewPortfolioItem(prev => ({ ...prev, description: e.target.value }))}
-                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent focus:border-indigo-500 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 outline-none transition-all font-medium text-gray-900 dark:text-white leading-relaxed"
+                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent focus:border-indigo-500 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-medium text-gray-900 dark:text-white leading-relaxed"
                       placeholder={t('profile.projectDescriptionPlaceholder')}
                     />
                   </div>
@@ -794,7 +794,7 @@ export default function Profile() {
                       value={newPortfolioItem.projectUrl}
                       onChange={e => setNewPortfolioItem(prev => ({ ...prev, projectUrl: e.target.value }))}
                       onBlur={(e) => fetchUrlMetadata(e.target.value)}
-                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent focus:border-indigo-500 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 outline-none transition-all font-medium text-gray-900 dark:text-white"
+                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent focus:border-indigo-500 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-medium text-gray-900 dark:text-white"
                       placeholder="https://..."
                       required
                     />

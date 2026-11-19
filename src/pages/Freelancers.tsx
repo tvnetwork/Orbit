@@ -173,7 +173,7 @@ export default function Freelancers() {
                   onClick={() => setViewMode('grid')}
                   className={cn(
                     "p-2.5 rounded-xl transition-all",
-                    viewMode === 'grid' ? "bg-white dark:bg-slate-900 text-indigo-600 shadow-sm" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
+                    viewMode === 'grid' ? "bg-white dark:bg-slate-900 text-indigo-600 shadow-sm" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                   )}
                 >
                   <LayoutGrid className="h-5 w-5" />
@@ -182,7 +182,7 @@ export default function Freelancers() {
                   onClick={() => setViewMode('list')}
                   className={cn(
                     "p-2.5 rounded-xl transition-all",
-                    viewMode === 'list' ? "bg-white dark:bg-slate-900 text-indigo-600 shadow-sm" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
+                    viewMode === 'list' ? "bg-white dark:bg-slate-900 text-indigo-600 shadow-sm" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                   )}
                 >
                   <List className="h-5 w-5" />
@@ -342,7 +342,7 @@ export default function Freelancers() {
                     >
                       {selectedLanguages.includes(lang) && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}
                     </div>
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:text-white">{lang}</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:hover:text-white">{lang}</span>
                   </label>
                 ))}
               </div>
@@ -477,7 +477,7 @@ export default function Freelancers() {
                 <button 
                   onClick={() => fetchTalents(true)}
                   disabled={loadingMore}
-                  className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 px-8 py-4 rounded-2xl font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 transition-all group disabled:opacity-50"
+                  className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 px-8 py-4 rounded-2xl font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all group disabled:opacity-50"
                 >
                   <Zap className={cn("h-5 w-5 text-orange-400 transition-transform", loadingMore && "animate-pulse")} />
                   {loadingMore ? 'Loading...' : t('freelancers.loadMore')}

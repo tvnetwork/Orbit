@@ -181,7 +181,7 @@ export default function ClientDashboard() {
 
               <div className="space-y-6">
                 {jobs.map((job) => (
-                    <div className="flex items-center justify-between p-6 rounded-2xl border border-gray-50 dark:border-slate-800 hover:border-indigo-100 hover:bg-gray-50 dark:bg-slate-800 transition-all group">
+                    <div className="flex items-center justify-between p-6 rounded-2xl border border-gray-50 dark:border-slate-800 hover:border-indigo-100 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all group">
                       <Link 
                         to={`/client/job/${job.id}/applicants`}
                         className="flex items-center gap-6 flex-1 min-w-0"
@@ -227,7 +227,7 @@ export default function ClientDashboard() {
                               e.preventDefault();
                               setActiveMenuId(activeMenuId === job.id ? null : job.id);
                             }}
-                            className="p-3 hover:bg-white dark:bg-slate-900 rounded-xl text-gray-300 hover:text-gray-900 dark:text-white transition-all"
+                            className="p-3 hover:bg-white dark:hover:bg-slate-900 rounded-xl text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all"
                           >
                             <MoreHorizontal className="h-5 w-5" />
                           </button>
@@ -242,11 +242,11 @@ export default function ClientDashboard() {
                               >
                                 <Link 
                                   to={`/jobs/${job.id}`}
-                                  className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2"
+                                  className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2"
                                 >
                                   <Eye className="h-4 w-4" /> View Public
                                 </Link>
-                                <button className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2">
+                                <button className="w-full px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2">
                                   <Edit className="h-4 w-4" /> Edit Job
                                 </button>
                                 <div className="h-px bg-gray-50 dark:bg-slate-800 my-1" />
@@ -278,7 +278,7 @@ export default function ClientDashboard() {
               <h3 className="text-lg font-black mb-6">Quick Insights</h3>
               <div className="space-y-6">
                 {recentProposals.map(proposal => (
-                  <Link key={proposal.id} to={`/client/job/${proposal.jobId}/applicants`} className="flex items-start gap-4 hover:bg-white dark:bg-slate-900/5 p-2 rounded-xl transition-all">
+                  <Link key={proposal.id} to={`/client/job/${proposal.jobId}/applicants`} className="flex items-start gap-4 hover:bg-white dark:hover:bg-slate-900/5 p-2 rounded-xl transition-all">
                     <div className="h-10 w-10 bg-indigo-500 rounded-xl flex items-center justify-center shrink-0">
                       <AlertCircle className="h-5 w-5" />
                     </div>
@@ -299,7 +299,7 @@ export default function ClientDashboard() {
               <h3 className="text-lg font-black text-gray-900 dark:text-white mb-6">{t('dashboard.topTalent')}</h3>
               <div className="space-y-6">
                 {topTalent.map(talent => (
-                  <Link key={talent.id} to={`/freelancer/${talent.id}`} className="flex items-center gap-4 hover:bg-gray-50 dark:bg-slate-800 p-2 rounded-xl transition-all">
+                  <Link key={talent.id} to={`/freelancer/${talent.id}`} className="flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-slate-800 p-2 rounded-xl transition-all">
                     <img 
                       src={talent.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(talent.displayName || 'T')}`} 
                       className="h-12 w-12 rounded-full border-2 border-indigo-50 object-cover" 
@@ -312,7 +312,7 @@ export default function ClientDashboard() {
                   </Link>
                 ))}
               </div>
-              <Link to="/freelancers" className="w-full mt-8 block text-center py-4 bg-gray-50 dark:bg-slate-800 rounded-2xl text-sm font-black text-gray-900 dark:text-white hover:bg-gray-100 dark:bg-slate-800/50 transition-all border border-gray-100 dark:border-slate-700">
+              <Link to="/freelancers" className="w-full mt-8 block text-center py-4 bg-gray-50 dark:bg-slate-800 rounded-2xl text-sm font-black text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-all border border-gray-100 dark:border-slate-700">
                 {t('dashboard.browseTalent')}
               </Link>
             </div>

@@ -278,7 +278,7 @@ export default function Messages() {
               <div className="flex items-center gap-2 md:gap-4">
                 <button 
                   onClick={() => setSelectedChatId(null)}
-                  className="p-2 -ml-2 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-white md:hidden"
+                  className="p-2 -ml-2 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white md:hidden"
                 >
                   <ArrowLeft className="h-6 w-6" />
                 </button>
@@ -343,7 +343,7 @@ export default function Messages() {
                               if (otherId) window.location.href = `/profile/${otherId}`;
                               setShowMenu(null);
                             }}
-                            className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2"
+                            className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2"
                           >
                             <UserIcon className="h-4 w-4" /> View Profile
                           </button>
@@ -353,7 +353,7 @@ export default function Messages() {
                             // Implement clear chat logic if needed
                             setShowMenu(null);
                           }}
-                          className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2"
+                          className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2"
                         >
                           <Search className="h-4 w-4" /> Search History
                         </button>
@@ -437,7 +437,7 @@ export default function Messages() {
                     value={newMessage}
                     onChange={e => setNewMessage(e.target.value)}
                     placeholder={isCommunity ? "Share something with the community..." : t('messages.messagePlaceholder')}
-                    className="w-full rounded-[1.5rem] border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-5 py-4 text-sm shadow-inner outline-none transition-all focus:border-indigo-400 focus:bg-white dark:bg-slate-900 focus:ring-4 focus:ring-indigo-100 sm:px-8 sm:py-5 sm:rounded-[2rem]"
+                    className="w-full rounded-[1.5rem] border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-5 py-4 text-sm shadow-inner outline-none transition-all focus:border-indigo-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-indigo-100 sm:px-8 sm:py-5 sm:rounded-[2rem]"
                   />
                 </div>
                 <motion.button 

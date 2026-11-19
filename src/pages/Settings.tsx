@@ -112,7 +112,7 @@ export default function Settings() {
                   "w-full flex items-center justify-between px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all text-left",
                   activeTab === tab.id 
                     ? "bg-gray-900 text-white shadow-xl shadow-gray-200" 
-                    : "text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-white hover:bg-white dark:bg-slate-900"
+                    : "text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-900"
                 )}
               >
                 <div className="flex items-center gap-4">
@@ -291,7 +291,7 @@ export default function Settings() {
                    </div>
 
                    <div className="space-y-6">
-                      <div className="p-8 bg-gray-50 dark:bg-slate-800 rounded-[2.5rem] flex items-center justify-between border border-gray-100 dark:border-slate-700 group hover:bg-white dark:bg-slate-900 hover:border-indigo-100 transition-all">
+                      <div className="p-8 bg-gray-50 dark:bg-slate-800 rounded-[2.5rem] flex items-center justify-between border border-gray-100 dark:border-slate-700 group hover:bg-white dark:hover:bg-slate-900 hover:border-indigo-100 transition-all">
                          <div className="flex items-center gap-6">
                            <div className="h-14 w-14 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 shadow-sm transition-colors group-hover:text-indigo-600">
                              <Lock className="h-6 w-6" />

@@ -92,8 +92,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative pt-12 pb-20 md:pt-20 md:pb-32 lg:pt-32 lg:pb-48">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10">
-          <div className="absolute top-[10%] left-[5%] w-72 h-72 bg-indigo-200/40 rounded-full blur-3xl" />
-          <div className="absolute bottom-[20%] right-[10%] w-96 h-96 bg-purple-200/30 rounded-full blur-3xl" />
+          <div className="absolute top-[10%] left-[5%] w-72 h-72 bg-indigo-200/40 dark:bg-indigo-600/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-[20%] right-[10%] w-96 h-96 bg-purple-200/30 dark:bg-purple-600/10 rounded-full blur-3xl" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,16 +103,16 @@ export default function Home() {
             animate="visible"
             className="text-center max-w-4xl mx-auto space-y-6 md:space-y-8"
           >
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full text-indigo-700 text-[10px] md:text-sm font-semibold uppercase tracking-wider">
+            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-950/60 rounded-full text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800/60 text-[10px] md:text-sm font-semibold uppercase tracking-wider">
               <Zap className="h-3 w-3 md:h-4 md:w-4" fill="currentColor" />
               <span>{t('home.heroTagline')}</span>
             </motion.div>
 
-            <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl lg:text-7xl font-sans font-bold tracking-tight text-gray-900 dark:text-white leading-[1.1]">
+            <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl lg:text-7xl font-sans font-bold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
               {t('home.heroTitleBefore')}<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">{t('home.universeWord')}</span>{t('home.heroTitleAfter')}
             </motion.h1>
             
-            <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed px-4">
+            <motion.p variants={itemVariants} className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed px-4">
               {t('home.heroSubtitle')}
             </motion.p>
 
@@ -120,21 +120,21 @@ export default function Home() {
               {!user ? (
                 <button 
                   onClick={login}
-                  className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
                 >
                   {t('common.getStarted')} <ArrowRight className="h-5 w-5" />
                 </button>
               ) : (
                 <Link 
                   to="/jobs"
-                  className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
                 >
                   {t('common.viewMarket')} <ArrowRight className="h-5 w-5" />
                 </Link>
               )}
               <Link 
                 to="/jobs"
-                className="w-full sm:w-auto bg-white dark:bg-slate-900 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-slate-700 px-8 py-4 rounded-2xl font-bold text-lg hover:border-gray-300 transition-all"
+                className="w-full sm:w-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 dark:hover:hover:bg-slate-800 transition-all"
               >
                 {t('common.browseProjects')}
               </Link>
@@ -144,8 +144,8 @@ export default function Home() {
               variants={itemVariants} 
               className="pt-24 relative overflow-hidden group"
             >
-              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
-              <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-50 dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-50 dark:from-slate-950 to-transparent z-10 pointer-events-none" />
               
               <motion.div 
                 animate={{ x: ["0%", "-50%"] }}
@@ -154,7 +154,7 @@ export default function Home() {
                   repeat: Infinity, 
                   ease: "linear" 
                 }}
-                className="flex w-fit items-center gap-16 grayscale opacity-30 group-hover:opacity-70 group-hover:grayscale-0 transition-all duration-700 cursor-default"
+                className="flex w-fit items-center gap-16 grayscale opacity-40 dark:opacity-30 group-hover:opacity-75 group-hover:grayscale-0 transition-all duration-700 cursor-default text-slate-500 dark:text-slate-400"
               >
                 {[
                   "Google", "Amazon", "Microsoft", "Netflix", "Meta", "Apple", 
@@ -172,7 +172,7 @@ export default function Home() {
                 ))}
               </motion.div>
               
-              <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mt-12 text-center">
+              <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] mt-12 text-center">
                 Trusted by elite teams worldwide
               </p>
             </motion.div>
@@ -181,7 +181,7 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-24 relative overflow-hidden bg-white dark:bg-slate-900">
+      <section className="py-24 relative overflow-hidden bg-white dark:bg-slate-900/60 border-y border-slate-200/60 dark:border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -190,10 +190,10 @@ export default function Home() {
             className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16"
           >
             <div className="space-y-4">
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">{t('home.exploreTitle')}</h2>
-              <p className="text-gray-500 dark:text-gray-400 max-w-xl text-lg">{t('home.exploreSubtitle')}</p>
+              <h2 className="text-4xl font-bold text-slate-900 dark:text-white tracking-tight">{t('home.exploreTitle')}</h2>
+              <p className="text-slate-600 dark:text-slate-400 max-w-xl text-lg">{t('home.exploreSubtitle')}</p>
             </div>
-            <Link to="/jobs" className="group flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-700 transition-colors py-2">
+            <Link to="/jobs" className="group flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold hover:text-indigo-700 dark:hover:hover:text-indigo-300 transition-colors py-2">
               {t('home.browseAll')} <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
@@ -206,12 +206,12 @@ export default function Home() {
             className="grid grid-cols-1 md:grid-cols-4 gap-6"
           >
             {[
-              { id: 'development', icon: Code, title: t('home.categories.development'), count: t('home.categories.jobsCount', { count: catCounts['Development'] || '0' }), color: 'bg-blue-50 text-blue-600', span: 'md:col-span-2' },
-              { id: 'design', icon: Palette, title: t('home.categories.design'), count: t('home.categories.jobsCount', { count: catCounts['Design'] || '0' }), color: 'bg-purple-50 text-purple-600', span: 'md:col-span-1' },
-              { id: 'ai', icon: Zap, title: t('home.categories.ai'), count: t('home.categories.jobsCount', { count: catCounts['AI & Data'] || '0' }), color: 'bg-amber-50 text-amber-600', span: 'md:col-span-1' },
-              { id: 'cyber', icon: Terminal, title: t('home.categories.cyber'), count: t('home.categories.jobsCount', { count: catCounts['Cybersecurity'] || '0' }), color: 'bg-rose-50 text-rose-600', span: 'md:col-span-1' },
-              { id: 'web3', icon: Globe, title: t('home.categories.web3'), count: t('home.categories.jobsCount', { count: catCounts['Web3'] || '0' }), color: 'bg-emerald-50 text-emerald-600', span: 'md:col-span-2' },
-              { id: 'marketing', icon: Target, title: t('home.categories.marketing'), count: t('home.categories.jobsCount', { count: catCounts['Marketing'] || '0' }), color: 'bg-indigo-50 text-indigo-600', span: 'md:col-span-1' },
+              { id: 'development', icon: Code, title: t('home.categories.development'), count: t('home.categories.jobsCount', { count: catCounts['Development'] || '0' }), color: 'bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/50', span: 'md:col-span-2' },
+              { id: 'design', icon: Palette, title: t('home.categories.design'), count: t('home.categories.jobsCount', { count: catCounts['Design'] || '0' }), color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-900/50', span: 'md:col-span-1' },
+              { id: 'ai', icon: Zap, title: t('home.categories.ai'), count: t('home.categories.jobsCount', { count: catCounts['AI & Data'] || '0' }), color: 'bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/50', span: 'md:col-span-1' },
+              { id: 'cyber', icon: Terminal, title: t('home.categories.cyber'), count: t('home.categories.jobsCount', { count: catCounts['Cybersecurity'] || '0' }), color: 'bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/50', span: 'md:col-span-1' },
+              { id: 'web3', icon: Globe, title: t('home.categories.web3'), count: t('home.categories.jobsCount', { count: catCounts['Web3'] || '0' }), color: 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50', span: 'md:col-span-2' },
+              { id: 'marketing', icon: Target, title: t('home.categories.marketing'), count: t('home.categories.jobsCount', { count: catCounts['Marketing'] || '0' }), color: 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/50', span: 'md:col-span-1' },
             ].map((cat, i) => (
               <motion.div
                 key={i}
@@ -219,7 +219,7 @@ export default function Home() {
                 whileHover={{ y: -5, scale: 1.01 }}
                 onClick={() => window.location.href = '/jobs'}
                 className={cn(
-                  "p-8 rounded-[2rem] border border-gray-100 dark:border-slate-700 hover:border-indigo-200 transition-all cursor-pointer group relative overflow-hidden bg-white dark:bg-slate-900 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/5",
+                  "p-8 rounded-[2rem] border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:hover:border-indigo-500/50 transition-all cursor-pointer group relative overflow-hidden bg-slate-50/70 dark:bg-slate-900 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5",
                   cat.span
                 )}
               >
@@ -228,11 +228,11 @@ export default function Home() {
                     <cat.icon className="h-8 w-8" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-indigo-600 transition-colors">{cat.title}</h3>
-                    <p className="text-gray-500 dark:text-gray-400 font-medium">{cat.count}</p>
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:hover:group-hover:text-indigo-400 transition-colors">{cat.title}</h3>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">{cat.count}</p>
                   </div>
                 </div>
-                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-gray-50 dark:bg-slate-800 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-indigo-50 dark:bg-slate-800 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </motion.div>
             ))}
           </motion.div>
@@ -240,7 +240,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-24 bg-gray-50 dark:bg-slate-800 overflow-hidden">
+      <section className="py-24 bg-slate-50 dark:bg-slate-950 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             variants={containerVariants}
@@ -258,10 +258,10 @@ export default function Home() {
                 key={idx} 
                 variants={itemVariants}
                 whileHover={{ scale: 1.02 }}
-                className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-gray-100 dark:border-slate-700 text-center space-y-2 shadow-sm shadow-gray-200/50"
+                className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 text-center space-y-2 shadow-sm shadow-slate-200/50 dark:shadow-none"
               >
-                <p className="text-gray-500 dark:text-gray-400 font-medium">{stat.label}</p>
-                <h3 className="text-4xl font-bold text-indigo-600 font-sans">{stat.value}</h3>
+                <p className="text-slate-500 dark:text-slate-400 font-medium">{stat.label}</p>
+                <h3 className="text-4xl font-bold text-indigo-600 dark:text-indigo-400 font-sans">{stat.value}</h3>
               </motion.div>
             ))}
           </motion.div>
@@ -269,7 +269,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-32 overflow-hidden">
+      <section className="py-32 overflow-hidden bg-white dark:bg-slate-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -277,8 +277,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center space-y-4 mb-20"
           >
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">{t('home.whyTitle')}</h2>
-            <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">{t('home.whySubtitle')}</p>
+            <h2 className="text-4xl font-bold text-slate-900 dark:text-white">{t('home.whyTitle')}</h2>
+            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">{t('home.whySubtitle')}</p>
           </motion.div>
 
           {/* New Global Feature Highlight */}
@@ -286,23 +286,23 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="mb-24 p-1 rounded-[3rem] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500"
+            className="mb-24 p-1 rounded-[3rem] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-xl shadow-indigo-500/10"
           >
             <div className="bg-white dark:bg-slate-900 rounded-[2.9rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -mr-32 -mt-32 opacity-50" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 dark:bg-indigo-950/30 rounded-full blur-3xl -mr-32 -mt-32 opacity-50" />
               <div className="flex-1 space-y-8 relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-widest">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800/50 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-widest">
                   <Globe className="h-4 w-4" /> Global Native support
                 </div>
-                <h3 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  Work in your native tongue. <span className="text-indigo-600">Collaborate globally.</span>
+                <h3 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  Work in your native tongue. <span className="text-indigo-600 dark:text-indigo-400">Collaborate globally.</span>
                 </h3>
-                <p className="text-xl text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
-                  We've introduced support for <span className="text-gray-900 dark:text-white font-bold">{availableLanguages.length} live languages</span> with automatic location detection. VyntaJobs now feels local, wherever you are.
+                <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                  We've introduced support for <span className="text-slate-900 dark:text-white font-bold">{availableLanguages.length} live languages</span> with automatic location detection. VyntaJobs now feels local, wherever you are.
                 </p>
                 <div className="flex flex-wrap gap-4 pt-4">
                   {featuredLanguages.map((language) => (
-                    <span key={language.code} className="px-5 py-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-gray-700 dark:text-gray-200 shadow-sm">
+                    <span key={language.code} className="px-5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-200 shadow-sm">
                       {language.name}
                     </span>
                   ))}
@@ -319,10 +319,10 @@ export default function Home() {
                     <motion.div 
                       key={i}
                       whileHover={{ scale: 1.05, y: -5 }}
-                      className="bg-gray-50 dark:bg-slate-800 p-6 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm"
+                      className="bg-slate-50 dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm"
                     >
                       <span className="text-3xl block mb-2">{item.flag}</span>
-                      <span className="text-sm font-bold text-gray-900 dark:text-white">{item.label}</span>
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">{item.label}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -351,16 +351,16 @@ export default function Home() {
                 <motion.div 
                   whileHover={{ scale: 1.1, rotate: i % 2 === 0 ? 5 : -5 }}
                   className={cn(
-                    "h-16 w-16 rounded-2xl flex items-center justify-center transition-all shadow-sm",
-                    feat.color === 'blue' ? "bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white" :
-                    feat.color === 'purple' ? "bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white" :
-                    "bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white"
+                    "h-16 w-16 rounded-2xl flex items-center justify-center transition-all shadow-sm border",
+                    feat.color === 'blue' ? "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/50 group-hover:bg-blue-600 group-hover:text-white" :
+                    feat.color === 'purple' ? "bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 border-purple-100 dark:border-purple-900/50 group-hover:bg-purple-600 group-hover:text-white" :
+                    "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/50 group-hover:bg-emerald-600 group-hover:text-white"
                   )}
                 >
                   <feat.icon className="h-8 w-8" />
                 </motion.div>
-                <h3 className="text-xl font-bold">{feat.title}</h3>
-                <p className="text-gray-500 dark:text-gray-400">{feat.desc}</p>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">{feat.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400">{feat.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -368,7 +368,7 @@ export default function Home() {
       </section>
 
       {/* How it Works Section */}
-      <section className="py-32 bg-gray-900 text-white overflow-hidden relative">
+      <section className="py-32 bg-slate-900 dark:bg-slate-950 text-white overflow-hidden relative border-t border-slate-800">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-indigo-600/10 blur-3xl -z-0" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -386,7 +386,7 @@ export default function Home() {
                     </React.Fragment>
                   ))}
                 </h2>
-                <p className="text-gray-400 dark:text-gray-500 text-lg max-w-md leading-relaxed">
+                <p className="text-slate-400 text-lg max-w-md leading-relaxed">
                   {t('home.missionSubtitle')}
                 </p>
               </motion.div>
@@ -405,10 +405,10 @@ export default function Home() {
                     viewport={{ once: true }}
                     className="flex gap-6 group"
                   >
-                    <span className="text-4xl font-black text-white/10 group-hover:text-indigo-500/50 transition-colors duration-500 font-sans">{s.step}</span>
+                    <span className="text-4xl font-black text-white/20 group-hover:text-indigo-400 transition-colors duration-500 font-sans">{s.step}</span>
                     <div className="space-y-1">
                       <h4 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">{s.title}</h4>
-                      <p className="text-gray-400 dark:text-gray-500 text-sm leading-relaxed max-w-sm">{s.desc}</p>
+                      <p className="text-slate-400 text-sm leading-relaxed max-w-sm">{s.desc}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -441,7 +441,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-32">
+      <section className="py-32 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -449,8 +449,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <h2 className="text-5xl font-bold tracking-tight">{t('home.readyTitle')}</h2>
-            <p className="text-xl text-gray-500 dark:text-gray-400">{t('home.readySubtitle')}</p>
+            <h2 className="text-5xl font-bold tracking-tight text-slate-900 dark:text-white">{t('home.readyTitle')}</h2>
+            <p className="text-xl text-slate-600 dark:text-slate-400">{t('home.readySubtitle')}</p>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -458,11 +458,11 @@ export default function Home() {
             viewport={{ once: true }}
             className="flex flex-col sm:flex-row justify-center gap-4"
           >
-            <Link to="/jobs" className="bg-indigo-600 text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200">
+            <Link to="/jobs" className="bg-indigo-600 text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/25">
               {t('home.startExploring')}
             </Link>
             {!user && (
-              <button onClick={login} className="bg-white dark:bg-slate-900 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-slate-700 px-10 py-5 rounded-2xl font-bold text-xl hover:border-gray-300 transition-all">
+              <button onClick={login} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-slate-50 dark:hover:hover:bg-slate-800 transition-all">
                 {t('home.joinNetwork')}
               </button>
             )}

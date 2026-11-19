@@ -188,7 +188,7 @@ export default function FreelancerProfile() {
         
         <button 
           onClick={() => navigate(-1)}
-          className="absolute top-8 left-8 bg-white dark:bg-slate-900/20 hover:bg-white dark:bg-slate-900/30 backdrop-blur-md text-white p-3 rounded-2xl transition-all"
+          className="absolute top-8 left-8 bg-white dark:bg-slate-900/20 hover:bg-white dark:hover:bg-slate-900/30 backdrop-blur-md text-white p-3 rounded-2xl transition-all"
         >
           <ArrowLeft className="h-6 w-6" />
         </button>
@@ -228,7 +228,7 @@ export default function FreelancerProfile() {
                 </button>
                 <button 
                   onClick={handleChat}
-                  className="bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-white font-bold py-4 rounded-2xl border border-gray-100 dark:border-slate-700 hover:bg-gray-100 dark:bg-slate-800/50 transition-all flex items-center justify-center gap-2"
+                  className="bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-white font-bold py-4 rounded-2xl border border-gray-100 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-all flex items-center justify-center gap-2"
                 >
                   <MessageSquare className="h-5 w-5" />
                   {t('profile.chat')}
@@ -249,26 +249,26 @@ export default function FreelancerProfile() {
                 
                 <div className="flex items-center gap-4 py-2 justify-center">
                   {profile.websiteUrl && (
-                    <a href={profile.websiteUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                    <a href={profile.websiteUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors">
                       <Globe className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                     </a>
                   )}
                   {profile.githubUrl && (
-                    <a href={profile.githubUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                    <a href={profile.githubUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors">
                       <Github className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                     </a>
                   )}
                   {profile.linkedinUrl && (
-                    <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                    <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors">
                       <Briefcase className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                     </a>
                   )}
                   {profile.twitterUrl && (
-                    <a href={profile.twitterUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                    <a href={profile.twitterUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors">
                       <Zap className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                     </a>
                   )}
-                  <a href={`mailto:${profile.email}`} className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors">
+                  <a href={`mailto:${profile.email}`} className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors">
                     <Mail className="h-5 w-5 text-gray-700 dark:text-gray-200" />
                   </a>
                 </div>
@@ -521,7 +521,7 @@ export default function FreelancerProfile() {
                   </div>
                   <button 
                     onClick={() => setShowHireModal(false)}
-                    className="p-3 bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-gray-500 rounded-2xl hover:bg-gray-100 dark:bg-slate-800/50 transition-all"
+                    className="p-3 bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-gray-500 rounded-2xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-all"
                   >
                     <X className="h-6 w-6" />
                   </button>

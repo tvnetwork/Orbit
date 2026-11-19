@@ -128,26 +128,26 @@ export default function PublicProfile() {
 
                 <div className="pt-8 border-t border-gray-50 dark:border-slate-800 flex items-center justify-center gap-4">
                   {profile.websiteUrl && (
-                    <a href={profile.websiteUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
+                    <a href={profile.websiteUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
                       <Globe className="h-5 w-5" />
                     </a>
                   )}
                   {profile.githubUrl && (
-                    <a href={profile.githubUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
+                    <a href={profile.githubUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
                       <Github className="h-5 w-5" />
                     </a>
                   )}
                   {profile.linkedinUrl && (
-                    <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
+                    <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
                       <Linkedin className="h-5 w-5" />
                     </a>
                   )}
                   {profile.twitterUrl && (
-                    <a href={profile.twitterUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
+                    <a href={profile.twitterUrl} target="_blank" rel="noreferrer" className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
                       <Twitter className="h-5 w-5" />
                     </a>
                   )}
-                  <a href={`mailto:${profile.email}`} className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
+                  <a href={`mailto:${profile.email}`} className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors text-gray-500 dark:text-gray-400">
                     <Mail className="h-5 w-5" />
                   </a>
                 </div>
@@ -206,7 +206,7 @@ export default function PublicProfile() {
                   target="_blank"
                   rel="noreferrer"
                   whileHover={{ y: -5 }}
-                  className="group bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 border border-transparent hover:border-indigo-100 hover:bg-white dark:bg-slate-900 hover:shadow-lg transition-all block"
+                  className="group bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 border border-transparent hover:border-indigo-100 hover:bg-white dark:hover:bg-slate-900 hover:shadow-lg transition-all block"
                 >
                   {item.imageUrl && (
                     <div className="aspect-video w-full rounded-xl mb-4 overflow-hidden bg-gray-100 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700 shadow-sm relative">

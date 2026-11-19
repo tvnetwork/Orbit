@@ -76,7 +76,7 @@ export default function SkillQuizModal({ skill, onClose, onPass }: SkillQuizModa
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Verify Skill: <span className="text-indigo-600 dark:text-indigo-400">{skill}</span>
           </h2>
-          <button onClick={onClose} className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-200">
+          <button onClick={onClose} className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:hover:text-gray-200">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -104,7 +104,7 @@ export default function SkillQuizModal({ skill, onClose, onPass }: SkillQuizModa
                     <button
                       key={i}
                       onClick={() => handleSelectOption(i)}
-                      className="w-full p-4 text-left border-2 border-gray-100 dark:border-gray-700 rounded-xl hover:border-indigo-600 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all font-medium text-gray-700 dark:text-gray-300"
+                      className="w-full p-4 text-left border-2 border-gray-100 dark:border-gray-700 rounded-xl hover:border-indigo-600 dark:hover:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:hover:bg-indigo-900/20 transition-all font-medium text-gray-700 dark:text-gray-300"
                     >
                       {opt}
                     </button>
@@ -140,7 +140,7 @@ export default function SkillQuizModal({ skill, onClose, onPass }: SkillQuizModa
                   <p className="text-gray-500 dark:text-gray-400">
                     You didn't pass the verification for {skill} this time. Review your knowledge and try again later.
                   </p>
-                  <button onClick={onClose} className="mt-8 w-full py-4 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                  <button onClick={onClose} className="mt-8 w-full py-4 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl font-bold hover:bg-gray-200 dark:hover:hover:bg-gray-600 transition-colors">
                     Close
                   </button>
                 </>

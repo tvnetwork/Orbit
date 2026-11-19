@@ -115,7 +115,7 @@ export default function Contact() {
                     <p className="text-indigo-100 opacity-80 text-sm">{t('contact.liveSupportDesc')}</p>
                     <button 
                       onClick={() => setShowChat(true)}
-                      className="w-full bg-white dark:bg-slate-900 text-indigo-600 py-4 rounded-xl font-bold shadow-lg shadow-indigo-900/20 hover:bg-gray-50 dark:bg-slate-800 transition-all active:scale-95"
+                      className="w-full bg-white dark:bg-slate-900 text-indigo-600 py-4 rounded-xl font-bold shadow-lg shadow-indigo-900/20 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all active:scale-95"
                     >
                       {t('contact.startChat')}
                     </button>

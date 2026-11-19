@@ -468,7 +468,7 @@ export default function JobDetails() {
               </div>
             </div>
  
-            <button className="w-full py-4 text-sm font-bold text-gray-500 dark:text-gray-400 border border-gray-100 dark:border-slate-700 rounded-2xl hover:bg-gray-50 dark:bg-slate-800 transition-colors">
+            <button className="w-full py-4 text-sm font-bold text-gray-500 dark:text-gray-400 border border-gray-100 dark:border-slate-700 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
               {t('jobs.viewHistory')}
             </button>
           </div>

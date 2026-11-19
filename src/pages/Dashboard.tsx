@@ -281,7 +281,7 @@ export default function Dashboard() {
             <div className="divide-y divide-gray-50">
               {profile?.role === 'client' ? (
                 activeJobs.length > 0 ? activeJobs.map(job => (
-                  <Link key={job.id} to={`/jobs/${job.id}`} className="p-6 flex items-center justify-between hover:bg-gray-50 dark:bg-slate-800 transition-colors group">
+                  <Link key={job.id} to={`/jobs/${job.id}`} className="p-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors group">
                     <div className="flex items-center gap-4">
                       <div className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl text-gray-400 dark:text-gray-500 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
                         <Briefcase className="h-5 w-5" />
@@ -305,7 +305,7 @@ export default function Dashboard() {
                 proposals.length > 0 ? proposals.map(proposal => {
                   const correlatedJob = activeJobs.find(j => j.id === proposal.jobId);
                   return (
-                    <Link key={proposal.id} to={`/jobs/${proposal.jobId}`} className="p-6 flex items-center justify-between hover:bg-gray-50 dark:bg-slate-800 transition-colors group">
+                    <Link key={proposal.id} to={`/jobs/${proposal.jobId}`} className="p-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors group">
                       <div className="flex items-center gap-4">
                         <div className={`p-3 rounded-xl transition-colors ${proposal.status === 'accepted' ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-gray-500 group-hover:bg-indigo-50 group-hover:text-indigo-600'}`}>
                           <FileText className="h-5 w-5" />

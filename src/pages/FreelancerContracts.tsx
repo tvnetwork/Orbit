@@ -77,7 +77,7 @@ export default function FreelancerContracts() {
                    "px-6 py-3 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all whitespace-nowrap",
                    filter === f 
                      ? "bg-gray-900 text-white shadow-xl shadow-gray-200" 
-                     : "text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-white hover:bg-gray-50 dark:bg-slate-800"
+                     : "text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800"
                  )}
                >
                  {f}

@@ -169,7 +169,7 @@ export default function PostJob() {
                     placeholder={t('postProject.titlePlaceholder')}
                     value={form.title}
                     onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-8 py-5 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 outline-none transition-all text-lg font-medium"
+                    className="w-full px-8 py-5 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-300 outline-none transition-all text-lg font-medium"
                   />
                 </div>
 
@@ -190,7 +190,7 @@ export default function PostJob() {
                     placeholder={t('postProject.descriptionPlaceholder')}
                     value={form.description}
                     onChange={e => setForm(prev => ({ ...prev, description: e.target.value }))}
-                    className="w-full px-8 py-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2.5rem] focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 outline-none transition-all leading-relaxed"
+                    className="w-full px-8 py-6 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2.5rem] focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-300 outline-none transition-all leading-relaxed"
                   />
                 </div>
               </div>
@@ -213,7 +213,7 @@ export default function PostJob() {
                       placeholder={t('postProject.skillsPlaceholder')}
                       value={form.newSkill}
                       onChange={e => setForm(prev => ({ ...prev, newSkill: e.target.value }))}
-                      className="flex-1 px-8 py-5 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 outline-none transition-all"
+                      className="flex-1 px-8 py-5 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-300 outline-none transition-all"
                     />
                     <button 
                       type="submit"
@@ -270,7 +270,7 @@ export default function PostJob() {
                       onClick={() => setForm(prev => ({ ...prev, type: 'fixed' }))}
                       className={cn(
                         "flex-1 flex items-center justify-center gap-3 py-6 rounded-3xl text-sm font-bold transition-all",
-                        form.type === 'fixed' ? "bg-white dark:bg-slate-900 shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
+                        form.type === 'fixed' ? "bg-white dark:bg-slate-900 shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                       )}
                     >
                       <DollarSign className="h-5 w-5" /> {t('postProject.fixedPrice')}
@@ -279,7 +279,7 @@ export default function PostJob() {
                       onClick={() => setForm(prev => ({ ...prev, type: 'hourly' }))}
                       className={cn(
                         "flex-1 flex items-center justify-center gap-3 py-6 rounded-3xl text-sm font-bold transition-all",
-                        form.type === 'hourly' ? "bg-white dark:bg-slate-900 shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
+                        form.type === 'hourly' ? "bg-white dark:bg-slate-900 shadow-lg shadow-indigo-100 text-indigo-600" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                       )}
                     >
                       <Clock className="h-5 w-5" /> {t('postProject.hourlyRate')}
@@ -296,7 +296,7 @@ export default function PostJob() {
                       placeholder="0.00"
                       value={form.budget}
                       onChange={e => setForm(prev => ({ ...prev, budget: e.target.value }))}
-                      className="w-full px-16 py-8 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2.5rem] text-center text-4xl font-black focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 focus:border-indigo-300 outline-none transition-all placeholder:text-gray-200"
+                      className="w-full px-16 py-8 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2.5rem] text-center text-4xl font-black focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-300 outline-none transition-all placeholder:text-gray-200"
                     />
                   </div>
                   <p className="text-center text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">{t('postProject.talentNote')}</p>
@@ -310,7 +310,7 @@ export default function PostJob() {
             {step > 1 && (
               <button 
                 onClick={() => setStep(step - 1)}
-                className="flex items-center gap-2 px-8 py-5 rounded-3xl font-bold text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:bg-slate-800 transition-all"
+                className="flex items-center gap-2 px-8 py-5 rounded-3xl font-bold text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all"
               >
                 <ChevronLeft className="h-5 w-5" /> {t('postProject.back')}
               </button>

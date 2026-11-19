@@ -111,7 +111,7 @@ export default function FreelancerProposals() {
                   "px-6 py-3 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all whitespace-nowrap",
                   activeFilter === filter.id 
                     ? "bg-gray-900 text-white shadow-xl shadow-gray-200" 
-                    : "text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-white hover:bg-gray-50 dark:bg-slate-800"
+                    : "text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800"
                 )}
               >
                 {filter.label}
@@ -125,7 +125,7 @@ export default function FreelancerProposals() {
                placeholder="Search registry..."
                value={searchQuery}
                onChange={(e) => setSearchQuery(e.target.value)}
-               className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2rem] pl-14 pr-6 py-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:bg-slate-900 transition-all"
+               className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2rem] pl-14 pr-6 py-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 transition-all"
              />
           </div>
         </div>
@@ -190,7 +190,7 @@ export default function FreelancerProposals() {
                        <div className="relative">
                           <button 
                             onClick={() => setActiveMenuId(activeMenuId === proposal.id ? null : proposal.id)}
-                            className="p-4 text-gray-300 hover:text-gray-900 dark:text-white transition-all"
+                            className="p-4 text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all"
                           >
                             <MoreHorizontal className="h-6 w-6" />
                           </button>
@@ -203,7 +203,7 @@ export default function FreelancerProposals() {
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                 className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50 overflow-hidden"
                               >
-                                <button className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2">
+                                <button className="w-full text-left px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2">
                                   <Eye className="h-4 w-4" /> View Original Job
                                 </button>
                                 <button className="w-full text-left px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2">
