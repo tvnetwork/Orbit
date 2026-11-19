@@ -342,7 +342,7 @@ export default function Freelancers() {
                     >
                       {selectedLanguages.includes(lang) && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}
                     </div>
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:hover:text-white">{lang}</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">{lang}</span>
                   </label>
                 ))}
               </div>

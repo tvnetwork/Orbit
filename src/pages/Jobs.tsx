@@ -99,7 +99,7 @@ export default function Jobs() {
                   onClick={() => setFilterType(type)}
                   className={cn(
                     "relative px-4 md:px-6 py-2 md:py-2.5 rounded-xl text-xs md:text-sm font-bold capitalize transition-all z-10 flex-1 whitespace-nowrap",
-                    filterType === type ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:hover:text-slate-200"
+                    filterType === type ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
                   )}
                 >
                   {t(`jobs.filter${type.charAt(0).toUpperCase() + type.slice(1)}`)}
@@ -135,7 +135,7 @@ export default function Jobs() {
                 variants={itemVariants}
                 layout
                 whileHover={{ y: -8 }}
-                className="bg-white dark:bg-slate-900 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:hover:border-indigo-500/40 hover:shadow-xl hover:shadow-indigo-500/5 transition-all group relative"
+                className="bg-white dark:bg-slate-900 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/40 hover:shadow-xl hover:shadow-indigo-500/5 transition-all group relative"
               >
                 <div className="flex justify-between items-start mb-6 md:mb-8">
                   <div className="space-y-3 md:space-y-4">
@@ -151,7 +151,7 @@ export default function Jobs() {
                       </span>
                     </div>
                     <Link to={`/jobs/${job.id}`}>
-                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:hover:group-hover:text-indigo-400 transition-colors leading-tight">{job.title}</h3>
+                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight">{job.title}</h3>
                     </Link>
                   </div>
                   <motion.div
@@ -193,7 +193,7 @@ export default function Jobs() {
                   </div>
                   <Link 
                     to={`/jobs/${job.id}`} 
-                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 rounded-xl text-sm font-bold opacity-0 group-hover:opacity-100 transition-all hover:bg-indigo-50 dark:hover:hover:bg-indigo-950/50"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 rounded-xl text-sm font-bold opacity-0 group-hover:opacity-100 transition-all hover:bg-indigo-50 dark:hover:bg-indigo-950/50"
                   >
                     {t('jobs.viewProject')} <ArrowUpRight className="h-4 w-4" />
                   </Link>

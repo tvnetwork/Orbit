@@ -141,7 +141,7 @@ const Navbar = () => {
                 className="relative px-3.5 py-2 group rounded-lg"
               >
                 <span className={`text-sm font-medium transition-colors duration-200 ${
-                  location.pathname === link.to ? 'text-indigo-600 dark:text-indigo-400 font-semibold' : 'text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:hover:group-hover:text-white'
+                  location.pathname === link.to ? 'text-indigo-600 dark:text-indigo-400 font-semibold' : 'text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white'
                 }`}>
                   {link.label}
                 </span>
@@ -167,7 +167,7 @@ const Navbar = () => {
                   <motion.div 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="h-9 w-9 rounded-full bg-slate-300 dark:bg-slate-700 overflow-hidden border border-slate-200 dark:border-slate-600 group-hover:border-indigo-400 transition-colors ring-2 ring-transparent group-hover:ring-indigo-100 dark:group-hover:hover:group-hover:ring-indigo-950 shadow-sm"
+                    className="h-9 w-9 rounded-full bg-slate-300 dark:bg-slate-700 overflow-hidden border border-slate-200 dark:border-slate-600 group-hover:border-indigo-400 transition-colors ring-2 ring-transparent group-hover:ring-indigo-100 dark:group-hover:ring-indigo-950 shadow-sm"
                   >
                     {user.photoURL ? (
                       <img src={user.photoURL} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />

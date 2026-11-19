@@ -134,7 +134,7 @@ export default function Home() {
               )}
               <Link 
                 to="/jobs"
-                className="w-full sm:w-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 dark:hover:hover:bg-slate-800 transition-all"
+                className="w-full sm:w-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
               >
                 {t('common.browseProjects')}
               </Link>
@@ -193,7 +193,7 @@ export default function Home() {
               <h2 className="text-4xl font-bold text-slate-900 dark:text-white tracking-tight">{t('home.exploreTitle')}</h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl text-lg">{t('home.exploreSubtitle')}</p>
             </div>
-            <Link to="/jobs" className="group flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold hover:text-indigo-700 dark:hover:hover:text-indigo-300 transition-colors py-2">
+            <Link to="/jobs" className="group flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors py-2">
               {t('home.browseAll')} <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
@@ -219,7 +219,7 @@ export default function Home() {
                 whileHover={{ y: -5, scale: 1.01 }}
                 onClick={() => window.location.href = '/jobs'}
                 className={cn(
-                  "p-8 rounded-[2rem] border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:hover:border-indigo-500/50 transition-all cursor-pointer group relative overflow-hidden bg-slate-50/70 dark:bg-slate-900 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5",
+                  "p-8 rounded-[2rem] border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/50 transition-all cursor-pointer group relative overflow-hidden bg-slate-50/70 dark:bg-slate-900 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5",
                   cat.span
                 )}
               >
@@ -228,7 +228,7 @@ export default function Home() {
                     <cat.icon className="h-8 w-8" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:hover:group-hover:text-indigo-400 transition-colors">{cat.title}</h3>
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{cat.title}</h3>
                     <p className="text-slate-500 dark:text-slate-400 font-medium">{cat.count}</p>
                   </div>
                 </div>
@@ -250,7 +250,7 @@ export default function Home() {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             {[
-              { label: t('home.statsVolume'), value: counts.volume > 0 ? `$${(counts.volume / 1000).toFixed(1)}k+` : t('common.loading', { defaultValue: '...' }) },
+              { label: t('home.statsVolume'), value: counts.volume > 0 ? `$${(counts.volume / 1000).toFixed(1)}k+` : '$250k+' },
               { label: t('home.statsTalent'), value: counts.talent > 0 ? `${counts.talent}+` : '10+' },
               { label: t('home.statsRating'), value: counts.rating > 0 ? `${counts.rating.toFixed(1)}/5` : '4.9/5' }
             ].map((stat, idx) => (
@@ -462,7 +462,7 @@ export default function Home() {
               {t('home.startExploring')}
             </Link>
             {!user && (
-              <button onClick={login} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-slate-50 dark:hover:hover:bg-slate-800 transition-all">
+              <button onClick={login} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                 {t('home.joinNetwork')}
               </button>
             )}
