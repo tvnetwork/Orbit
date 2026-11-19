@@ -41,6 +41,7 @@ import {
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import AuthModal from './components/AuthModal';
+import EcosystemAppLauncher from './components/EcosystemAppLauncher';
 import { 
   handleKontyraSSOCallback, 
   initiateKontyraSSO, 
@@ -134,8 +135,8 @@ const Navbar = () => {
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center gap-2 md:gap-4">
             <Link to="/" className="flex items-center gap-2.5 group select-none">
-              <div className="w-8 h-8 rounded-xl bg-indigo-600 dark:bg-indigo-500/20 flex items-center justify-center text-white dark:text-indigo-400 shadow-sm shadow-indigo-500/20 border border-indigo-600/20 dark:border-indigo-500/30">
-                <BrandIcon className="h-4 w-4" />
+              <div className="w-8 h-8 rounded-xl bg-slate-900/5 dark:bg-white/[0.06] flex items-center justify-center p-1.5 shadow-sm border border-slate-200/80 dark:border-white/[0.08] group-hover:scale-105 transition-transform">
+                <img src="/kontyra-gradient.svg" alt="Kontyra" className="w-full h-full object-contain" />
               </div>
               <span className="font-semibold text-slate-900 dark:text-white text-base tracking-tight flex items-center gap-2">
                 <span>Kontyra VyntaJobs</span>
@@ -169,11 +170,12 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-3">
             <div className="hidden sm:block">
               <LanguageSwitcher />
             </div>
             <ThemeToggle />
+            <EcosystemAppLauncher />
             {user ? (
               <div className="flex items-center gap-2 md:gap-4">
                 <Link to="/profile" className="flex items-center gap-2 group">

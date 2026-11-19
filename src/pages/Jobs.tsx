@@ -144,10 +144,10 @@ export default function Jobs() {
                       <span className={cn(
                         "px-3 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-widest border",
                         job.type === 'fixed' 
-                          ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800/40" 
-                          : "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-800/40"
+                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" 
+                          : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
                       )}>
-                        {job.type === 'fixed' ? t('jobs.milestoneBased') : t('jobs.hourlyEngagement')}
+                        {job.type === 'fixed' ? `Escrow • ${t('jobs.milestoneBased')}` : t('jobs.hourlyEngagement')}
                       </span>
                     </div>
                     <Link to={`/jobs/${job.id}`}>
