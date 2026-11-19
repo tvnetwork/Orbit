@@ -1,6 +1,17 @@
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth, db } from './firebase';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  serverTimestamp, 
+  collection, 
+  query, 
+  where, 
+  getDocs, 
+  limit 
+} from 'firebase/firestore';
 import { UserProfile } from '../types';
 
 export const KONTYRA_AUTH_PORTAL = 'https://accounts.kontyra.name.ng/auth';
@@ -148,8 +159,38 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
   }
 
   const normalizedEmail = (resolvedEmail || 'user@kontyra.internal').toLowerCase().trim();
-  const finalUid = resolvedUid || `kontyra_${normalizedEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
-  const finalName = resolvedName || normalizedEmail.split('@')[0] || 'Kontyra Talent';
+  let finalUid = resolvedUid || `kontyra_${normalizedEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
+  let finalName = resolvedName || normalizedEmail.split('@')[0] || 'Kontyra Talent';
+
+  // 1. Search for an existing user account created with this email
+  let existingUserDocId: string | null = null;
+  let existingUserProfile: UserProfile | null = null;
+
+  try {
+    const emailQ = query(
+      collection(db, 'users'),
+      where('email', '==', normalizedEmail),
+      limit(1)
+    );
+    const snap = await getDocs(emailQ);
+    if (!snap.empty) {
+      const matchDoc = snap.docs[0];
+      existingUserDocId = matchDoc.id;
+      existingUserProfile = matchDoc.data() as UserProfile;
+      console.log(`Recognized existing account for email ${normalizedEmail} with UID: ${existingUserDocId}`);
+    }
+  } catch (err) {
+    console.warn('Could not query existing account by email:', err);
+  }
+
+  // If existing user account exists, adopt its canonical UID and profile data!
+  if (existingUserDocId) {
+    finalUid = existingUserDocId;
+    if (existingUserProfile) {
+      finalName = existingUserProfile.displayName || finalName;
+      resolvedPhoto = existingUserProfile.photoURL || resolvedPhoto;
+    }
+  }
 
   const sessionUser: KontyraSSOUser = {
     uid: finalUid,
@@ -171,11 +212,19 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
     localStorage.setItem(KONTYRA_STORAGE_KEY, JSON.stringify(sessionUser));
   } catch {}
 
-  // Ensure Firestore user profile document exists
+  // 2. Ensure Firestore profile is linked or created
   try {
     const userDocRef = doc(db, 'users', finalUid);
     const existingSnap = await getDoc(userDocRef);
-    if (!existingSnap.exists()) {
+    if (existingSnap.exists()) {
+      // Existing profile found: link SSO and touch lastActive
+      await updateDoc(userDocRef, {
+        lastActive: serverTimestamp(),
+        kontyraSsoUid: resolvedUid || finalUid,
+        isKontyraLinked: true,
+      });
+    } else {
+      // Create new profile for first-time Kontyra user
       const newProfile: Partial<UserProfile> = {
         uid: finalUid,
         email: normalizedEmail,
@@ -192,6 +241,8 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
   } catch (fsErr) {
     console.warn('Could not sync Kontyra profile to Firestore:', fsErr);
   }
+
+  return sessionUser;
 
   return sessionUser;
 }

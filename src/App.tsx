@@ -4,7 +4,19 @@ import ScrollToTop from './components/ScrollToTop';
 import TranslationPrompt from './components/TranslationPrompt';
 import LiveSupport from './components/LiveSupport';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
+import { 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  serverTimestamp, 
+  onSnapshot,
+  collection,
+  query,
+  where,
+  getDocs,
+  limit
+} from 'firebase/firestore';
 import { auth, db, loginWithGoogle } from './lib/firebase';
 import { UserProfile, UserRole } from './types';
 import { motion, AnimatePresence } from 'motion/react';
@@ -34,7 +46,8 @@ import {
   initiateKontyraSSO, 
   getStoredKontyraSession, 
   clearStoredKontyraSession, 
-  KontyraSSOUser 
+  KontyraSSOUser,
+  KONTYRA_STORAGE_KEY
 } from './lib/kontyraSso';
 
 // Context
@@ -347,30 +360,79 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { t } = useTranslation();
 
-  // Listen to profile whenever user changes
+  // Listen to profile whenever user changes and resolve existing accounts by email
   useEffect(() => {
     if (!user) {
       setProfile(null);
       return;
     }
 
-    const docRef = doc(db, 'users', user.uid);
-    updateDoc(docRef, { lastActive: serverTimestamp() }).catch(console.error);
+    let unsubProfile: (() => void) | undefined;
+    let isCancelled = false;
 
-    const unsubProfile = onSnapshot(docRef, (docSnap) => {
-      if (docSnap.exists()) {
-        setProfile(docSnap.data() as UserProfile);
-      } else {
-        setProfile(null);
+    async function bindProfile() {
+      if (!user) return;
+      let targetUid = user.uid;
+
+      // 1. Check if user profile exists directly under targetUid
+      const directRef = doc(db, 'users', targetUid);
+      const directSnap = await getDoc(directRef).catch(() => null);
+
+      if (!directSnap || !directSnap.exists()) {
+        // 2. If not found by UID, search by email to find existing account
+        if (user.email) {
+          try {
+            const emailQ = query(
+              collection(db, 'users'),
+              where('email', '==', user.email.toLowerCase().trim()),
+              limit(1)
+            );
+            const querySnap = await getDocs(emailQ);
+            if (!querySnap.empty) {
+              const matchedDoc = querySnap.docs[0];
+              targetUid = matchedDoc.id;
+              console.log(`Recognized existing account for email ${user.email} under canonical UID: ${targetUid}`);
+
+              // If current session UID was a temporary SSO placeholder, update it to canonical UID
+              if (user.uid !== targetUid) {
+                const updatedSession = { ...user, uid: targetUid };
+                setUser(updatedSession as any);
+                try {
+                  localStorage.setItem(KONTYRA_STORAGE_KEY, JSON.stringify(updatedSession));
+                } catch {}
+              }
+            }
+          } catch (e) {
+            console.warn("Could not query existing profile by email:", e);
+          }
+        }
       }
-      setLoading(false);
-    }, (error) => {
-      console.error("Profile listen error:", error);
-      setLoading(false);
-    });
 
-    return () => unsubProfile();
-  }, [user?.uid]);
+      if (isCancelled) return;
+
+      const targetDocRef = doc(db, 'users', targetUid);
+      updateDoc(targetDocRef, { lastActive: serverTimestamp() }).catch(console.error);
+
+      unsubProfile = onSnapshot(targetDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setProfile(docSnap.data() as UserProfile);
+        } else {
+          setProfile(null);
+        }
+        setLoading(false);
+      }, (error) => {
+        console.error("Profile listen error:", error);
+        setLoading(false);
+      });
+    }
+
+    bindProfile();
+
+    return () => {
+      isCancelled = true;
+      if (unsubProfile) unsubProfile();
+    };
+  }, [user?.uid, user?.email]);
 
   // Handle SSO callback and Firebase auth state
   useEffect(() => {
