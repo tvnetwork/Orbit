@@ -85,6 +85,9 @@ const Navbar = () => {
   const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const displayPhoto = profile?.photoURL || user?.photoURL;
+  const displayName = profile?.displayName || user?.displayName || user?.email?.split('@')[0] || 'User';
+
   // Update lastActive on navigation
   useEffect(() => {
     if (user && auth.currentUser) {
@@ -127,7 +130,7 @@ const Navbar = () => {
       to: user ? "/profile" : "#", 
       onClick: user ? undefined : handleLogin, 
       icon: user ? UserIcon : LogOut, 
-      label: user ? t('profile.title') : t('common.login') 
+      label: user ? (displayName.split(' ')[0] || t('profile.title')) : t('common.login') 
     }
   ];
 
@@ -177,25 +180,33 @@ const Navbar = () => {
             <ThemeToggle />
             <EcosystemAppLauncher />
             {user ? (
-              <div className="flex items-center gap-2 md:gap-4">
-                <Link to="/profile" className="flex items-center gap-2 group">
+              <div className="flex items-center gap-2 md:gap-3">
+                <Link 
+                  to="/profile" 
+                  className="flex items-center gap-2 p-1 pl-1.5 pr-3 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800/60 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all group"
+                  title={displayName}
+                >
                   <motion.div 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="h-9 w-9 rounded-full bg-slate-300 dark:bg-slate-700 overflow-hidden border border-slate-200 dark:border-slate-600 group-hover:border-indigo-400 transition-colors ring-2 ring-transparent group-hover:ring-indigo-100 dark:group-hover:ring-indigo-950 shadow-sm"
+                    className="h-8 w-8 rounded-full bg-indigo-600 overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-center text-white shrink-0"
                   >
-                    {user.photoURL ? (
-                      <img src={user.photoURL} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
+                    {displayPhoto ? (
+                      <img src={displayPhoto} alt={displayName} className="h-full w-full object-cover" referrerPolicy="no-referrer" />
                     ) : (
-                      <UserIcon className="h-full w-full p-1.5 text-slate-600 dark:text-slate-300" />
+                      <span className="text-xs font-bold">{displayName.charAt(0).toUpperCase()}</span>
                     )}
                   </motion.div>
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors max-w-[130px] truncate hidden lg:inline-block">
+                    {displayName}
+                  </span>
                 </Link>
                 <motion.button 
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={logout} 
                   className="p-2 text-slate-400 dark:text-slate-500 hover:text-red-500 transition-colors hidden sm:block"
+                  title="Logout"
                 >
                   <LogOut className="h-5 w-5" />
                 </motion.button>
@@ -362,15 +373,15 @@ const Navbar = () => {
                 <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-100 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0">
-                      {user.photoURL ? (
-                        <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                      {displayPhoto ? (
+                        <img src={displayPhoto} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                       ) : (
-                        <UserIcon className="w-4 h-4" />
+                        <span>{displayName.charAt(0).toUpperCase()}</span>
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.displayName || user.email?.split('@')[0] || 'Kontyra User'}</p>
-                      <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">{user.email}</p>
+                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{displayName}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">{user.email || profile?.email}</p>
                     </div>
                   </div>
                   <button
@@ -541,16 +552,40 @@ const LoginRedirect = () => {
 };
 
 export default function App() {
-  const [user, setUser] = useState<FirebaseUser | KontyraSSOUser | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<FirebaseUser | KontyraSSOUser | null>(() => {
+    return getStoredKontyraSession();
+  });
+  const [profile, setProfile] = useState<UserProfile | null>(() => {
+    try {
+      const cached = localStorage.getItem('kontyra_user_profile');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { t } = useTranslation();
 
+  const updateProfileState = (p: UserProfile | null | ((prev: UserProfile | null) => UserProfile | null)) => {
+    setProfile(prev => {
+      const next = typeof p === 'function' ? p(prev) : p;
+      try {
+        if (next) {
+          localStorage.setItem('kontyra_user_profile', JSON.stringify(next));
+        } else {
+          localStorage.removeItem('kontyra_user_profile');
+        }
+      } catch {}
+      return next;
+    });
+  };
+
   // Listen to profile whenever user changes and resolve existing accounts by email
   useEffect(() => {
     if (!user) {
-      setProfile(null);
+      updateProfileState(null);
+      setLoading(false);
       return;
     }
 
@@ -642,9 +677,27 @@ export default function App() {
 
       unsubProfile = onSnapshot(targetDocRef, (docSnap) => {
         if (docSnap.exists()) {
-          setProfile(docSnap.data() as UserProfile);
+          const profileData = docSnap.data() as UserProfile;
+          updateProfileState(profileData);
+          setUser(prevUser => {
+            if (!prevUser) return prevUser;
+            return {
+              ...prevUser,
+              displayName: profileData.displayName || prevUser.displayName,
+              photoURL: profileData.photoURL || prevUser.photoURL,
+            };
+          });
+          try {
+            const raw = localStorage.getItem(KONTYRA_STORAGE_KEY);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              parsed.displayName = profileData.displayName || parsed.displayName;
+              parsed.photoURL = profileData.photoURL || parsed.photoURL;
+              localStorage.setItem(KONTYRA_STORAGE_KEY, JSON.stringify(parsed));
+            }
+          } catch {}
         } else {
-          setProfile(null);
+          updateProfileState(null);
         }
         setLoading(false);
       }, (error) => {
@@ -671,7 +724,6 @@ export default function App() {
         const ssoUser = await handleKontyraSSOCallback();
         if (ssoUser && isMounted) {
           setUser(ssoUser);
-          setLoading(false);
           return;
         }
 
@@ -680,7 +732,6 @@ export default function App() {
         if (storedSso && isMounted) {
           if (!auth.currentUser) {
             setUser(storedSso);
-            setLoading(false);
             ensureFirebaseAuth().catch(() => {});
           }
         }
@@ -699,9 +750,10 @@ export default function App() {
             setUser(currentSso);
           } else {
             setUser(null);
+            updateProfileState(null);
+            setLoading(false);
           }
         }
-        setLoading(false);
       });
 
       return unsubscribe;
@@ -736,6 +788,9 @@ export default function App() {
 
   const logout = async () => {
     clearStoredKontyraSession();
+    try {
+      localStorage.removeItem('kontyra_user_profile');
+    } catch {}
     setUser(null);
     setProfile(null);
     await auth.signOut();
@@ -749,26 +804,26 @@ export default function App() {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         await updateDoc(docRef, { role });
-        setProfile(prev => prev ? { ...prev, role } : null);
+        updateProfileState(prev => prev ? { ...prev, role } : null);
       } else {
-        const newProfile: UserProfile = {
+        const newProfile: any = {
           uid: targetUid,
           email: user.email || '',
           displayName: user.displayName || 'Anonymous',
-          photoURL: user.photoURL || undefined,
           role,
           verificationStatus: 'none',
           rating: 5.0,
           completedJobs: 0,
           createdAt: serverTimestamp(),
         };
+        if (user.photoURL) newProfile.photoURL = user.photoURL;
         await setDoc(docRef, newProfile);
-        setProfile(newProfile);
+        updateProfileState(newProfile);
       }
     } catch (err) {
       console.warn("Could not update role in Firestore:", err);
       // Optimistic fallback so role toggle works seamlessly
-      setProfile(prev => prev ? { ...prev, role } : null);
+      updateProfileState(prev => prev ? { ...prev, role } : null);
     }
   };
 

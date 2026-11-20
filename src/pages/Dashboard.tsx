@@ -160,7 +160,7 @@ export default function Dashboard() {
           className="bg-indigo-600 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 text-white relative overflow-hidden shadow-2xl shadow-indigo-200 dark:shadow-none"
         >
           <div className="relative z-10 space-y-4">
-            <h1 className="text-3xl md:text-4xl font-bold">{t('dashboard.welcome')}, {user?.displayName?.split(' ')[0]}!</h1>
+            <h1 className="text-3xl md:text-4xl font-bold">{t('dashboard.welcome')}, {(profile?.displayName || user?.displayName || 'User').split(' ')[0]}!</h1>
             <p className="text-indigo-100 max-w-lg text-sm md:text-base">
               {activeJobs.length === 1 
                 ? t('dashboard.welcomeBackSubtitleSingular', { count: activeJobs.length, pendingCount: pendingProposalsCount })
