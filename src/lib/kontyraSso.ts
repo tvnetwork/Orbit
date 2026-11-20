@@ -68,6 +68,21 @@ export function clearStoredKontyraSession() {
 }
 
 /**
+ * Ensures Firebase Auth is actively authenticated if a stored token exists.
+ */
+export async function ensureFirebaseAuth(): Promise<void> {
+  if (auth.currentUser) return;
+  try {
+    const storedToken = localStorage.getItem(KONTYRA_TOKEN_KEY);
+    if (storedToken) {
+      await signInWithCustomToken(auth, storedToken);
+    }
+  } catch (err) {
+    console.warn("Stored custom token exchange error:", err);
+  }
+}
+
+/**
  * Decodes a standard JWT payload safely without external dependencies.
  */
 function decodeJwtPayload(token: string): any | null {

@@ -47,6 +47,7 @@ import {
   initiateKontyraSSO, 
   getStoredKontyraSession, 
   clearStoredKontyraSession, 
+  ensureFirebaseAuth,
   KontyraSSOUser,
   KONTYRA_STORAGE_KEY
 } from './lib/kontyraSso';
@@ -84,9 +85,9 @@ const Navbar = () => {
 
   // Update lastActive on navigation
   useEffect(() => {
-    if (user) {
+    if (user && auth.currentUser) {
       const docRef = doc(db, 'users', user.uid);
-      updateDoc(docRef, { lastActive: serverTimestamp() }).catch(console.error);
+      updateDoc(docRef, { lastActive: serverTimestamp() }).catch(() => {});
     }
   }, [user, location.pathname]);
 
@@ -448,7 +449,9 @@ export default function App() {
       if (isCancelled) return;
 
       const targetDocRef = doc(db, 'users', targetUid);
-      updateDoc(targetDocRef, { lastActive: serverTimestamp() }).catch(() => {});
+      if (auth.currentUser) {
+        updateDoc(targetDocRef, { lastActive: serverTimestamp() }).catch(() => {});
+      }
 
       unsubProfile = onSnapshot(targetDocRef, (docSnap) => {
         if (docSnap.exists()) {
@@ -487,9 +490,12 @@ export default function App() {
 
         // 2. Check for stored Kontyra session
         const storedSso = getStoredKontyraSession();
-        if (storedSso && isMounted && !auth.currentUser) {
-          setUser(storedSso);
-          setLoading(false);
+        if (storedSso && isMounted) {
+          if (!auth.currentUser) {
+            setUser(storedSso);
+            setLoading(false);
+            ensureFirebaseAuth().catch(() => {});
+          }
         }
       } catch (err) {
         console.warn("SSO Init Error:", err);
