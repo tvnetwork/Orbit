@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { db, auth, handleFirestoreError, OperationType } from '../lib/firebase';
 import { UserProfile } from '../types';
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +31,8 @@ export default function PublicProfile() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const portfolioRef = useRef<HTMLDivElement>(null);
+
+  const isOwnProfile = auth.currentUser?.uid === uid;
 
   const scrollToPortfolio = () => {
     portfolioRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -81,18 +83,18 @@ export default function PublicProfile() {
   // Stats array removed as per user request
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800/50 min-h-screen py-12 md:py-20 px-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="bg-gray-50 dark:bg-slate-800/50 min-h-screen py-10 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         
         {/* Sidebar */}
-        <div className="lg:col-span-1 space-y-8">
+        <div className="lg:col-span-4 space-y-6 sm:space-y-8">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden sticky top-24"
           >
             <div className="h-32 bg-gradient-to-br from-indigo-600 to-purple-800 relative" />
-            <div className="px-8 pb-8">
+            <div className="px-6 sm:px-8 pb-8">
               <div className="relative -mt-16 mb-6">
                 <div className="h-32 w-32 rounded-3xl border-4 border-white bg-white dark:bg-slate-900 overflow-hidden shadow-2xl relative group">
                   {profile.photoURL ? (
@@ -111,20 +113,29 @@ export default function PublicProfile() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">{profile.displayName}</h2>
-                  <p className="font-medium text-indigo-600 text-sm mt-1">{profile.professionalTitle || t('profile.expertProfessional')}</p>
+                  <p className="font-medium text-indigo-600 text-sm mt-1">{profile.professionalTitle || t('profile.expertProfessional', { defaultValue: 'Expert Professional' })}</p>
                   <p className="text-gray-500 dark:text-gray-400 flex items-center gap-2 mt-2 text-sm">
-                    <MapPin className="h-4 w-4 text-gray-300" /> {profile.location || t('profile.distributed')}
+                    <MapPin className="h-4 w-4 text-gray-300 shrink-0" /> {profile.location || t('profile.distributed', { defaultValue: 'Remote / Distributed' })}
                   </p>
                 </div>
 
                 {/* Stats section removed as per user request */}
 
-                <button 
-                  onClick={handleChat}
-                  className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-2"
-                >
-                  <MessageSquare className="h-5 w-5" /> {t('profile.chatWith', { name: profile.displayName.split(' ')[0] })}
-                </button>
+                {isOwnProfile ? (
+                  <Link 
+                    to="/profile"
+                    className="w-full bg-indigo-600 text-white py-3.5 sm:py-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 dark:shadow-none flex items-center justify-center gap-2 text-sm sm:text-base"
+                  >
+                    <UserIcon className="h-5 w-5" /> {t('profile.editProfile', { defaultValue: 'Edit Profile' })}
+                  </Link>
+                ) : (
+                  <button 
+                    onClick={handleChat}
+                    className="w-full bg-indigo-600 text-white py-3.5 sm:py-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 dark:shadow-none flex items-center justify-center gap-2 text-sm sm:text-base"
+                  >
+                    <MessageSquare className="h-5 w-5" /> {t('profile.chatWith', { name: profile.displayName ? profile.displayName.split(' ')[0] : '', defaultValue: `Contact ${profile.displayName ? profile.displayName.split(' ')[0] : 'Freelancer'}` })}
+                  </button>
+                )}
 
                 <div className="pt-8 border-t border-gray-50 dark:border-slate-800 flex items-center justify-center gap-4">
                   {profile.websiteUrl && (
@@ -157,33 +168,33 @@ export default function PublicProfile() {
         </div>
 
         {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-8 space-y-6 sm:space-y-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden p-8 md:p-12"
+            className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden p-6 sm:p-8 lg:p-10"
           >
-            <div className="space-y-12">
+            <div className="space-y-8 sm:space-y-12">
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t('profile.generalInfo')}</h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg whitespace-pre-wrap">
-                  {profile.bio || t('profile.noBioYet')}
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t('profile.generalInfo', { defaultValue: 'General Information' })}</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-base sm:text-lg whitespace-pre-wrap">
+                  {profile.bio || t('profile.noBioYet', { defaultValue: "This professional hasn't added a bio yet." })}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('profile.skills')}</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('profile.skills', { defaultValue: 'Expertise & Tech Stack' })}</h3>
                 <div className="flex flex-wrap gap-2">
                   {profile.skills?.map(skill => (
                     <span 
                       key={skill}
-                      className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-bold border border-indigo-100"
+                      className="px-4 py-2 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 rounded-xl text-sm font-bold border border-indigo-100 dark:border-indigo-800/60"
                     >
                       {skill}
                     </span>
                   ))}
                   {(!profile.skills || profile.skills.length === 0) && (
-                    <p className="text-gray-400 dark:text-gray-500 italic">{t('profile.noSkillsListed')}</p>
+                    <p className="text-gray-400 dark:text-gray-500 italic">{t('profile.noSkillsListed', { defaultValue: 'No skills listed yet.' })}</p>
                   )}
                 </div>
               </div>
@@ -195,9 +206,9 @@ export default function PublicProfile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden p-8 md:p-12"
+            className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden p-6 sm:p-8 lg:p-10"
           >
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">{t('profile.portfolioTitle')}</h3>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8">{t('profile.portfolioTitle', { defaultValue: 'Portfolio & Showcase' })}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {profile.portfolio?.map((item) => (
                 <motion.a 
@@ -220,13 +231,13 @@ export default function PublicProfile() {
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 mb-4">{item.description}</p>
                   <span className="text-xs font-bold text-indigo-600 flex items-center gap-1 hover:underline">
-                    {t('profile.visitProject')}
+                    {t('profile.visitProject', { defaultValue: 'Visit Project' })}
                   </span>
                 </motion.a>
               ))}
               {(!profile.portfolio || profile.portfolio.length === 0) && (
                 <div className="col-span-full py-12 text-center border-2 border-dashed border-gray-100 dark:border-slate-700 rounded-3xl">
-                  <p className="text-sm text-gray-400 dark:text-gray-500 italic">{t('profile.noPortfolioShowcase')}</p>
+                  <p className="text-sm text-gray-400 dark:text-gray-500 italic">{t('profile.noPortfolioShowcase', { defaultValue: 'This expert has not showcased portfolio items yet.' })}</p>
                 </div>
               )}
             </div>

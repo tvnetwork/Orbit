@@ -379,7 +379,21 @@ const en: LocaleResource = {
         "responseTime": "Response Time"
       },
       "visitProject": "Visit Project",
-      "recentFeedback": "Recent Feedback"
+      "recentFeedback": "Recent Feedback",
+      "expertProfessional": "Expert Professional",
+      "distributed": "Distributed",
+      "chatWith": "Contact {{name}}",
+      "noBioYet": "This professional hasn't added a bio yet.",
+      "noSkillsListed": "No skills listed yet.",
+      "editProfile": "Edit Profile",
+      "profileProgress": "Profile Progress",
+      "viewPublic": "View Public",
+      "syncNow": "Sync Now",
+      "syncing": "Syncing...",
+      "fullNamePlaceholder": "Your full legal or professional name",
+      "professionalTitlePlaceholder": "e.g. Senior Fullstack Developer / UI Designer",
+      "locationPlaceholder": "e.g. London, UK / Remote",
+      "skillsUsed": "skills used"
     },
     "submitProposal": {
       "title": "Submit Proposal",

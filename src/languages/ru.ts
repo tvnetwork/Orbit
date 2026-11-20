@@ -379,7 +379,17 @@ const ru: LocaleResource = {
         "responseTime": "Время ответа"
       },
       "visitProject": "Посетите проект",
-      "recentFeedback": "Недавний отзыв"
+      "recentFeedback": "Недавний отзыв",
+      "expertProfessional": "Опытный специалист",
+      "distributed": "Удаленно / Распределенно",
+      "chatWith": "Контакт {{name}}",
+      "noBioYet": "Этот специалист еще не добавил биографию.",
+      "noSkillsListed": "Навыки пока не указаны.",
+      "editProfile": "Редактировать профиль",
+      "profileProgress": "Заполненность профиля",
+      "viewPublic": "Публичный профиль",
+      "syncNow": "Синхронизировать",
+      "syncing": "Синхронизация..."
     },
     "submitProposal": {
       "title": "Отправить предложение",

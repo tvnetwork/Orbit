@@ -341,7 +341,17 @@ const fr: LocaleResource = {
         "responseTime": "Temps de réponse"
       },
       "visitProject": "Visiter Projet",
-      "recentFeedback": "Commentaires récents"
+      "recentFeedback": "Commentaires récents",
+      "expertProfessional": "Professionnel Expert",
+      "distributed": "Distribué",
+      "chatWith": "Contact {{name}}",
+      "noBioYet": "Ce professionnel n'a pas encore ajouté de biographie.",
+      "noSkillsListed": "Aucune compétence répertoriée pour le moment.",
+      "editProfile": "Modifier le profil",
+      "profileProgress": "Progression du profil",
+      "viewPublic": "Voir le profil public",
+      "syncNow": "Synchroniser",
+      "syncing": "Synchronisation..."
     },
     "messages": {
       "title": "Messages",

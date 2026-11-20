@@ -241,40 +241,38 @@ export default function Profile() {
   // Stats array removed as per user request
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800/50 min-h-screen py-20 px-4 md:px-0">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="bg-gray-50 dark:bg-slate-800/50 min-h-screen py-10 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         
         {/* Header Breadcrumb/Title Area */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-4 px-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-1">
           <div className="space-y-1">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">{t('profile.userProfile')}</h1>
-            <p className="text-gray-500 dark:text-gray-400 font-medium">{t('profile.manageIdentity')}</p>
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white">{t('profile.userProfile', { defaultValue: 'User Profile' })}</h1>
+            <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 font-medium">{t('profile.manageIdentity', { defaultValue: 'Manage your professional identity and preferences.' })}</p>
           </div>
-          <div className="flex items-center gap-3 bg-white dark:bg-slate-900 p-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
-             <div className="flex -space-x-2 overflow-hidden px-2">
-                {[1,2,3].map(i => (
-                  <div key={i} className="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-indigo-100" />
-                ))}
+          <div className="flex items-center gap-2.5 bg-white dark:bg-slate-900 px-3.5 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 text-xs font-bold text-gray-500 dark:text-gray-400">
+             <div className="h-6 w-6 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center">
+               <Award className="h-3.5 w-3.5" />
              </div>
-             <p className="text-xs font-bold text-gray-400 dark:text-gray-500 mr-2 uppercase tracking-widest">{t('profile.globalRanking')}</p>
+             <p className="text-[11px] font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest">{t('profile.globalRanking', { defaultValue: 'Global Ranking: Top 5%' })}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
           {/* Sidebar / Profile Card */}
-          <div className="lg:col-span-1 space-y-8">
+          <div className="lg:col-span-4 space-y-6 sm:space-y-8">
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden sticky top-32"
+              className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden sticky top-28"
             >
               {/* Cover Area */}
               <div className="h-32 bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 relative">
                 <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '12px 12px' }} />
               </div>
 
-              <div className="px-8 pb-8">
+              <div className="px-6 sm:px-8 pb-8">
                 <div className="relative -mt-16 mb-6">
                   <div className="h-32 w-32 rounded-3xl border-4 border-white bg-white dark:bg-slate-900 overflow-hidden shadow-2xl relative group">
                     {user?.photoURL ? (
@@ -297,8 +295,8 @@ export default function Profile() {
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">{profile?.displayName || 'Set Display Name'}</h2>
                     <p className="font-medium text-indigo-600 text-sm mt-1">{profile?.professionalTitle || 'Set Professional Title'}</p>
-                    <p className="text-gray-500 dark:text-gray-400 flex items-center gap-2 mt-2 text-sm">
-                      <Mail className="h-4 w-4 text-gray-300" /> {user?.email}
+                    <p className="text-gray-500 dark:text-gray-400 flex items-center gap-2 mt-2 text-sm break-all">
+                      <Mail className="h-4 w-4 text-gray-300 shrink-0" /> {user?.email}
                     </p>
                   </div>
 
@@ -312,14 +310,14 @@ export default function Profile() {
                             key={role}
                             onClick={() => handleSwitchRole(role)}
                             className={cn(
-                              "relative flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold transition-all z-10",
+                              "relative flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold transition-all z-10 min-w-0",
                               profile?.role === role 
                                 ? "text-gray-900 dark:text-white" 
                                 : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                             )}
                           >
-                            {role === 'freelancer' ? <Zap className="h-3.5 w-3.5" /> : <Target className="h-3.5 w-3.5" />}
-                            <span>{t(`role.${role}`)}</span>
+                            {role === 'freelancer' ? <Zap className="h-3.5 w-3.5 shrink-0" /> : <Target className="h-3.5 w-3.5 shrink-0" />}
+                            <span className="truncate">{t(`role.${role}`)}</span>
                             {profile?.role === role && (
                               <motion.div 
                                 layoutId="role-bg"
@@ -337,30 +335,34 @@ export default function Profile() {
           </div>
 
           {/* Main Section / Form Area */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-8 space-y-6 sm:space-y-8">
             <motion.div 
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ delay: 0.1 }}
                style={{ width: '100%', maxWidth: '100%' }}
-               className="bg-white dark:bg-slate-900 rounded-[3rem] border border-gray-100 dark:border-slate-700 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] overflow-hidden relative z-10"
+               className="bg-white dark:bg-slate-900 rounded-[2.5rem] sm:rounded-[3rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden relative z-10"
             >
-              <div className="p-8 md:p-12 bg-gradient-to-b from-gray-50/50 to-white border-b border-gray-50 dark:border-slate-800">
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+              <div className="p-6 sm:p-8 lg:p-10 bg-gradient-to-b from-gray-50/50 to-white dark:from-slate-850 dark:to-slate-900 border-b border-gray-100 dark:border-slate-800">
+                <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
                   <div className="space-y-1">
-                    <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                      {t('profile.generalInfo')}
+                    <h3 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                      {t('profile.generalInfo', { defaultValue: 'General Information' })}
                     </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">{t('profile.manageIdentity')}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                      {t('profile.manageIdentity', { defaultValue: 'Manage your professional identity and preferences.' })}
+                    </p>
                   </div>
                   
-                  <div className="flex items-center gap-6 bg-white dark:bg-slate-900 p-4 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm w-full lg:w-auto">
-                    <div className="flex-1 lg:flex-none lg:min-w-[180px]">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Profile Progress</span>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm w-full xl:w-auto">
+                    <div className="w-full sm:w-44 lg:w-48">
+                      <div className="flex justify-between items-center mb-1.5">
+                        <span className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+                          {t('profile.profileProgress', { defaultValue: 'Profile Progress' })}
+                        </span>
                         <span className="text-xs font-black text-indigo-600">80%</span>
                       </div>
-                      <div className="h-2.5 w-full bg-gray-50 dark:bg-slate-800 rounded-full border border-gray-100 dark:border-slate-700 overflow-hidden p-0.5">
+                      <div className="h-2 w-full bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
                         <motion.div 
                           initial={{ width: 0 }}
                           animate={{ width: '80%' }}
@@ -369,44 +371,45 @@ export default function Profile() {
                         />
                       </div>
                     </div>
-                    <div className="h-10 w-px bg-gray-100 dark:bg-slate-800/50 hidden sm:block" />
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="h-8 w-px bg-gray-100 dark:bg-slate-800 hidden sm:block" />
+                    <div className="flex items-center gap-2">
                       <Link 
                         to={`/profile/${user?.uid}`}
-                        className="bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 px-5 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-all border border-gray-100 dark:border-slate-700 text-[10px] uppercase tracking-widest whitespace-nowrap"
+                        className="flex-1 sm:flex-none bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 px-3.5 sm:px-4 py-2.5 rounded-2xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all border border-gray-200/60 dark:border-slate-700 text-[10px] uppercase tracking-wider whitespace-nowrap"
                       >
-                        <LinkIcon className="h-3.5 w-3.5" />
-                        View Public
+                        <LinkIcon className="h-3.5 w-3.5 shrink-0" />
+                        <span>{t('profile.viewPublic', { defaultValue: 'View Public' })}</span>
                       </Link>
-                      <div className="relative">
+                      <div className="relative flex-1 sm:flex-none">
                         <motion.button 
-                          whileHover={{ scale: 1.02, y: -1 }}
+                          whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => handleSave()}
                           disabled={loading}
-                          className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 disabled:opacity-50 text-[10px] uppercase tracking-widest justify-center min-w-[120px]"
+                          className="w-full sm:w-auto bg-indigo-600 text-white px-4 sm:px-5 py-2.5 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100 dark:shadow-none disabled:opacity-50 text-[10px] uppercase tracking-wider whitespace-nowrap min-w-[100px]"
                         >
                           <AnimatePresence mode="wait">
                             {saved ? (
                               <motion.div
                                 key="saved"
-                                initial={{ opacity: 0, y: 10 }}
+                                initial={{ opacity: 0, y: 5 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                className="flex items-center gap-2"
+                                exit={{ opacity: 0, y: -5 }}
+                                className="flex items-center gap-1.5"
                               >
-                                <CheckCircle className="h-3.5 w-3.5" /> {t('profile.saved')}
+                                <CheckCircle className="h-3.5 w-3.5" />
+                                <span>{t('profile.saved')}</span>
                               </motion.div>
                             ) : (
                               <motion.div
                                 key="save"
-                                initial={{ opacity: 0, y: 10 }}
+                                initial={{ opacity: 0, y: 5 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                className="flex items-center gap-2"
+                                exit={{ opacity: 0, y: -5 }}
+                                className="flex items-center gap-1.5"
                               >
                                 {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-                                {loading ? 'Syncing...' : 'Sync Now'}
+                                <span>{loading ? t('profile.syncing', { defaultValue: 'Syncing...' }) : t('profile.syncNow', { defaultValue: 'Sync Now' })}</span>
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -422,8 +425,8 @@ export default function Profile() {
                 </div>
               </div>
 
-              <div className="p-8 md:p-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="p-6 sm:p-8 lg:p-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                   <div className="group space-y-3">
                     <label className="text-xs font-bold text-gray-400 dark:text-gray-500 group-focus-within:text-indigo-600 uppercase tracking-[0.2em] flex items-center gap-2 transition-colors">
                       <UserIcon className="h-3 w-3" /> {t('profile.fullName')}
@@ -433,7 +436,7 @@ export default function Profile() {
                       value={form.displayName}
                       onChange={e => setForm(prev => ({ ...prev, displayName: e.target.value }))}
                       className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white placeholder:text-gray-300"
-                      placeholder={t('profile.fullNamePlaceholder')}
+                      placeholder={t('profile.fullNamePlaceholder', { defaultValue: 'Your full legal or professional name' })}
                     />
                   </div>
                   <div className="group space-y-3">
@@ -445,72 +448,65 @@ export default function Profile() {
                       value={form.professionalTitle}
                       onChange={e => setForm(prev => ({ ...prev, professionalTitle: e.target.value }))}
                       className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 dark:text-white placeholder:text-gray-300"
-                      placeholder={t('profile.professionalTitlePlaceholder') || "e.g. Senior Fullstack Developer"}
+                      placeholder={t('profile.professionalTitlePlaceholder', { defaultValue: 'e.g. Senior Fullstack Developer' })}
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-50 dark:border-slate-800">
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">{t('profile.socials')}</h4>
-                    <div className="space-y-4">
-                      <div className="group space-y-2">
-                        <div className="flex items-center gap-2">
-                          <LinkIcon className="h-3 w-3 text-gray-400 dark:text-gray-500" />
-                          <span className="text-xs font-bold text-gray-500 dark:text-gray-400">Website</span>
-                        </div>
-                        <input 
-                          type="url" 
-                          value={form.websiteUrl}
-                          onChange={e => setForm(prev => ({ ...prev, websiteUrl: e.target.value }))}
-                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
-                          placeholder="https://yourwebsite.com"
-                        />
+                <div className="pt-8 border-t border-gray-100 dark:border-slate-800 space-y-4">
+                  <h4 className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">{t('profile.socials', { defaultValue: 'Socials & Links' })}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="group space-y-2">
+                      <div className="flex items-center gap-2">
+                        <LinkIcon className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+                        <span className="text-xs font-bold text-gray-500 dark:text-gray-400">Website</span>
                       </div>
-                      <div className="group space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Code className="h-3 w-3 text-gray-400 dark:text-gray-500" />
-                          <span className="text-xs font-bold text-gray-500 dark:text-gray-400">GitHub</span>
-                        </div>
-                        <input 
-                          type="url" 
-                          value={form.githubUrl}
-                          onChange={e => setForm(prev => ({ ...prev, githubUrl: e.target.value }))}
-                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
-                          placeholder="https://github.com/username"
-                        />
-                      </div>
+                      <input 
+                        type="url" 
+                        value={form.websiteUrl}
+                        onChange={e => setForm(prev => ({ ...prev, websiteUrl: e.target.value }))}
+                        className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
+                        placeholder="https://yourwebsite.com"
+                      />
                     </div>
-                  </div>
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">&nbsp;</h4>
-                    <div className="space-y-4">
-                      <div className="group space-y-2">
-                        <div className="flex items-center gap-2">
-                          <UserIcon className="h-3 w-3 text-gray-400 dark:text-gray-500" />
-                          <span className="text-xs font-bold text-gray-500 dark:text-gray-400">LinkedIn</span>
-                        </div>
-                        <input 
-                          type="url" 
-                          value={form.linkedinUrl}
-                          onChange={e => setForm(prev => ({ ...prev, linkedinUrl: e.target.value }))}
-                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
-                          placeholder="https://linkedin.com/in/username"
-                        />
+                    <div className="group space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Code className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+                        <span className="text-xs font-bold text-gray-500 dark:text-gray-400">GitHub</span>
                       </div>
-                      <div className="group space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Zap className="h-3 w-3 text-gray-400 dark:text-gray-500" />
-                          <span className="text-xs font-bold text-gray-500 dark:text-gray-400">X (Twitter)</span>
-                        </div>
-                        <input 
-                          type="url" 
-                          value={form.twitterUrl}
-                          onChange={e => setForm(prev => ({ ...prev, twitterUrl: e.target.value }))}
-                          className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
-                          placeholder="https://x.com/username"
-                        />
+                      <input 
+                        type="url" 
+                        value={form.githubUrl}
+                        onChange={e => setForm(prev => ({ ...prev, githubUrl: e.target.value }))}
+                        className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
+                        placeholder="https://github.com/username"
+                      />
+                    </div>
+                    <div className="group space-y-2">
+                      <div className="flex items-center gap-2">
+                        <UserIcon className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+                        <span className="text-xs font-bold text-gray-500 dark:text-gray-400">LinkedIn</span>
                       </div>
+                      <input 
+                        type="url" 
+                        value={form.linkedinUrl}
+                        onChange={e => setForm(prev => ({ ...prev, linkedinUrl: e.target.value }))}
+                        className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
+                        placeholder="https://linkedin.com/in/username"
+                      />
+                    </div>
+                    <div className="group space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Zap className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+                        <span className="text-xs font-bold text-gray-500 dark:text-gray-400">X (Twitter)</span>
+                      </div>
+                      <input 
+                        type="url" 
+                        value={form.twitterUrl}
+                        onChange={e => setForm(prev => ({ ...prev, twitterUrl: e.target.value }))}
+                        className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
+                        placeholder="https://x.com/username"
+                      />
                     </div>
                   </div>
                 </div>
@@ -679,37 +675,37 @@ export default function Profile() {
             </motion.div>
 
             {/* Verification / Security Callout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <div className="mt-8">
                <motion.div 
                  initial={{ opacity: 0, y: 20 }}
                  animate={{ opacity: 1, y: 0 }}
                  transition={{ delay: 0.3 }}
                  onClick={handleRequestVerification}
                  className={cn(
-                   "p-8 rounded-[2.5rem] border flex items-start gap-6 group transition-colors cursor-pointer",
+                   "p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border flex flex-col sm:flex-row items-start gap-5 sm:gap-6 group transition-colors cursor-pointer",
                    profile?.verificationStatus === 'verified' 
-                    ? "bg-emerald-50 border-emerald-100 hover:bg-emerald-100" 
+                    ? "bg-emerald-50 border-emerald-100 dark:bg-emerald-950/30 dark:border-emerald-800/40 hover:bg-emerald-100/80" 
                     : profile?.verificationStatus === 'pending'
-                    ? "bg-amber-50 border-amber-100 cursor-default"
-                    : "bg-gray-50 dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800/50"
+                    ? "bg-amber-50 border-amber-100 dark:bg-amber-950/30 dark:border-amber-800/40 cursor-default"
+                    : "bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-700 hover:border-indigo-100 hover:shadow-lg"
                  )}
                >
                  <div className={cn(
-                   "h-16 w-16 rounded-2xl bg-white dark:bg-slate-900 flex items-center justify-center shadow-xl transition-transform group-hover:scale-110",
+                   "h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center shadow-lg transition-transform group-hover:scale-105 shrink-0",
                    profile?.verificationStatus === 'verified' ? "text-emerald-600" : profile?.verificationStatus === 'pending' ? "text-amber-500" : "text-gray-400 dark:text-gray-500"
                  )}>
-                    <ShieldCheck className="h-8 w-8" />
+                    <ShieldCheck className="h-7 w-7 sm:h-8 sm:w-8" />
                  </div>
-                 <div className="space-y-1 flex-1">
+                 <div className="space-y-1 flex-1 min-w-0">
                    <h4 className={cn(
-                     "font-bold text-lg",
-                     profile?.verificationStatus === 'verified' ? "text-emerald-900" : profile?.verificationStatus === 'pending' ? "text-amber-900" : "text-gray-900 dark:text-white"
+                     "font-bold text-base sm:text-lg",
+                     profile?.verificationStatus === 'verified' ? "text-emerald-900 dark:text-emerald-300" : profile?.verificationStatus === 'pending' ? "text-amber-900 dark:text-amber-300" : "text-gray-900 dark:text-white"
                    )}>
                      {profile?.verificationStatus === 'verified' ? t('profile.identityVerified') : profile?.verificationStatus === 'pending' ? t('profile.verificationPending') : t('profile.requestVerification')}
                    </h4>
                    <p className={cn(
-                     "text-sm leading-relaxed",
-                     profile?.verificationStatus === 'verified' ? "text-emerald-700/70" : profile?.verificationStatus === 'pending' ? "text-amber-700/70" : "text-gray-500 dark:text-gray-400"
+                     "text-xs sm:text-sm leading-relaxed",
+                     profile?.verificationStatus === 'verified' ? "text-emerald-700/80 dark:text-emerald-400/80" : profile?.verificationStatus === 'pending' ? "text-amber-700/80 dark:text-amber-400/80" : "text-gray-500 dark:text-gray-400"
                    )}>
                      {profile?.verificationStatus === 'verified' 
                       ? t('profile.identityDesc') 
@@ -718,14 +714,12 @@ export default function Profile() {
                       : t('profile.upgradeElite')}
                    </p>
                    {profile?.verificationStatus === 'none' && (
-                     <p className="text-xs font-bold text-indigo-600 mt-2 flex items-center gap-1 uppercase tracking-widest">
+                     <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-2 flex items-center gap-1 uppercase tracking-widest">
                        {t('profile.upgradeStatus')} <ChevronRight className="h-3 w-3" />
                      </p>
                    )}
                  </div>
                </motion.div>
-
-
             </div>
           </div>
 

@@ -379,7 +379,17 @@ const pt: LocaleResource = {
         "responseTime": "Resposta Tempo"
       },
       "visitProject": "Visite o projeto",
-      "recentFeedback": "Feedback recente"
+      "recentFeedback": "Feedback recente",
+      "expertProfessional": "Profissional Especialista",
+      "distributed": "Distribuído",
+      "chatWith": "Contato {{name}}",
+      "noBioYet": "Este profissional ainda não adicionou uma biografia.",
+      "noSkillsListed": "Nenhuma habilidade listada ainda.",
+      "editProfile": "Editar Perfil",
+      "profileProgress": "Progresso do Perfil",
+      "viewPublic": "Ver Perfil Público",
+      "syncNow": "Sincronizar",
+      "syncing": "Sincronizando..."
     },
     "messages": {
       "title": "Mensagens",

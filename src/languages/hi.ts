@@ -379,7 +379,17 @@ const hi: LocaleResource = {
         "responseTime": "प्रतिक्रिया समय"
       },
       "visitProject": "प्रोजेक्ट पर जाएँ",
-      "recentFeedback": "हालिया प्रतिक्रिया"
+      "recentFeedback": "हालिया प्रतिक्रिया",
+      "expertProfessional": "अनुभवी पेशेवर",
+      "distributed": "रिमोट / वैश्विक",
+      "chatWith": "संपर्क करें {{name}}",
+      "noBioYet": "इस पेशेवर ने अभी तक बायो नहीं जोड़ा है।",
+      "noSkillsListed": "अभी तक कोई कौशल सूचीबद्ध नहीं है।",
+      "editProfile": "प्रोफ़ाइल संपादित करें",
+      "profileProgress": "प्रोफ़ाइल प्रगति",
+      "viewPublic": "सार्वजनिक प्रोफ़ाइल",
+      "syncNow": "सिंक करें",
+      "syncing": "सिंक हो रहा है..."
     },
     "submitProposal": {
       "title": "प्रस्ताव जमा करें",

@@ -379,7 +379,17 @@ const ar: LocaleResource = {
         "responseTime": "الاستجابة الوقت"
       },
       "visitProject": "زيارة المشروع",
-      "recentFeedback": "التعليقات الأخيرة"
+      "recentFeedback": "التعليقات الأخيرة",
+      "expertProfessional": "خبير محترف",
+      "distributed": "موزع",
+      "chatWith": "جهة الاتصال {{name}}",
+      "noBioYet": "لم يضف هذا المحترف سيرة ذاتية بعد.",
+      "noSkillsListed": "لا توجد مهارات مدرجة بعد.",
+      "editProfile": "تعديل الملف الشخصي",
+      "profileProgress": "تقدم الملف الشخصي",
+      "viewPublic": "عرض الملف العام",
+      "syncNow": "مزامنة الآن",
+      "syncing": "جاري المزامنة..."
     },
     "submitProposal": {
       "title": "إرسال الاقتراح",

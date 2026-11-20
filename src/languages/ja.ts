@@ -379,7 +379,17 @@ const ja: LocaleResource = {
         "responseTime": "応答時間"
       },
       "visitProject": "プロジェクトにアクセス",
-      "recentFeedback": "最近のフィードバック"
+      "recentFeedback": "最近のフィードバック",
+      "expertProfessional": "エキスパートプロフェッショナル",
+      "distributed": "リモート / 分散型",
+      "chatWith": "連絡先 {{name}}",
+      "noBioYet": "このプロフェッショナルはまだ自己紹介を追加していません。",
+      "noSkillsListed": "スキルはまだ登録されていません。",
+      "editProfile": "プロフィールを編集",
+      "profileProgress": "プロフィールの進捗",
+      "viewPublic": "公開プロフィールを表示",
+      "syncNow": "今すぐ同期",
+      "syncing": "同期中..."
     },
     "submitProposal": {
       "title": "送信提案書",

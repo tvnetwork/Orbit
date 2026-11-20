@@ -379,7 +379,17 @@ const zh: LocaleResource = {
         "responseTime": "响应时间"
       },
       "visitProject": "访问项目",
-      "recentFeedback": "最近反馈"
+      "recentFeedback": "最近反馈",
+      "expertProfessional": "资深专家",
+      "distributed": "远程 / 分布式",
+      "chatWith": "联系人 {{name}}",
+      "noBioYet": "该专业人员尚未添加个人简介。",
+      "noSkillsListed": "尚未列出任何技能。",
+      "editProfile": "编辑个人资料",
+      "profileProgress": "资料完成度",
+      "viewPublic": "查看公开主页",
+      "syncNow": "立即同步",
+      "syncing": "同步中..."
     },
     "submitProposal": {
       "title": "提交提案",
