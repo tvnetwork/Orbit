@@ -241,7 +241,7 @@ export default function Profile() {
   // Stats array removed as per user request
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800/50 min-h-screen py-10 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen py-10 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         
         {/* Header Breadcrumb/Title Area */}
@@ -250,8 +250,8 @@ export default function Profile() {
             <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white">{t('profile.userProfile', { defaultValue: 'User Profile' })}</h1>
             <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 font-medium">{t('profile.manageIdentity', { defaultValue: 'Manage your professional identity and preferences.' })}</p>
           </div>
-          <div className="flex items-center gap-2.5 bg-white dark:bg-slate-900 px-3.5 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 text-xs font-bold text-gray-500 dark:text-gray-400">
-             <div className="h-6 w-6 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center">
+          <div className="flex items-center gap-2.5 bg-white dark:bg-slate-900 px-3.5 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 text-xs font-bold text-gray-500 dark:text-gray-400">
+             <div className="h-6 w-6 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
                <Award className="h-3.5 w-3.5" />
              </div>
              <p className="text-[11px] font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest">{t('profile.globalRanking', { defaultValue: 'Global Ranking: Top 5%' })}</p>
@@ -265,7 +265,7 @@ export default function Profile() {
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden sticky top-28"
+              className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-xl overflow-hidden sticky top-28"
             >
               {/* Cover Area */}
               <div className="h-32 bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 relative">
@@ -274,7 +274,7 @@ export default function Profile() {
 
               <div className="px-6 sm:px-8 pb-8">
                 <div className="relative -mt-16 mb-6">
-                  <div className="h-32 w-32 rounded-3xl border-4 border-white bg-white dark:bg-slate-900 overflow-hidden shadow-2xl relative group">
+                  <div className="h-32 w-32 rounded-3xl border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-2xl relative group">
                     {user?.photoURL ? (
                       <img src={user.photoURL} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
                     ) : (
@@ -285,7 +285,7 @@ export default function Profile() {
                     </div>
                   </div>
                   {profile?.verificationStatus === 'verified' && (
-                    <div className="absolute -bottom-1 -right-1 h-8 w-8 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center shadow-lg" title="Identity Verified">
+                    <div className="absolute -bottom-1 -right-1 h-8 w-8 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center shadow-lg" title="Identity Verified">
                       <ShieldCheck className="h-4 w-4 text-white" />
                     </div>
                   )}
@@ -294,7 +294,7 @@ export default function Profile() {
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">{profile?.displayName || 'Set Display Name'}</h2>
-                    <p className="font-medium text-indigo-600 text-sm mt-1">{profile?.professionalTitle || 'Set Professional Title'}</p>
+                    <p className="font-medium text-indigo-600 dark:text-indigo-400 text-sm mt-1">{profile?.professionalTitle || 'Set Professional Title'}</p>
                     <p className="text-gray-500 dark:text-gray-400 flex items-center gap-2 mt-2 text-sm break-all">
                       <Mail className="h-4 w-4 text-gray-300 shrink-0" /> {user?.email}
                     </p>
@@ -308,23 +308,26 @@ export default function Profile() {
                         {(['freelancer', 'client'] as UserRole[]).map((role) => (
                           <button
                             key={role}
+                            type="button"
                             onClick={() => handleSwitchRole(role)}
                             className={cn(
-                              "relative flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold transition-all z-10 min-w-0",
+                              "relative flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold transition-all min-w-0 z-10",
                               profile?.role === role 
                                 ? "text-gray-900 dark:text-white" 
                                 : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                             )}
                           >
-                            {role === 'freelancer' ? <Zap className="h-3.5 w-3.5 shrink-0" /> : <Target className="h-3.5 w-3.5 shrink-0" />}
-                            <span className="truncate">{t(`role.${role}`)}</span>
                             {profile?.role === role && (
                               <motion.div 
                                 layoutId="role-bg"
-                                className="absolute inset-0 bg-white dark:bg-slate-900 rounded-2xl shadow-md -z-0 border border-gray-200 dark:border-slate-600/50"
+                                className="absolute inset-0 bg-white dark:bg-slate-900 rounded-2xl shadow-md border border-gray-200 dark:border-slate-700 -z-10"
                                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
                               />
                             )}
+                            <span className="relative z-10 flex items-center justify-center gap-2 truncate">
+                              {role === 'freelancer' ? <Zap className="h-3.5 w-3.5 shrink-0" /> : <Target className="h-3.5 w-3.5 shrink-0" />}
+                              <span className="truncate">{t(`role.${role}`)}</span>
+                            </span>
                           </button>
                         ))}
                       </div>
@@ -341,9 +344,9 @@ export default function Profile() {
                animate={{ opacity: 1, y: 0 }}
                transition={{ delay: 0.1 }}
                style={{ width: '100%', maxWidth: '100%' }}
-               className="bg-white dark:bg-slate-900 rounded-[2.5rem] sm:rounded-[3rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden relative z-10"
+               className="bg-white dark:bg-slate-900 rounded-[2.5rem] sm:rounded-[3rem] border border-gray-100 dark:border-slate-800 shadow-xl overflow-hidden relative z-10"
             >
-              <div className="p-6 sm:p-8 lg:p-10 bg-gradient-to-b from-gray-50/50 to-white dark:from-slate-850 dark:to-slate-900 border-b border-gray-100 dark:border-slate-800">
+              <div className="p-6 sm:p-8 lg:p-10 bg-gradient-to-b from-gray-50/50 to-white dark:from-slate-900 dark:to-slate-900 border-b border-gray-100 dark:border-slate-800">
                 <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
                   <div className="space-y-1">
                     <h3 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
@@ -572,8 +575,8 @@ export default function Profile() {
                             className={cn(
                               "px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-3 group/tag border shadow-sm transition-all",
                               isVerified 
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
-                                : "bg-white dark:bg-slate-900 text-indigo-700 border-gray-100 dark:border-slate-700 hover:border-indigo-200 hover:shadow-md"
+                                ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/60" 
+                                : "bg-white dark:bg-slate-900 text-indigo-700 dark:text-indigo-400 border-gray-100 dark:border-slate-800 hover:border-indigo-200 hover:shadow-md"
                             )}
                           >
                             <span className="flex items-center gap-1.5">
@@ -584,7 +587,7 @@ export default function Profile() {
                               <button
                                 type="button"
                                 onClick={() => setQuizSkill(skill)}
-                                className="text-[10px] uppercase tracking-wider bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded hover:bg-indigo-200 transition-colors"
+                                className="text-[10px] uppercase tracking-wider bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 px-2 py-0.5 rounded hover:bg-indigo-200 dark:hover:bg-indigo-900/60 transition-colors"
                               >
                                 Verify
                               </button>

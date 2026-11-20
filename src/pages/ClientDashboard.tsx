@@ -124,13 +124,13 @@ export default function ClientDashboard() {
   }, []);
 
   const cards = [
-    { label: t('dashboard.activeSpending'), value: `$${stats.activeSpending.toLocaleString()}`, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: t('dashboard.pendingApprovals'), value: stats.pendingApprovals, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50' },
-    { label: t('dashboard.openJobs'), value: stats.openJobs, icon: Briefcase, color: 'text-indigo-600', bg: 'bg-indigo-50' }
+    { label: t('dashboard.activeSpending'), value: `$${stats.activeSpending.toLocaleString()}`, icon: TrendingUp, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/60' },
+    { label: t('dashboard.pendingApprovals'), value: stats.pendingApprovals, icon: Clock, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/60' },
+    { label: t('dashboard.openJobs'), value: stats.openJobs, icon: Briefcase, color: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-50 dark:bg-indigo-950/60' }
   ];
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen pb-24 relative">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen pb-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
@@ -140,7 +140,7 @@ export default function ClientDashboard() {
           </div>
           <Link 
             to="/post-job"
-            className="flex items-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100"
+            className="flex items-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 dark:shadow-none"
           >
             <Plus className="h-5 w-5" />
             {t('dashboard.postNewProject')}
@@ -156,7 +156,7 @@ export default function ClientDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               className={cn(
-                "bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-slate-700 relative group overflow-hidden"
+                "bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-slate-800 relative group overflow-hidden"
               )}
             >
               <div className={cn("inline-flex p-4 rounded-2xl mb-6", card.bg)}>

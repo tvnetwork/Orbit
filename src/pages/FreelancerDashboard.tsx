@@ -127,7 +127,7 @@ export default function FreelancerDashboard() {
   );
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen pb-20 pt-10 relative">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen pb-20 pt-10 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Welcome Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -136,8 +136,8 @@ export default function FreelancerDashboard() {
             <p className="text-gray-500 dark:text-gray-400 mt-1 font-medium">{t('dashboard.freelancerSubtitle')}</p>
           </div>
           <div className="flex items-center gap-4">
-            <Link to="/wallet" className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 p-4 rounded-3xl flex items-center gap-4 hover:shadow-lg transition-all pr-8">
-              <div className="h-12 w-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+            <Link to="/wallet" className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-4 rounded-3xl flex items-center gap-4 hover:shadow-lg transition-all pr-8">
+              <div className="h-12 w-12 bg-emerald-50 dark:bg-emerald-950/60 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                 <DollarSign className="h-6 w-6" />
               </div>
               <div>
@@ -151,19 +151,19 @@ export default function FreelancerDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {[
-            { label: t('dashboard.activeContracts'), value: activeContracts.length, icon: Briefcase, color: 'indigo' },
-            { label: t('dashboard.pendingBids'), value: pendingCount, icon: Clock, color: 'orange' },
-            { label: t('dashboard.completedJobs'), value: profile?.completedJobs || 0, icon: CheckCircle2, color: 'purple' },
-            { label: t('dashboard.systemRating'), value: profile?.rating ? `${profile.rating}/5` : '5.0/5', icon: Award, color: 'emerald' },
+            { label: t('dashboard.activeContracts'), value: activeContracts.length, icon: Briefcase, color: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-50 dark:bg-indigo-950/60' },
+            { label: t('dashboard.pendingBids'), value: pendingCount, icon: Clock, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/60' },
+            { label: t('dashboard.completedJobs'), value: profile?.completedJobs || 0, icon: CheckCircle2, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-950/60' },
+            { label: t('dashboard.systemRating'), value: profile?.rating ? `${profile.rating}/5` : '5.0/5', icon: Award, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/60' },
           ].map((stat, i) => (
             <motion.div 
               key={i}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm"
+              className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-sm"
             >
-              <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center mb-6", `bg-${stat.color}-50 text-${stat.color}-600`)}>
+              <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center mb-6", stat.bg, stat.color)}>
                 <stat.icon className="h-6 w-6" />
               </div>
               <p className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-none mb-2">{stat.label}</p>

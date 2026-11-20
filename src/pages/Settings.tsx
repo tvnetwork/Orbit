@@ -94,7 +94,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen py-20">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen py-20">
       <div className="max-w-6xl mx-auto px-4">
         <div className="mb-12">
           <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">{t('settings.title')}</h1>

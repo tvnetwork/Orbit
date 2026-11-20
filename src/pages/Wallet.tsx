@@ -95,13 +95,13 @@ export default function Wallet() {
   }, [user]);
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-800">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950">
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
     </div>
   );
 
   return (
-    <div className="relative min-h-screen bg-gray-50 dark:bg-slate-800 pb-20 pt-10 sm:pt-12 md:pt-16">
+    <div className="relative min-h-screen bg-gray-50 dark:bg-slate-950 pb-20 pt-10 sm:pt-12 md:pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col justify-between gap-6 md:mb-12 md:flex-row md:items-end md:gap-8">
           <div>

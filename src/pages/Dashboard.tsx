@@ -146,7 +146,7 @@ export default function Dashboard() {
     : activeJobs.filter(j => j.status === 'in_progress' || j.status === 'completed').reduce((sum, j) => sum + j.budget, 0);
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen py-12">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen py-12">
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -157,7 +157,7 @@ export default function Dashboard() {
         {/* Welcome Header */}
         <motion.div 
           variants={itemVariants}
-          className="bg-indigo-600 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 text-white relative overflow-hidden shadow-2xl shadow-indigo-200"
+          className="bg-indigo-600 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 text-white relative overflow-hidden shadow-2xl shadow-indigo-200 dark:shadow-none"
         >
           <div className="relative z-10 space-y-4">
             <h1 className="text-3xl md:text-4xl font-bold">{t('dashboard.welcome')}, {user?.displayName?.split(' ')[0]}!</h1>
@@ -169,7 +169,7 @@ export default function Dashboard() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link to={profile?.role === 'client' ? '/post-job' : '/jobs'} className="bg-white dark:bg-slate-900 text-indigo-600 px-6 py-3 rounded-2xl font-bold hover:bg-indigo-50 transition-all flex items-center justify-center gap-2">
+                <Link to={profile?.role === 'client' ? '/post-job' : '/jobs'} className="bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 px-6 py-3 rounded-2xl font-bold hover:bg-indigo-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-sm">
                   {profile?.role === 'client' ? t('dashboard.postNewProject') : t('dashboard.findNewProjects')} <ArrowRight className="h-4 w-4" />
                 </Link>
               </motion.div>
@@ -185,16 +185,16 @@ export default function Dashboard() {
         {/* Stats Grid */}
         <motion.div variants={containerVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {[
-            { label: t('dashboard.activeProjects'), value: activeJobs.length, icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50' },
-            { label: t('dashboard.pendingProposals'), value: pendingProposalsCount, icon: FileText, color: 'text-purple-600', bg: 'bg-purple-50' },
-            { label: profile?.role === 'freelancer' ? t('dashboard.earnings') : t('dashboard.totalSpent'), value: `$${earnings.toLocaleString()}`, icon: DollarSign, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-            { label: t('dashboard.networkScore'), value: 'Live', icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50' }
+            { label: t('dashboard.activeProjects'), value: activeJobs.length, icon: Briefcase, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/50' },
+            { label: t('dashboard.pendingProposals'), value: pendingProposalsCount, icon: FileText, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-950/50' },
+            { label: profile?.role === 'freelancer' ? t('dashboard.earnings') : t('dashboard.totalSpent'), value: `$${earnings.toLocaleString()}`, icon: DollarSign, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/50' },
+            { label: t('dashboard.networkScore'), value: 'Live', icon: TrendingUp, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/50' }
           ].map((stat, idx) => (
             <motion.div 
               key={idx} 
               variants={itemVariants} 
               whileHover={{ y: -5 }}
-              className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex flex-col sm:flex-row items-center gap-4 group transition-all hover:shadow-xl hover:shadow-indigo-500/5 text-center sm:text-left"
+              className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center gap-4 group transition-all hover:shadow-xl hover:shadow-indigo-500/5 text-center sm:text-left"
             >
               <div className={`p-3 ${stat.bg} ${stat.color} rounded-xl group-hover:scale-110 transition-transform`}>
                 <stat.icon className="h-5 w-5 md:h-6 md:w-6" />
@@ -210,14 +210,14 @@ export default function Dashboard() {
         {/* Analytics Section */}
         <motion.div 
           variants={itemVariants} 
-          className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm"
+          className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-sm"
         >
           <div className="flex justify-between items-center mb-8">
             <div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('dashboard.activityOverview')}</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">{t('dashboard.engagementTrend')}</p>
             </div>
-            <div className="flex items-center gap-2 text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl font-bold text-xs uppercase font-mono">
+            <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1.5 rounded-xl font-bold text-xs uppercase font-mono">
               <BrandIcon className="h-4 w-4" />
               {t('dashboard.liveInsights')}
             </div>
@@ -271,19 +271,19 @@ export default function Dashboard() {
         {/* Tables Section */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Active Work / Proposals */}
-          <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="p-8 border-b border-gray-50 dark:border-slate-800 flex justify-between items-center">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 {profile?.role === 'client' ? t('dashboard.myProjects') : t('dashboard.myApplications')}
               </h2>
-              <Link to="/jobs" className="text-sm text-indigo-600 font-bold hover:underline transition-colors font-mono uppercase tracking-tighter">{t('dashboard.viewAll')}</Link>
+              <Link to="/jobs" className="text-sm text-indigo-600 dark:text-indigo-400 font-bold hover:underline transition-colors font-mono uppercase tracking-tighter">{t('dashboard.viewAll')}</Link>
             </div>
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-gray-100 dark:divide-slate-800">
               {profile?.role === 'client' ? (
                 activeJobs.length > 0 ? activeJobs.map(job => (
-                  <Link key={job.id} to={`/jobs/${job.id}`} className="p-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors group">
+                  <Link key={job.id} to={`/jobs/${job.id}`} className="p-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors group">
                     <div className="flex items-center gap-4">
-                      <div className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl text-gray-400 dark:text-gray-500 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                      <div className="p-3 bg-gray-50 dark:bg-slate-800 rounded-xl text-gray-400 dark:text-gray-500 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950/50 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                         <Briefcase className="h-5 w-5" />
                       </div>
                       <div>
@@ -293,7 +293,7 @@ export default function Dashboard() {
                     </div>
                     <motion.span 
                       whileHover={{ scale: 1.1 }}
-                      className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${job.status === 'open' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'}`}
+                      className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${job.status === 'open' ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400' : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400'}`}
                     >
                       {job.status}
                     </motion.span>

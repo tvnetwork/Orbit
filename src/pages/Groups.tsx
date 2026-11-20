@@ -148,12 +148,12 @@ export default function Groups() {
         {/* Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
            {[
-             { label: t('groups.activeMasters'), value: counts.talent > 0 ? `${counts.talent}+` : '0', icon: Users, color: 'indigo' },
-             { label: t('groups.verifiedDomains'), value: 'Live', icon: Globe, color: 'emerald' },
-             { label: t('groups.networkInsights'), value: counts.messages > 0 ? `${counts.messages} Insights` : 'No Links', icon: Zap, color: 'orange' }
+             { label: t('groups.activeMasters'), value: counts.talent > 0 ? `${counts.talent}+` : '0', icon: Users, color: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-50 dark:bg-indigo-950/60' },
+             { label: t('groups.verifiedDomains'), value: 'Live', icon: Globe, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/60' },
+             { label: t('groups.networkInsights'), value: counts.messages > 0 ? `${counts.messages} Insights` : 'No Links', icon: Zap, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/60' }
            ].map((stat, i) => (
-             <div key={i} className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 flex items-center gap-6 shadow-sm">
-                <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center", `bg-${stat.color}-50 text-${stat.color}-600`)}>
+             <div key={i} className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 flex items-center gap-6 shadow-sm">
+                <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center", stat.bg, stat.color)}>
                   <stat.icon className="h-6 w-6" />
                 </div>
                 <div>
@@ -197,8 +197,16 @@ export default function Groups() {
                  <div className="space-y-6 p-6 sm:p-8 lg:p-10">
                    <div className="flex justify-between items-start">
                       <div className={cn(
-                        "h-16 w-16 rounded-[2rem] flex items-center justify-center transition-all group-hover:scale-110",
-                        `bg-${cohort.color || 'indigo'}-50 text-${cohort.color || 'indigo'}-600 shadow-lg shadow-${cohort.color || 'indigo'}-500/5`
+                        "h-16 w-16 rounded-[2rem] flex items-center justify-center transition-all group-hover:scale-110 shadow-lg",
+                        cohort.color === 'emerald' || cohort.color === 'green'
+                          ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 shadow-emerald-500/5"
+                          : cohort.color === 'purple'
+                          ? "bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400 shadow-purple-500/5"
+                          : cohort.color === 'orange' || cohort.color === 'amber'
+                          ? "bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 shadow-amber-500/5"
+                          : cohort.color === 'blue'
+                          ? "bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 shadow-blue-500/5"
+                          : "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400 shadow-indigo-500/5"
                       )}>
                         <Users className="h-8 w-8" />
                       </div>

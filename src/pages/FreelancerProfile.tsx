@@ -180,7 +180,7 @@ export default function FreelancerProfile() {
   ];
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen pb-24">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen pb-24">
       {/* Cover Backdrop */}
       <div className="h-64 bg-indigo-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 opacity-80" />

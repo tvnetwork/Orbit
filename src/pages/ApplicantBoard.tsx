@@ -90,7 +90,7 @@ export default function ApplicantBoard() {
   </div>;
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen pb-24">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen pb-24">
       {/* Header */}
       <div className="border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 py-6 shadow-sm sm:py-8 md:py-10">
         <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">

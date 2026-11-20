@@ -153,27 +153,30 @@ export default function About() {
                 icon: ShieldCheck, 
                 title: t('about.values.integrity.title'), 
                 desc: t('about.values.integrity.desc'),
-                color: 'blue'
+                color: 'text-blue-600 dark:text-blue-400',
+                bg: 'bg-blue-50 dark:bg-blue-950/60'
               },
               { 
                 icon: Zap, 
                 title: t('about.values.velocity.title'), 
                 desc: t('about.values.velocity.desc'),
-                color: 'purple'
+                color: 'text-purple-600 dark:text-purple-400',
+                bg: 'bg-purple-50 dark:bg-purple-950/60'
               },
               { 
                 icon: Award, 
                 title: t('about.values.quality.title'), 
                 desc: t('about.values.quality.desc'),
-                color: 'emerald'
+                color: 'text-emerald-600 dark:text-emerald-400',
+                bg: 'bg-emerald-50 dark:bg-emerald-950/60'
               }
             ].map((value, i) => (
               <motion.div 
                 key={i}
                 variants={itemVariants}
-                className="group p-10 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 hover:border-indigo-100 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500"
+                className="group p-10 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 hover:border-indigo-100 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500"
               >
-                <div className={`p-4 bg-${value.color}-50 text-${value.color}-600 rounded-2xl w-fit mb-8 group-hover:scale-110 transition-transform`}>
+                <div className={cn("p-4 rounded-2xl w-fit mb-8 group-hover:scale-110 transition-transform", value.bg, value.color)}>
                   <value.icon className="h-8 w-8" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{value.title}</h3>

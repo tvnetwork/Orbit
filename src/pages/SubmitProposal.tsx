@@ -124,12 +124,12 @@ export default function SubmitProposal() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-800">
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950">
     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
   </div>;
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen py-20 pb-40">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen py-20 pb-40">
       <div className="max-w-5xl mx-auto px-4">
         {/* Breadcrumb */}
         <Link to={`/jobs/${jobId}`} className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-indigo-600 mb-8 transition-colors">

@@ -83,7 +83,7 @@ export default function PublicProfile() {
   // Stats array removed as per user request
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800/50 min-h-screen py-10 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen py-10 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         
         {/* Sidebar */}
@@ -91,12 +91,12 @@ export default function PublicProfile() {
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden sticky top-24"
+            className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-xl overflow-hidden sticky top-24"
           >
             <div className="h-32 bg-gradient-to-br from-indigo-600 to-purple-800 relative" />
             <div className="px-6 sm:px-8 pb-8">
               <div className="relative -mt-16 mb-6">
-                <div className="h-32 w-32 rounded-3xl border-4 border-white bg-white dark:bg-slate-900 overflow-hidden shadow-2xl relative group">
+                <div className="h-32 w-32 rounded-3xl border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-2xl relative group">
                   {profile.photoURL ? (
                     <img src={profile.photoURL} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
                   ) : (

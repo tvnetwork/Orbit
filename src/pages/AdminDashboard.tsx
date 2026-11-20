@@ -183,13 +183,13 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-800 min-h-screen py-12">
+    <div className="bg-gray-50 dark:bg-slate-950 min-h-screen py-12">
       <div className="max-w-7xl mx-auto px-4 space-y-12">
         
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-indigo-600 rounded-2xl shadow-lg shadow-indigo-200">
+              <div className="p-3 bg-indigo-600 rounded-2xl shadow-lg shadow-indigo-200 dark:shadow-none">
                 <Shield className="h-6 w-6 text-white" />
               </div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">{t('admin.control')}</h1>
@@ -197,14 +197,14 @@ export default function AdminDashboard() {
             <p className="text-gray-500 dark:text-gray-400">{t('admin.subtitle')}</p>
           </div>
 
-          <div className="flex bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-x-auto">
+          <div className="flex bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto">
             {(['users', 'jobs', 'cohorts', 'kyc', 'support', 'financials'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                   activeTab === tab 
-                    ? 'bg-gray-900 text-white shadow-lg' 
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' 
                     : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
                 }`}
               >
@@ -215,8 +215,8 @@ export default function AdminDashboard() {
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center gap-4">
-            <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div className="p-4 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-2xl">
               <Users className="h-6 w-6" />
             </div>
             <div>
@@ -224,8 +224,8 @@ export default function AdminDashboard() {
               <p className="text-2xl font-black text-gray-900 dark:text-white">{users.length}</p>
             </div>
           </div>
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center gap-4">
-            <div className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-2xl">
               <Briefcase className="h-6 w-6" />
             </div>
             <div>
@@ -233,8 +233,8 @@ export default function AdminDashboard() {
               <p className="text-2xl font-black text-gray-900 dark:text-white">{jobs.length}</p>
             </div>
           </div>
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center gap-4">
-            <div className="p-4 bg-orange-50 text-orange-600 rounded-2xl">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div className="p-4 bg-orange-50 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 rounded-2xl">
               <Layers className="h-6 w-6" />
             </div>
             <div>
@@ -242,8 +242,8 @@ export default function AdminDashboard() {
               <p className="text-2xl font-black text-gray-900 dark:text-white">{cohorts.length}</p>
             </div>
           </div>
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center gap-4">
-            <div className="p-4 bg-amber-50 text-amber-600 rounded-2xl">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div className="p-4 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 rounded-2xl">
               <Shield className="h-6 w-6" />
             </div>
             <div>
