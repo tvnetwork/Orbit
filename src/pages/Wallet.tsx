@@ -125,14 +125,14 @@ export default function Wallet() {
             
             {/* Balance Overview */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
-              <div className="group relative overflow-hidden rounded-[2.5rem] bg-indigo-600 p-6 text-white shadow-2xl shadow-indigo-200 sm:p-8 lg:rounded-[3rem] lg:p-10">
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-white dark:bg-slate-900/10 blur-[60px] rounded-full -mr-16 -mt-16" />
+              <div className="group relative overflow-hidden rounded-[2.5rem] bg-indigo-600 p-6 text-white shadow-2xl shadow-indigo-200 dark:shadow-none sm:p-8 lg:rounded-[3rem] lg:p-10">
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[60px] rounded-full -mr-16 -mt-16 pointer-events-none" />
                  <div className="relative z-10 space-y-8">
                    <div className="flex justify-between items-start">
-                     <div className="h-14 w-14 bg-white dark:bg-slate-900/10 rounded-2xl flex items-center justify-center">
+                     <div className="h-14 w-14 bg-white/15 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/10">
                        <WalletIcon className="h-7 w-7 text-white" />
                      </div>
-                     <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-white dark:bg-slate-900/20 px-3 py-1 rounded-full">{t('wallet.primaryWallet')}</span>
+                     <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">{t('wallet.primaryWallet')}</span>
                    </div>
                    <div>
                      <p className="text-sm font-black text-white/60 mb-1 uppercase tracking-widest">{t('wallet.availableBalance')}</p>
@@ -143,7 +143,7 @@ export default function Wallet() {
                         <ShieldCheck className="h-4 w-4" />
                         {t('wallet.insuredNote')}
                       </div>
-                      <div className="h-8 w-12 bg-white dark:bg-slate-900/10 rounded-lg flex items-center justify-center italic font-black text-[8px] tracking-widest">VISA</div>
+                      <div className="h-8 w-12 bg-white/15 rounded-lg flex items-center justify-center italic font-black text-[8px] tracking-widest text-white border border-white/10">VISA</div>
                    </div>
                  </div>
               </div>

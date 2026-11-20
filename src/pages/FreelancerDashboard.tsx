@@ -271,23 +271,23 @@ export default function FreelancerDashboard() {
           {/* Right Sidebar */}
           <div className="space-y-8">
             {/* Quick Actions */}
-            <div className="bg-gray-900 text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white dark:bg-slate-900/10 blur-[60px] rounded-full -mr-16 -mt-16" />
+            <div className="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 text-white p-8 sm:p-10 rounded-[2.5rem] sm:rounded-[3rem] shadow-xl relative overflow-hidden border border-indigo-800/40 group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-[60px] rounded-full -mr-16 -mt-16 pointer-events-none" />
               <h3 className="text-xl font-black mb-6 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-orange-400" />
+                <Sparkles className="h-5 w-5 text-amber-400" />
                 {t('dashboard.quickActions')}
               </h3>
               <div className="space-y-3">
-                <Link to="/jobs" className="flex items-center justify-between p-5 bg-white dark:bg-slate-900/10 hover:bg-white dark:hover:bg-slate-900/20 rounded-2xl transition-all border border-white/10">
-                  <span className="font-bold">{t('dashboard.browseJobs')}</span>
-                  <ArrowUpRight className="h-4 w-4" />
+                <Link to="/jobs" className="flex items-center justify-between p-4 sm:p-5 bg-white/10 hover:bg-white/15 rounded-2xl transition-all border border-white/10 text-white group/btn">
+                  <span className="font-bold text-sm sm:text-base">{t('dashboard.browseJobs')}</span>
+                  <ArrowUpRight className="h-4 w-4 text-white/80 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                 </Link>
-                <Link to="/profile" className="flex items-center justify-between p-5 bg-white dark:bg-slate-900/10 hover:bg-white dark:hover:bg-slate-900/20 rounded-2xl transition-all border border-white/10">
-                  <span className="font-bold">{t('dashboard.optimizeProfile')}</span>
-                  <ArrowUpRight className="h-4 w-4" />
+                <Link to="/profile" className="flex items-center justify-between p-4 sm:p-5 bg-white/10 hover:bg-white/15 rounded-2xl transition-all border border-white/10 text-white group/btn">
+                  <span className="font-bold text-sm sm:text-base">{t('dashboard.optimizeProfile')}</span>
+                  <ArrowUpRight className="h-4 w-4 text-white/80 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                 </Link>
-                <Link to="/wallet" className="flex items-center justify-between p-5 bg-indigo-600 hover:bg-indigo-700 rounded-2xl transition-all border border-indigo-500">
-                  <span className="font-bold underline underline-offset-4 decoration-2">{t('dashboard.withdrawFunds')}</span>
+                <Link to="/wallet" className="flex items-center justify-between p-4 sm:p-5 bg-indigo-600 hover:bg-indigo-500 rounded-2xl transition-all shadow-md shadow-indigo-950/50 border border-indigo-400/30 text-white">
+                  <span className="font-bold text-sm sm:text-base">{t('dashboard.withdrawFunds')}</span>
                   <DollarSign className="h-4 w-4" />
                 </Link>
               </div>

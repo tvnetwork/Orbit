@@ -30,6 +30,31 @@ import { UserRole } from '../types';
 import { cn } from '../lib/utils';
 import SkillQuizModal from '../components/SkillQuizModal';
 
+const extractDomain = (url: string) => {
+  return (url || '').replace(/^https?:\/\//i, '').trim();
+};
+
+const extractGithubUsername = (url: string) => {
+  return (url || '')
+    .replace(/^(https?:\/\/)?(www\.)?github\.com\/?/i, '')
+    .replace(/^@/, '')
+    .trim();
+};
+
+const extractLinkedinHandle = (url: string) => {
+  return (url || '')
+    .replace(/^(https?:\/\/)?(www\.)?linkedin\.com\/(in|company)\/?/i, '')
+    .replace(/^@/, '')
+    .trim();
+};
+
+const extractTwitterHandle = (url: string) => {
+  return (url || '')
+    .replace(/^(https?:\/\/)?(www\.)?(twitter|x)\.com\/?/i, '')
+    .replace(/^@/, '')
+    .trim();
+};
+
 export default function Profile() {
   const { user, profile, updateRole } = useAuth();
   const { t } = useTranslation();
@@ -464,52 +489,84 @@ export default function Profile() {
                         <LinkIcon className="h-3 w-3 text-gray-400 dark:text-gray-500" />
                         <span className="text-xs font-bold text-gray-500 dark:text-gray-400">Website</span>
                       </div>
-                      <input 
-                        type="url" 
-                        value={form.websiteUrl}
-                        onChange={e => setForm(prev => ({ ...prev, websiteUrl: e.target.value }))}
-                        className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
-                        placeholder="https://yourwebsite.com"
-                      />
+                      <div className="flex items-center rounded-xl overflow-hidden bg-gray-50 dark:bg-slate-800/50 border border-gray-200/60 dark:border-slate-700/60 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-50 dark:focus-within:ring-indigo-950/40 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+                        <span className="inline-flex items-center px-3.5 py-3 bg-gray-100/70 dark:bg-slate-800 text-gray-400 dark:text-gray-500 text-[11px] sm:text-xs font-mono select-none border-r border-gray-200/60 dark:border-slate-700/60 shrink-0">
+                          https://
+                        </span>
+                        <input 
+                          type="text" 
+                          value={extractDomain(form.websiteUrl)}
+                          onChange={e => {
+                            const val = extractDomain(e.target.value);
+                            setForm(prev => ({ ...prev, websiteUrl: val ? `https://${val}` : '' }));
+                          }}
+                          className="w-full min-w-0 bg-transparent px-4 py-3 outline-none font-medium text-sm text-gray-900 dark:text-white placeholder:text-gray-300 dark:placeholder:text-gray-600"
+                          placeholder="yourwebsite.com"
+                        />
+                      </div>
                     </div>
                     <div className="group space-y-2">
                       <div className="flex items-center gap-2">
                         <Code className="h-3 w-3 text-gray-400 dark:text-gray-500" />
                         <span className="text-xs font-bold text-gray-500 dark:text-gray-400">GitHub</span>
                       </div>
-                      <input 
-                        type="url" 
-                        value={form.githubUrl}
-                        onChange={e => setForm(prev => ({ ...prev, githubUrl: e.target.value }))}
-                        className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
-                        placeholder="https://github.com/username"
-                      />
+                      <div className="flex items-center rounded-xl overflow-hidden bg-gray-50 dark:bg-slate-800/50 border border-gray-200/60 dark:border-slate-700/60 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-50 dark:focus-within:ring-indigo-950/40 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+                        <span className="inline-flex items-center px-3.5 py-3 bg-gray-100/70 dark:bg-slate-800 text-gray-400 dark:text-gray-500 text-[11px] sm:text-xs font-mono select-none border-r border-gray-200/60 dark:border-slate-700/60 shrink-0">
+                          https://github.com/
+                        </span>
+                        <input 
+                          type="text" 
+                          value={extractGithubUsername(form.githubUrl)}
+                          onChange={e => {
+                            const val = extractGithubUsername(e.target.value);
+                            setForm(prev => ({ ...prev, githubUrl: val ? `https://github.com/${val}` : '' }));
+                          }}
+                          className="w-full min-w-0 bg-transparent px-4 py-3 outline-none font-medium text-sm text-gray-900 dark:text-white placeholder:text-gray-300 dark:placeholder:text-gray-600"
+                          placeholder="username"
+                        />
+                      </div>
                     </div>
                     <div className="group space-y-2">
                       <div className="flex items-center gap-2">
                         <UserIcon className="h-3 w-3 text-gray-400 dark:text-gray-500" />
                         <span className="text-xs font-bold text-gray-500 dark:text-gray-400">LinkedIn</span>
                       </div>
-                      <input 
-                        type="url" 
-                        value={form.linkedinUrl}
-                        onChange={e => setForm(prev => ({ ...prev, linkedinUrl: e.target.value }))}
-                        className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
-                        placeholder="https://linkedin.com/in/username"
-                      />
+                      <div className="flex items-center rounded-xl overflow-hidden bg-gray-50 dark:bg-slate-800/50 border border-gray-200/60 dark:border-slate-700/60 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-50 dark:focus-within:ring-indigo-950/40 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+                        <span className="inline-flex items-center px-3.5 py-3 bg-gray-100/70 dark:bg-slate-800 text-gray-400 dark:text-gray-500 text-[11px] sm:text-xs font-mono select-none border-r border-gray-200/60 dark:border-slate-700/60 shrink-0">
+                          https://linkedin.com/in/
+                        </span>
+                        <input 
+                          type="text" 
+                          value={extractLinkedinHandle(form.linkedinUrl)}
+                          onChange={e => {
+                            const val = extractLinkedinHandle(e.target.value);
+                            setForm(prev => ({ ...prev, linkedinUrl: val ? `https://linkedin.com/in/${val}` : '' }));
+                          }}
+                          className="w-full min-w-0 bg-transparent px-4 py-3 outline-none font-medium text-sm text-gray-900 dark:text-white placeholder:text-gray-300 dark:placeholder:text-gray-600"
+                          placeholder="username"
+                        />
+                      </div>
                     </div>
                     <div className="group space-y-2">
                       <div className="flex items-center gap-2">
                         <Zap className="h-3 w-3 text-gray-400 dark:text-gray-500" />
                         <span className="text-xs font-bold text-gray-500 dark:text-gray-400">X (Twitter)</span>
                       </div>
-                      <input 
-                        type="url" 
-                        value={form.twitterUrl}
-                        onChange={e => setForm(prev => ({ ...prev, twitterUrl: e.target.value }))}
-                        className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent px-5 py-3 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 outline-none transition-all font-medium text-sm text-gray-900 dark:text-white"
-                        placeholder="https://x.com/username"
-                      />
+                      <div className="flex items-center rounded-xl overflow-hidden bg-gray-50 dark:bg-slate-800/50 border border-gray-200/60 dark:border-slate-700/60 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-50 dark:focus-within:ring-indigo-950/40 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+                        <span className="inline-flex items-center px-3.5 py-3 bg-gray-100/70 dark:bg-slate-800 text-gray-400 dark:text-gray-500 text-[11px] sm:text-xs font-mono select-none border-r border-gray-200/60 dark:border-slate-700/60 shrink-0">
+                          https://x.com/
+                        </span>
+                        <input 
+                          type="text" 
+                          value={extractTwitterHandle(form.twitterUrl)}
+                          onChange={e => {
+                            const val = extractTwitterHandle(e.target.value);
+                            setForm(prev => ({ ...prev, twitterUrl: val ? `https://x.com/${val}` : '' }));
+                          }}
+                          className="w-full min-w-0 bg-transparent px-4 py-3 outline-none font-medium text-sm text-gray-900 dark:text-white placeholder:text-gray-300 dark:placeholder:text-gray-600"
+                          placeholder="username"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -786,15 +843,26 @@ export default function Profile() {
                     <label className="text-xs font-bold text-gray-400 dark:text-gray-500 group-focus-within:text-indigo-600 uppercase tracking-widest transition-colors flex items-center gap-2">
                        <Zap className="h-3 w-3" /> {t('profile.projectUrl')}
                     </label>
-                    <input 
-                      type="url" 
-                      value={newPortfolioItem.projectUrl}
-                      onChange={e => setNewPortfolioItem(prev => ({ ...prev, projectUrl: e.target.value }))}
-                      onBlur={(e) => fetchUrlMetadata(e.target.value)}
-                      className="w-full bg-gray-50 dark:bg-slate-800/50 border border-transparent focus:border-indigo-500 px-6 py-4 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-medium text-gray-900 dark:text-white"
-                      placeholder="https://..."
-                      required
-                    />
+                    <div className="flex items-center rounded-2xl overflow-hidden bg-gray-50 dark:bg-slate-800/50 border border-gray-200/60 dark:border-slate-700/60 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-50 dark:focus-within:ring-indigo-950/40 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+                      <span className="inline-flex items-center px-4 py-4 bg-gray-100/70 dark:bg-slate-800 text-gray-400 dark:text-gray-500 text-xs font-mono select-none border-r border-gray-200/60 dark:border-slate-700/60 shrink-0">
+                        https://
+                      </span>
+                      <input 
+                        type="text" 
+                        value={extractDomain(newPortfolioItem.projectUrl)}
+                        onChange={e => {
+                          const val = extractDomain(e.target.value);
+                          setNewPortfolioItem(prev => ({ ...prev, projectUrl: val ? `https://${val}` : '' }));
+                        }}
+                        onBlur={e => {
+                          const val = extractDomain(e.target.value);
+                          if (val) fetchUrlMetadata(`https://${val}`);
+                        }}
+                        className="w-full min-w-0 bg-transparent px-5 py-4 outline-none font-medium text-gray-900 dark:text-white placeholder:text-gray-300 dark:placeholder:text-gray-600"
+                        placeholder="yourproject.com or demo.app"
+                        required
+                      />
+                    </div>
                   </div>
                   {newPortfolioItem.imageUrl && (
                     <div className="space-y-2">
