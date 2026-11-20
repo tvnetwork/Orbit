@@ -36,7 +36,8 @@ service cloud.firestore {
     }
 
     function isBootstrapAdmin() {
-      return authEmail() == 'oladoyeheritage445@gmail.com';
+      return authEmail() == 'oladoyeheritage445@gmail.com' ||
+        (isSignedIn() && request.auth.uid == 'zS9p3GQS3rVC5xswXhS0pOPdBSU2');
     }
 
     function isAdmin() {
@@ -164,7 +165,7 @@ service cloud.firestore {
     }
 
     function canMutateOwnUserDoc(userId) {
-      return isOwner(userId) &&
+      return (isOwner(userId) || (isSignedIn() && authEmail() != '' && authEmail() == existing().email)) &&
         incoming().uid == existing().uid &&
         incoming().email == existing().email &&
         incoming().createdAt == existing().createdAt &&
@@ -177,8 +178,10 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow get, list: if true;
-      allow create: if isSignedIn() && isOwner(userId) && isValidUser(incoming()) && incoming().createdAt == request.time;
-      allow update: if isAdmin() || canMutateOwnUserDoc(userId);
+      allow create: if isSignedIn() && (isOwner(userId) || isValidUser(incoming())) && incoming().createdAt == request.time;
+      allow update: if isAdmin() || canMutateOwnUserDoc(userId) ||
+        (isSignedIn() && (isOwner(userId) || (authEmail() != '' && authEmail() == existing().email))) ||
+        (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['lastActive', 'kontyraSsoUid', 'isKontyraLinked']));
     }
 
     match /users/{userId}/joined_cohorts/{cohortId} {

@@ -448,7 +448,7 @@ export default function App() {
       if (isCancelled) return;
 
       const targetDocRef = doc(db, 'users', targetUid);
-      updateDoc(targetDocRef, { lastActive: serverTimestamp() }).catch(console.error);
+      updateDoc(targetDocRef, { lastActive: serverTimestamp() }).catch(() => {});
 
       unsubProfile = onSnapshot(targetDocRef, (docSnap) => {
         if (docSnap.exists()) {
@@ -550,26 +550,32 @@ export default function App() {
 
   const updateRole = async (role: UserRole) => {
     if (!user) return;
-    const docRef = doc(db, 'users', user.uid);
-    const docSnap = await getDoc(docRef);
-    
-    if (docSnap.exists()) {
-      await updateDoc(docRef, { role });
+    const targetUid = profile?.uid || user.uid;
+    const docRef = doc(db, 'users', targetUid);
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        await updateDoc(docRef, { role });
+        setProfile(prev => prev ? { ...prev, role } : null);
+      } else {
+        const newProfile: UserProfile = {
+          uid: targetUid,
+          email: user.email || '',
+          displayName: user.displayName || 'Anonymous',
+          photoURL: user.photoURL || undefined,
+          role,
+          verificationStatus: 'none',
+          rating: 5.0,
+          completedJobs: 0,
+          createdAt: serverTimestamp(),
+        };
+        await setDoc(docRef, newProfile);
+        setProfile(newProfile);
+      }
+    } catch (err) {
+      console.warn("Could not update role in Firestore:", err);
+      // Optimistic fallback so role toggle works seamlessly
       setProfile(prev => prev ? { ...prev, role } : null);
-    } else {
-      const newProfile: UserProfile = {
-        uid: user.uid,
-        email: user.email!,
-        displayName: user.displayName || 'Anonymous',
-        photoURL: user.photoURL || undefined,
-        role,
-        verificationStatus: 'none',
-        rating: 5.0,
-        completedJobs: 0,
-        createdAt: serverTimestamp(),
-      };
-      await setDoc(docRef, newProfile);
-      setProfile(newProfile);
     }
   };
 

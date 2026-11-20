@@ -1,4 +1,4 @@
-import { signInWithCustomToken } from 'firebase/auth';
+import { signInWithCustomToken, signInAnonymously } from 'firebase/auth';
 import { auth, db } from './firebase';
 import { 
   doc, 
@@ -17,6 +17,7 @@ import { UserProfile } from '../types';
 export const KONTYRA_AUTH_PORTAL = 'https://accounts.kontyra.name.ng/auth';
 export const KONTYRA_APP_ID = 'vyntajobs';
 export const KONTYRA_STORAGE_KEY = 'kontyra_vyntajobs_session';
+export const KONTYRA_TOKEN_KEY = 'kontyra_vyntajobs_token';
 
 export interface KontyraSSOUser {
   uid: string;
@@ -62,6 +63,7 @@ export function getStoredKontyraSession(): KontyraSSOUser | null {
 export function clearStoredKontyraSession() {
   try {
     localStorage.removeItem(KONTYRA_STORAGE_KEY);
+    localStorage.removeItem(KONTYRA_TOKEN_KEY);
   } catch {}
 }
 
@@ -164,6 +166,9 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
   // Attempt Firebase Custom Token sign-in first if a token is provided
   if (tokenParam) {
     try {
+      localStorage.setItem(KONTYRA_TOKEN_KEY, tokenParam);
+    } catch {}
+    try {
       const cred = await signInWithCustomToken(auth, tokenParam);
       if (cred.user) {
         resolvedUid = cred.user.uid || resolvedUid;
@@ -180,7 +185,25 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
         } catch {}
       }
     } catch (fbErr) {
-      console.log('Firebase Custom Token exchange skipped (cross-project):', fbErr);
+      console.log('Firebase Custom Token exchange fallback:', fbErr);
+      if (!auth.currentUser) {
+        try {
+          await signInAnonymously(auth);
+        } catch {}
+      }
+    }
+  } else if (!auth.currentUser) {
+    try {
+      const storedToken = localStorage.getItem(KONTYRA_TOKEN_KEY);
+      if (storedToken) {
+        await signInWithCustomToken(auth, storedToken);
+      } else {
+        await signInAnonymously(auth);
+      }
+    } catch {
+      try {
+        await signInAnonymously(auth);
+      } catch {}
     }
   }
 

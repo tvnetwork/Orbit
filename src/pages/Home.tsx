@@ -240,7 +240,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-24 bg-slate-50 dark:bg-slate-950 overflow-hidden">
+      <section className="py-16 md:py-20 bg-slate-50/70 dark:bg-slate-950 border-y border-slate-200/60 dark:border-slate-800/60 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             variants={containerVariants}
@@ -269,13 +269,13 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-32 overflow-hidden bg-white dark:bg-slate-900/30">
+      <section className="py-20 md:py-24 overflow-hidden bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center space-y-4 mb-20"
+            className="text-center space-y-4 mb-16"
           >
             <h2 className="text-4xl font-bold text-slate-900 dark:text-white">{t('home.whyTitle')}</h2>
             <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">{t('home.whySubtitle')}</p>
@@ -283,12 +283,12 @@ export default function Home() {
 
           {/* New Global Feature Highlight */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="mb-24 p-1 rounded-[3rem] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-xl shadow-indigo-500/10"
+            className="mb-16 p-0.5 rounded-[2.5rem] bg-gradient-to-br from-indigo-500/25 via-purple-500/20 to-pink-500/25 border border-indigo-200/60 dark:border-indigo-500/30 shadow-lg shadow-indigo-500/5"
           >
-            <div className="bg-white dark:bg-slate-900 rounded-[2.9rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
+            <div className="bg-white dark:bg-slate-900 rounded-[2.4rem] p-8 md:p-14 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
               <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 dark:bg-indigo-950/30 rounded-full blur-3xl -mr-32 -mt-32 opacity-50" />
               <div className="flex-1 space-y-8 relative z-10">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800/50 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-widest">
