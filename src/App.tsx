@@ -366,8 +366,8 @@ const Navbar = () => {
             {/* Preferences & Profile */}
             <div className="pt-4 mt-auto border-t border-slate-200 dark:border-white/10 shrink-0 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-500 dark:text-zinc-400">Language</span>
-                <LanguageSwitcher />
+                <span className="text-xs font-semibold text-slate-600 dark:text-zinc-400">Language</span>
+                <LanguageSwitcher dropUp showNameOnMobile />
               </div>
               {user ? (
                 <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-100 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5">
