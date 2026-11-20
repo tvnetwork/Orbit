@@ -36,7 +36,9 @@ import {
   Users,
   DollarSign,
   Globe,
-  FileText
+  FileText,
+  X,
+  ExternalLink
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import AuthModal from './components/AuthModal';
@@ -81,6 +83,7 @@ const Navbar = () => {
   const { user, profile, loading, login, logout } = useAuth();
   const location = useLocation();
   const { t } = useTranslation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Update lastActive on navigation
   useEffect(() => {
@@ -208,10 +211,195 @@ const Navbar = () => {
                 {t('common.login')}
               </motion.button>
             )}
+
+            {/* Asymmetric Pulse Dash Menu Trigger for Mobile */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/10 active:scale-95 transition-all cursor-pointer flex items-center justify-center shrink-0"
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5 text-slate-900 dark:text-white" />
+              ) : (
+                <div className="w-5 h-4 flex flex-col justify-center items-end gap-1.5 group">
+                  <span className="w-4 h-[2px] rounded-full bg-gradient-to-r from-cyan-400 to-indigo-500 transition-all duration-300 group-hover:w-5" />
+                  <span className="w-2.5 h-[2px] rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 transition-all duration-300 group-hover:w-4 relative">
+                    <span className="absolute -left-1.5 -top-[2px] w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping opacity-75" />
+                  </span>
+                </div>
+              )}
+            </button>
           </div>
         </div>
       </div>
     </nav>
+
+    {/* Vercel-Style Bottom-Sheet Drawer for Mobile */}
+    <AnimatePresence>
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex flex-col justify-end">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 320 }}
+            className="relative w-full max-h-[85vh] bg-white/95 dark:bg-[#07090e]/95 backdrop-blur-2xl border-t border-slate-200 dark:border-white/15 rounded-t-[32px] overflow-y-auto shadow-2xl p-6 pb-24 flex flex-col z-10"
+          >
+            {/* Grab Handle */}
+            <div className="w-12 h-1.5 bg-slate-300 dark:bg-white/20 hover:bg-slate-400 dark:hover:bg-white/30 rounded-full mx-auto mb-6 shrink-0" />
+
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-white/10 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-indigo-600 dark:bg-indigo-500/20 flex items-center justify-center text-white dark:text-indigo-400 p-1.5 shadow-sm border border-indigo-600/20">
+                  <BrandIcon className="w-full h-full object-contain" />
+                </div>
+                <div>
+                  <span className="font-extrabold text-sm text-slate-900 dark:text-white uppercase tracking-wider">{t('common.brandName')}</span>
+                  <span className="text-[10px] text-slate-500 dark:text-zinc-400 block -mt-0.5">Kontyra Jobs Platform</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+                aria-label="Close menu"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Navigation Links Grid */}
+            <div className="py-4 space-y-2">
+              <p className="text-[10px] font-mono uppercase text-slate-500 dark:text-zinc-400 tracking-wider px-1">
+                Navigation
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {navLinks.filter(l => l.show).map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.to;
+                  return (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-2.5 px-3.5 py-3 rounded-2xl text-xs font-semibold transition-all ${
+                        isActive
+                          ? 'bg-indigo-50 dark:bg-white/10 text-indigo-600 dark:text-white border border-indigo-200 dark:border-white/15 shadow-sm'
+                          : 'text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white bg-slate-50 dark:bg-white/[0.02] hover:bg-slate-100 dark:hover:bg-white/5 border border-slate-200/60 dark:border-white/5'
+                      }`}
+                    >
+                      <div className="p-1.5 rounded-lg bg-indigo-100 dark:bg-white/5 shrink-0 text-indigo-600 dark:text-indigo-400">
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <span className="truncate">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Ecosystem Quick Switcher */}
+            <div className="py-3 space-y-2 border-t border-slate-200 dark:border-white/10">
+              <p className="text-[10px] font-mono uppercase text-slate-500 dark:text-zinc-400 tracking-wider px-1">
+                Kontyra Ecosystem
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href="https://kontyra.name.ng"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/5 transition-all group"
+                >
+                  <span className="text-xs font-medium text-slate-800 dark:text-zinc-300 group-hover:text-indigo-600 dark:group-hover:text-white truncate">Kontyra Hub</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 shrink-0" />
+                </a>
+                <a
+                  href="https://accounts.kontyra.name.ng"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/5 transition-all group"
+                >
+                  <span className="text-xs font-medium text-slate-800 dark:text-zinc-300 group-hover:text-indigo-600 dark:group-hover:text-white truncate">Accounts</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 shrink-0" />
+                </a>
+                <a
+                  href="https://devos.kontyra.name.ng"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/5 transition-all group"
+                >
+                  <span className="text-xs font-medium text-slate-800 dark:text-zinc-300 group-hover:text-indigo-600 dark:group-hover:text-white truncate">DevOS</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 shrink-0" />
+                </a>
+                <a
+                  href="https://events.kontyra.name.ng"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/5 transition-all group"
+                >
+                  <span className="text-xs font-medium text-slate-800 dark:text-zinc-300 group-hover:text-indigo-600 dark:group-hover:text-white truncate">VUX Events</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 shrink-0" />
+                </a>
+              </div>
+            </div>
+
+            {/* Preferences & Profile */}
+            <div className="pt-4 mt-auto border-t border-slate-200 dark:border-white/10 shrink-0 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500 dark:text-zinc-400">Language</span>
+                <LanguageSwitcher />
+              </div>
+              {user ? (
+                <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-100 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0">
+                      {user.photoURL ? (
+                        <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <UserIcon className="w-4 h-4" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.displayName || user.email?.split('@')[0] || 'Kontyra User'}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">{user.email}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="p-2 text-slate-400 hover:text-red-500 dark:text-zinc-400 dark:hover:text-rose-400 hover:bg-white/5 rounded-xl transition-colors shrink-0"
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    handleLogin();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full py-3 bg-indigo-600 text-white font-bold text-xs rounded-xl hover:bg-indigo-700 transition-colors shadow-lg"
+                >
+                  {t('common.login')}
+                </button>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
 
     {/* Modern Floating Bottom Navigation */}
       <div className="md:hidden fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pointer-events-none">
