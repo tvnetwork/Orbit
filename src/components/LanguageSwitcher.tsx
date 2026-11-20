@@ -51,7 +51,7 @@ export default function LanguageSwitcher() {
               initial={{ opacity: 0, y: 10, scale: 0.95, filter: 'blur(10px)' }}
               animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
               exit={{ opacity: 0, y: 10, scale: 0.95, filter: 'blur(10px)' }}
-              className="absolute right-0 mt-3 w-64 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/80 dark:border-slate-800 z-[120] flex flex-col max-h-[480px] overflow-hidden"
+              className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-800 z-[120] flex flex-col overflow-hidden" style={{ maxHeight: 'min(320px, calc(100vh - 120px))' }}
             >
               <div className="p-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900">
                 <div className="relative group">
