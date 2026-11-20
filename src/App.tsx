@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import TranslationPrompt from './components/TranslationPrompt';
-import LiveSupport from './components/LiveSupport';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { 
   doc, 
@@ -117,7 +116,7 @@ const Navbar = () => {
     : { to: "/community", icon: Globe, label: t('common.community') };
 
   const bottomLinks = [
-    { to: "/", icon: BrandIcon, label: t('common.brandName') },
+    { to: "/", icon: BrandIcon, label: t('nav.home', { defaultValue: 'Home' }) },
     { to: "/jobs", icon: Search, label: t('nav.marketplace') },
     mobilePrimaryLink,
     mobileSocialLink,
@@ -632,7 +631,6 @@ export default function App() {
           <React.Suspense fallback={null}>
             <Footer />
           </React.Suspense>
-          <LiveSupport />
           <TranslationPrompt />
           {/* Role Selection Modal for new users */}
           {user && !profile && !loading && (
