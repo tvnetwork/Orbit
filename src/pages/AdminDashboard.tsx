@@ -17,7 +17,8 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { collection, query, getDocs, deleteDoc, doc, updateDoc, orderBy, where } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { db, auth, handleFirestoreError, OperationType } from '../lib/firebase';
 import { UserProfile, Job } from '../types';
 import { formatDate, cn } from '../lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -48,8 +49,11 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
+    let isSubscribed = true;
+
     async function fetchData() {
       try {
+        setLoading(true);
         const [usersSnap, jobsSnap, cohortsSnap, kycSnap, supportSnap] = await Promise.all([
           getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc'))).catch(e => {
             handleFirestoreError(e, OperationType.LIST, 'users');
@@ -73,18 +77,30 @@ export default function AdminDashboard() {
           })
         ]);
         
-        setUsers(usersSnap.docs.map(d => ({ ...d.data(), uid: d.id }) as UserProfile));
-        setJobs(jobsSnap.docs.map(d => ({ ...d.data(), id: d.id }) as Job));
-        setCohorts(cohortsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-        setKycDocs(kycSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-        setSupportMessages(supportSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        if (isSubscribed) {
+          setUsers(usersSnap.docs.map(d => ({ ...d.data(), uid: d.id }) as UserProfile));
+          setJobs(jobsSnap.docs.map(d => ({ ...d.data(), id: d.id }) as Job));
+          setCohorts(cohortsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+          setKycDocs(kycSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+          setSupportMessages(supportSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        }
       } catch (error) {
         console.error('Admin fetching error:', error);
       } finally {
-        setLoading(false);
+        if (isSubscribed) {
+          setLoading(false);
+        }
       }
     }
-    fetchData();
+
+    const unsubscribe = onAuthStateChanged(auth, () => {
+      fetchData();
+    });
+
+    return () => {
+      isSubscribed = false;
+      unsubscribe();
+    };
   }, []);
 
   const handleDeleteJob = async (id: string) => {

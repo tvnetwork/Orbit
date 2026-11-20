@@ -35,16 +35,31 @@ service cloud.firestore {
         : '';
     }
 
+    function hasAdminClaim() {
+      return isSignedIn() && (
+        (request.auth.token.keys().hasAny(['admin']) && request.auth.token.admin == true) ||
+        (request.auth.token.keys().hasAny(['role']) && request.auth.token.role == 'admin')
+      );
+    }
+
     function isBootstrapAdmin() {
       return authEmail() == 'oladoyeheritage445@gmail.com' ||
-        (isSignedIn() && request.auth.uid == 'zS9p3GQS3rVC5xswXhS0pOPdBSU2');
+        (isSignedIn() && (
+          request.auth.uid == 'zS9p3GQS3rVC5xswXhS0pOPdBSU2' ||
+          request.auth.uid == 'Aw9dX9oyH5fKOSsG4qx9mApr0tC2' ||
+          request.auth.uid == 'oladoyeheritage445@gmail.com'
+        ));
     }
 
     function isAdmin() {
       return isSignedIn() && (
         isBootstrapAdmin() ||
+        hasAdminClaim() ||
         exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
-        (userDocExists(request.auth.uid) && userDoc(request.auth.uid).role == 'admin')
+        (userDocExists(request.auth.uid) && userDoc(request.auth.uid).role == 'admin') ||
+        (userDocExists('zS9p3GQS3rVC5xswXhS0pOPdBSU2') &&
+         userDoc('zS9p3GQS3rVC5xswXhS0pOPdBSU2').role == 'admin' &&
+         userDoc('zS9p3GQS3rVC5xswXhS0pOPdBSU2').kontyraSsoUid == request.auth.uid)
       );
     }
 
@@ -309,10 +324,15 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    match /admins/{adminId} {
+      allow read: if isSignedIn() && (isAdmin() || request.auth.uid == adminId);
+      allow write: if isAdmin();
+    }
+
     match /kyc/{kycId} {
       allow read: if isAdmin() || (isSignedIn() && existing().userId == request.auth.uid);
       allow create: if isSignedIn() && incoming().userId == request.auth.uid && incoming().status == 'pending';
-      allow update: if isAdmin() || (isSignedIn() && existing().userId == request.auth.uid);
+      allow update, delete: if isAdmin() || (isSignedIn() && existing().userId == request.auth.uid);
     }
 
     match /reviews/{reviewId} {
