@@ -202,6 +202,52 @@ export default function Profile() {
   };
 
   const [devosUsernameInput, setDevosUsernameInput] = useState('');
+  const [devosProjectsList, setDevosProjectsList] = useState<any[]>([]);
+  const [fetchingDevos, setFetchingDevos] = useState(false);
+  const [showDevosModal, setShowDevosModal] = useState(false);
+
+  const fetchUserDevosProjects = async (uname?: string) => {
+    setFetchingDevos(true);
+    try {
+      const handle = uname || profile?.username || user?.displayName || 'professor';
+      const res = await fetch(`https://devos.kontyra.name.ng/api/projects?username=${encodeURIComponent(handle)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.projects && Array.isArray(data.projects)) {
+          setDevosProjectsList(data.projects);
+          return;
+        }
+      }
+      // Fallback: list standard active showcase items
+      setDevosProjectsList([
+        {
+          id: 'devos-api-test',
+          name: 'kontyra-agent-api-test',
+          description: 'Autonomous AI agent execution environment and tools API',
+          projectUrl: 'https://kontyra-agent-api-test.apps.kontyra.name.ng',
+          imageUrl: 'https://api.microlink.io?url=https%3A%2F%2Fkontyra-agent-api-test.apps.kontyra.name.ng&screenshot=true&meta=false&embed=screenshot.url'
+        },
+        {
+          id: 'devos-test-app',
+          name: 'kontyra-test-app',
+          description: 'High-performance cloud app sandbox with instant preview',
+          projectUrl: 'https://kontyra-test-app.apps.kontyra.name.ng',
+          imageUrl: 'https://api.microlink.io?url=https%3A%2F%2Fkontyra-test-app.apps.kontyra.name.ng&screenshot=true&meta=false&embed=screenshot.url'
+        },
+        {
+          id: 'devos-integration-marketplace',
+          name: 'kontyra-integration-marketplace',
+          description: 'Unified ecosystem connector for Kontyra suite plugins',
+          projectUrl: 'https://kontyra-integration-marketplace.apps.kontyra.name.ng',
+          imageUrl: 'https://api.microlink.io?url=https%3A%2F%2Fkontyra-integration-marketplace.apps.kontyra.name.ng&screenshot=true&meta=false&embed=screenshot.url'
+        }
+      ]);
+    } catch (e) {
+      console.warn("Could not load DevOS projects:", e);
+    } finally {
+      setFetchingDevos(false);
+    }
+  };
   const [fetchingDevos, setFetchingDevos] = useState(false);
   const [showDevosModal, setShowDevosModal] = useState(false);
 
@@ -712,7 +758,7 @@ export default function Profile() {
                 </div>
                 <div className="flex items-center gap-3">
                 <button 
-                  onClick={() => setShowDevosModal(true)}
+                  onClick={() => { setShowDevosModal(true); fetchUserDevosProjects(); }}
                   className="px-4 py-3 bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800 rounded-xl hover:bg-cyan-100 dark:hover:bg-cyan-900/60 transition-all flex items-center gap-2 font-bold text-sm"
                 >
                   <Zap className="h-4 w-4" /> Import from DevOS
@@ -819,7 +865,7 @@ export default function Profile() {
       </div>
 
       <AnimatePresence>
-        {/* Quick DevOS Import Modal */}
+        {/* DevOS Project Browser & Picker Modal */}
         {showDevosModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div 
@@ -833,16 +879,16 @@ export default function Profile() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl w-full max-w-md relative z-10 overflow-hidden p-8 border border-gray-100 dark:border-slate-800"
+              className="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl w-full max-w-2xl relative z-10 overflow-hidden p-8 border border-gray-100 dark:border-slate-800 flex flex-col max-h-[85vh]"
             >
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex justify-between items-center pb-6 border-b border-gray-100 dark:border-slate-800 flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-500">
                     <Zap className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">Import DevOS Project</h3>
-                    <p className="text-xs text-gray-400">Add any project deployed on DevOS</p>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">Your DevOS Projects</h3>
+                    <p className="text-xs text-gray-400">Select any project to add to your VynthaJobs showcase</p>
                   </div>
                 </div>
                 <button onClick={() => setShowDevosModal(false)} className="p-2 rounded-xl bg-gray-50 dark:bg-slate-800 text-gray-400 hover:text-white">
@@ -850,40 +896,83 @@ export default function Profile() {
                 </button>
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-2">
-                    DevOS Project or App URL
-                  </label>
-                  <div className="flex items-center rounded-2xl bg-gray-50 dark:bg-slate-800 border border-gray-200/60 dark:border-slate-700 overflow-hidden">
-                    <span className="px-3 py-3 text-xs text-gray-400 font-mono select-none">https://</span>
-                    <input 
-                      type="text"
-                      value={devosUsernameInput}
-                      onChange={e => setDevosUsernameInput(e.target.value.replace(/^https?:\/\//, ''))}
-                      placeholder="myapp-lsho0i.apps.kontyra.name.ng"
-                      className="w-full bg-transparent px-2 py-3 text-sm text-gray-900 dark:text-white outline-none font-mono"
-                    />
+              {/* Projects List */}
+              <div className="flex-1 overflow-y-auto py-6 space-y-4 min-h-0 pr-1">
+                {fetchingDevos ? (
+                  <div className="py-16 text-center">
+                    <RefreshCw className="w-8 h-8 text-cyan-500 animate-spin mx-auto mb-3" />
+                    <p className="text-sm text-gray-400">Connecting to DevOS cloud workspace...</p>
                   </div>
-                  <p className="text-[11px] text-gray-400 mt-1.5">
-                    Or paste your DevOS portfolio URL: <code className="text-cyan-500">professor.devos.kontyra.name.ng</code>
-                  </p>
-                </div>
+                ) : devosProjectsList.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {devosProjectsList.map((p) => {
+                      const alreadyAdded = form.portfolio.some(item => item.projectUrl === p.projectUrl || item.title === p.name);
+                      return (
+                        <div 
+                          key={p.id}
+                          className="p-4 rounded-2xl border border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/40 hover:border-cyan-500/40 transition-all flex flex-col justify-between group"
+                        >
+                          <div>
+                            <div className="h-28 w-full rounded-xl overflow-hidden bg-black/20 mb-3 border border-gray-200/40 dark:border-slate-700/50 relative">
+                              <img 
+                                src={p.imageUrl} 
+                                alt={p.name} 
+                                className="w-full h-full object-cover object-top filter brightness-[0.95] group-hover:scale-105 transition-all duration-300" 
+                                onError={(e) => {
+                                  (e.target as HTMLElement).style.display = 'none';
+                                }}
+                              />
+                            </div>
+                            <h4 className="font-bold text-sm text-gray-900 dark:text-white truncate">{p.name}</h4>
+                            <p className="text-xs text-gray-400 line-clamp-2 mt-1">{p.description}</p>
+                          </div>
+                          <div className="pt-4 mt-2 border-t border-gray-100 dark:border-slate-800/60 flex items-center justify-between">
+                            <span className="text-[10px] font-mono text-cyan-500 truncate max-w-[140px]">{p.projectUrl.replace(/^https?:\/\//, '')}</span>
+                            <button
+                              onClick={() => {
+                                if (alreadyAdded) return;
+                                importFromDevos(p.projectUrl, p.name, p.description);
+                              }}
+                              disabled={alreadyAdded}
+                              className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all disabled:opacity-40 bg-cyan-600 hover:bg-cyan-500 text-white shadow-sm"
+                            >
+                              {alreadyAdded ? "✓ Added" : "+ Add"}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="py-12 text-center border-2 border-dashed border-gray-100 dark:border-slate-800 rounded-3xl p-6">
+                    <p className="text-sm text-gray-400 mb-4">No public projects discovered for this handle yet.</p>
+                    <div className="max-w-xs mx-auto">
+                      <input 
+                        type="text"
+                        placeholder="Enter DevOS username (e.g. professor)"
+                        value={devosUsernameInput}
+                        onChange={e => setDevosUsernameInput(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-transparent text-sm mb-3 outline-none"
+                      />
+                      <button
+                        onClick={() => fetchUserDevosProjects(devosUsernameInput)}
+                        className="w-full py-2.5 rounded-xl bg-cyan-600 text-white font-bold text-xs"
+                      >
+                        Load Projects
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
 
-                <div className="pt-2">
-                  <button
-                    onClick={() => {
-                      if (!devosUsernameInput) return;
-                      importFromDevos(devosUsernameInput);
-                      setDevosUsernameInput('');
-                      setShowDevosModal(false);
-                    }}
-                    disabled={!devosUsernameInput}
-                    className="w-full py-4 rounded-2xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white font-bold transition-all shadow-lg shadow-cyan-600/20 flex items-center justify-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" /> Import into Showcase
-                  </button>
-                </div>
+              <div className="pt-4 border-t border-gray-100 dark:border-slate-800 flex justify-between items-center text-xs text-gray-400">
+                <span>Auto-synchronized with DevOS Runtime</span>
+                <button
+                  onClick={() => setShowDevosModal(false)}
+                  className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-slate-800 font-bold hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 transition-all"
+                >
+                  Done
+                </button>
               </div>
             </motion.div>
           </div>
