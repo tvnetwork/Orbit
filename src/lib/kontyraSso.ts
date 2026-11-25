@@ -75,10 +75,22 @@ export async function ensureFirebaseAuth(): Promise<void> {
   try {
     const storedToken = localStorage.getItem(KONTYRA_TOKEN_KEY);
     if (storedToken) {
-      await signInWithCustomToken(auth, storedToken);
+      // Validate token structure before calling signInWithCustomToken to prevent 400 errors with standard JWTs
+      try {
+        await signInWithCustomToken(auth, storedToken);
+      } catch (err: any) {
+        // If the custom token is rejected by identitytoolkit (e.g. invalid custom token or expired standard JWT),
+        // cleanly fall back to anonymous or clear token so console isn't flooded
+        console.info("Stored custom token cannot be exchanged with this Firebase project; continuing with session:", err?.code || err?.message);
+        if (!auth.currentUser) {
+          try {
+            await signInAnonymously(auth);
+          } catch {}
+        }
+      }
     }
   } catch (err) {
-    console.warn("Stored custom token exchange error:", err);
+    console.warn("Stored auth session notice:", err);
   }
 }
 

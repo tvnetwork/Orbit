@@ -201,6 +201,30 @@ export default function Profile() {
     }
   };
 
+  const [devosUsernameInput, setDevosUsernameInput] = useState('');
+  const [fetchingDevos, setFetchingDevos] = useState(false);
+  const [showDevosModal, setShowDevosModal] = useState(false);
+
+  const importFromDevos = (devosUrl: string, title?: string, description?: string) => {
+    if (!devosUrl) return;
+    let validatedUrl = devosUrl.trim();
+    if (!validatedUrl.startsWith('http://') && !validatedUrl.startsWith('https://')) {
+      validatedUrl = `https://${validatedUrl}`;
+    }
+    const cleanTitle = title || validatedUrl.replace(/^https?:\/\//, '').split('.')[0];
+    const item = {
+      id: Math.random().toString(36).substring(7),
+      title: cleanTitle,
+      description: description || 'Built with DevOS Cloud Execution Platform',
+      projectUrl: validatedUrl,
+      imageUrl: `https://api.microlink.io?url=${encodeURIComponent(validatedUrl)}&screenshot=true&meta=false&embed=screenshot.url`
+    };
+    setForm(prev => ({
+      ...prev,
+      portfolio: [item, ...prev.portfolio.filter(p => p.projectUrl !== validatedUrl)]
+    }));
+  };
+
   const addPortfolioItem = () => {
     if (!newPortfolioItem.title || !newPortfolioItem.projectUrl) return;
     
@@ -686,12 +710,20 @@ export default function Profile() {
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">{t('profile.portfolioTitle')}</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('profile.portfolioSubtitle')}</p>
                 </div>
+                <div className="flex items-center gap-3">
+                <button 
+                  onClick={() => setShowDevosModal(true)}
+                  className="px-4 py-3 bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800 rounded-xl hover:bg-cyan-100 dark:hover:bg-cyan-900/60 transition-all flex items-center gap-2 font-bold text-sm"
+                >
+                  <Zap className="h-4 w-4" /> Import from DevOS
+                </button>
                 <button 
                   onClick={() => setShowPortfolioModal(true)}
                   className="p-3 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition-all flex items-center gap-2 font-bold text-sm"
                 >
                   <Plus className="h-4 w-4" /> {t('profile.addProject')}
                 </button>
+              </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -787,6 +819,76 @@ export default function Profile() {
       </div>
 
       <AnimatePresence>
+        {/* Quick DevOS Import Modal */}
+        {showDevosModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowDevosModal(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl w-full max-w-md relative z-10 overflow-hidden p-8 border border-gray-100 dark:border-slate-800"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-500">
+                    <Zap className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">Import DevOS Project</h3>
+                    <p className="text-xs text-gray-400">Add any project deployed on DevOS</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowDevosModal(false)} className="p-2 rounded-xl bg-gray-50 dark:bg-slate-800 text-gray-400 hover:text-white">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-2">
+                    DevOS Project or App URL
+                  </label>
+                  <div className="flex items-center rounded-2xl bg-gray-50 dark:bg-slate-800 border border-gray-200/60 dark:border-slate-700 overflow-hidden">
+                    <span className="px-3 py-3 text-xs text-gray-400 font-mono select-none">https://</span>
+                    <input 
+                      type="text"
+                      value={devosUsernameInput}
+                      onChange={e => setDevosUsernameInput(e.target.value.replace(/^https?:\/\//, ''))}
+                      placeholder="myapp-lsho0i.apps.kontyra.name.ng"
+                      className="w-full bg-transparent px-2 py-3 text-sm text-gray-900 dark:text-white outline-none font-mono"
+                    />
+                  </div>
+                  <p className="text-[11px] text-gray-400 mt-1.5">
+                    Or paste your DevOS portfolio URL: <code className="text-cyan-500">professor.devos.kontyra.name.ng</code>
+                  </p>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    onClick={() => {
+                      if (!devosUsernameInput) return;
+                      importFromDevos(devosUsernameInput);
+                      setDevosUsernameInput('');
+                      setShowDevosModal(false);
+                    }}
+                    disabled={!devosUsernameInput}
+                    className="w-full py-4 rounded-2xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white font-bold transition-all shadow-lg shadow-cyan-600/20 flex items-center justify-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" /> Import into Showcase
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
         {showPortfolioModal && (
           <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4">
             <motion.div 
