@@ -248,8 +248,6 @@ export default function Profile() {
       setFetchingDevos(false);
     }
   };
-  const [fetchingDevos, setFetchingDevos] = useState(false);
-  const [showDevosModal, setShowDevosModal] = useState(false);
 
   const importFromDevos = (devosUrl: string, title?: string, description?: string) => {
     if (!devosUrl) return;
