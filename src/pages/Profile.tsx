@@ -210,7 +210,7 @@ export default function Profile() {
     setFetchingDevos(true);
     try {
       const handle = uname || profile?.username || user?.displayName || 'professor';
-      const res = await fetch(`https://devos.kontyra.name.ng/api/projects?username=${encodeURIComponent(handle)}`);
+      const res = await fetch(`https://devos.kontyra.name.ng/api/projects/list-public?username=${encodeURIComponent(handle)}`);
       if (res.ok) {
         const data = await res.json();
         if (data.projects && Array.isArray(data.projects)) {
