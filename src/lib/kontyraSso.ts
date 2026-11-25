@@ -310,15 +310,22 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
   try {
     const userDocRef = doc(db, 'users', finalUid);
     const existingSnap = await getDoc(userDocRef);
+    const usernameFromEmail = normalizedEmail ? normalizedEmail.split('@')[0] : '';
+    const portfolioUrl = usernameFromEmail ? `https://${usernameFromEmail}.devos.kontyra.name.ng` : undefined;
+
     if (existingSnap.exists()) {
-      // Existing profile found: link SSO and touch lastActive
-      await updateDoc(userDocRef, {
+      // Existing profile found: link SSO, sync DevOS portfolio, and touch lastActive
+      const updatePayload: Record<string, any> = {
         lastActive: serverTimestamp(),
         kontyraSsoUid: resolvedUid || finalUid,
         isKontyraLinked: true,
-      });
+      };
+      if (portfolioUrl && !existingSnap.data()?.websiteUrl) {
+        updatePayload.websiteUrl = portfolioUrl;
+      }
+      await updateDoc(userDocRef, updatePayload);
     } else {
-      // Create new profile for first-time Kontyra user
+      // Create new profile for first-time Kontyra user with automatic DevOS portfolio link
       const newProfile: Partial<UserProfile> = {
         uid: finalUid,
         email: normalizedEmail,
@@ -326,6 +333,7 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
         photoURL: finalPhoto || undefined,
         role: 'freelancer',
         verificationStatus: 'verified',
+        websiteUrl: portfolioUrl,
         rating: 5.0,
         completedJobs: 0,
         createdAt: serverTimestamp(),
