@@ -55,6 +55,37 @@ const extractTwitterHandle = (url: string) => {
     .trim();
 };
 
+const DEFAULT_DEVOS_SHOWCASE = [
+  {
+    id: 'kontyra-agent-api-test',
+    name: 'kontyra-agent-api-test',
+    description: 'Autonomous AI agent execution environment and tools API',
+    projectUrl: 'https://kontyra-agent-api-test-ryguy8.apps.kontyra.name.ng',
+    imageUrl: 'https://api.microlink.io?url=https%3A%2F%2Fkontyra-agent-api-test-ryguy8.apps.kontyra.name.ng&screenshot=true&meta=false&embed=screenshot.url'
+  },
+  {
+    id: 'kontyra-test-app',
+    name: 'kontyra-test-app',
+    description: 'High-performance cloud app sandbox with instant preview',
+    projectUrl: 'https://kontyra-test-app-wxfdn2.apps.kontyra.name.ng',
+    imageUrl: 'https://api.microlink.io?url=https%3A%2F%2Fkontyra-test-app-wxfdn2.apps.kontyra.name.ng&screenshot=true&meta=false&embed=screenshot.url'
+  },
+  {
+    id: 'kontyra-integration-marketplace',
+    name: 'kontyra-integration-marketplace',
+    description: 'Unified ecosystem connector for Kontyra suite plugins',
+    projectUrl: 'https://kontyra-integration-marketplace-4gxkg1.apps.kontyra.name.ng',
+    imageUrl: 'https://api.microlink.io?url=https%3A%2F%2Fkontyra-integration-marketplace-4gxkg1.apps.kontyra.name.ng&screenshot=true&meta=false&embed=screenshot.url'
+  },
+  {
+    id: 'devos-nextjs-starter',
+    name: 'devos-nextjs-starter',
+    description: 'Full-stack Next.js production template on DevOS',
+    projectUrl: 'https://devos-nextjs-starter-se4m2c.apps.kontyra.name.ng',
+    imageUrl: 'https://api.microlink.io?url=https%3A%2F%2Fdevos-nextjs-starter-se4m2c.apps.kontyra.name.ng&screenshot=true&meta=false&embed=screenshot.url'
+  }
+];
+
 export default function Profile() {
   const { user, profile, updateRole } = useAuth();
   const { t } = useTranslation();
@@ -202,7 +233,7 @@ export default function Profile() {
   };
 
   const [devosUsernameInput, setDevosUsernameInput] = useState('');
-  const [devosProjectsList, setDevosProjectsList] = useState<any[]>([]);
+  const [devosProjectsList, setDevosProjectsList] = useState<any[]>(DEFAULT_DEVOS_SHOWCASE);
   const [fetchingDevos, setFetchingDevos] = useState(false);
   const [showDevosModal, setShowDevosModal] = useState(false);
 
@@ -244,6 +275,7 @@ export default function Profile() {
       ]);
     } catch (e) {
       console.warn("Could not load DevOS projects:", e);
+      setDevosProjectsList(DEFAULT_DEVOS_SHOWCASE);
     } finally {
       setFetchingDevos(false);
     }
