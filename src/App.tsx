@@ -74,7 +74,7 @@ export const useAuth = () => {
 };
 
 // Layout Component
-const Footer = React.lazy(() => import('./components/Footer'));
+import Footer from './components/Footer';
 
 const isNavActive = (pathname: string, to: string) =>
   to === '/' ? pathname === '/' : pathname === to || pathname.startsWith(`${to}/`);
@@ -871,9 +871,7 @@ export default function App() {
               <AnimatedRoutes />
             </React.Suspense>
           </main>
-          <React.Suspense fallback={null}>
             <Footer />
-          </React.Suspense>
           <TranslationPrompt />
           {/* Role Selection Modal for new users */}
           {user && !profile && !loading && (

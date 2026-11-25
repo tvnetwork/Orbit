@@ -143,36 +143,8 @@ export default function Profile() {
     }
   }, [user, form]);
 
-  // Autosave effect
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+  // Explicit manual save only — removed autosave loop to prevent Firebase quota exhaustion
 
-        // Only autosave if form is different from current profile to avoid infinite loops
-        const hasChanged = JSON.stringify(form) !== JSON.stringify({
-          displayName: profile?.displayName || '',
-          bio: profile?.bio || '',
-          skills: profile?.skills || [],
-          professionalTitle: profile?.professionalTitle || '',
-          location: profile?.location || '',
-          githubUrl: profile?.githubUrl || '',
-          linkedinUrl: profile?.linkedinUrl || '',
-          twitterUrl: profile?.twitterUrl || '',
-          websiteUrl: profile?.websiteUrl || '',
-          portfolio: profile?.portfolio || [],
-          verifiedSkills: profile?.verifiedSkills || [],
-        });
-
-    if (!hasChanged) return;
-
-    const timer = setTimeout(() => {
-      handleSave();
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [form, profile, handleSave]);
 
   useEffect(() => {
     if (profile) {
