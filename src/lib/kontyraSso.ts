@@ -307,9 +307,27 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
     }
   }
 
+  // Query master profile from Kontyra Accounts if token is present
+  let masterProfile: any = null;
+  const rawToken = tokenParam || localStorage.getItem(KONTYRA_TOKEN_KEY);
+  if (rawToken) {
+    try {
+      const res = await fetch("https://accounts.kontyra.name.ng/api/oauth/userinfo", {
+        headers: { Authorization: `Bearer ${rawToken}` },
+      });
+      if (res.ok) {
+        masterProfile = await res.json();
+      }
+    } catch {}
+  }
+
   const finalUid = canonicalUid;
-  const finalName = canonicalProfile?.displayName || resolvedName || (normalizedEmail ? normalizedEmail.split('@')[0] : 'Kontyra Talent');
-  const finalPhoto = canonicalProfile?.photoURL || resolvedPhoto;
+  const finalName = masterProfile?.name || masterProfile?.fullName || canonicalProfile?.displayName || resolvedName || (normalizedEmail ? normalizedEmail.split('@')[0] : 'Kontyra Talent');
+  const finalPhoto = masterProfile?.picture || masterProfile?.photoUrl || canonicalProfile?.photoURL || resolvedPhoto;
+  const finalUsername = masterProfile?.preferred_username || masterProfile?.username || (normalizedEmail ? normalizedEmail.split('@')[0] : '');
+  const finalBio = masterProfile?.bio || canonicalProfile?.bio || '';
+  const finalHeadline = masterProfile?.headline || canonicalProfile?.professionalTitle || '';
+  const finalWebsite = masterProfile?.website || masterProfile?.websiteUrl || canonicalProfile?.websiteUrl || (finalUsername ? `https://${finalUsername}.devos.kontyra.name.ng` : undefined);
 
   const sessionUser: KontyraSSOUser = {
     uid: finalUid,
@@ -335,30 +353,33 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
   try {
     const userDocRef = doc(db, 'users', finalUid);
     const existingSnap = await getDoc(userDocRef);
-    const usernameFromEmail = normalizedEmail ? normalizedEmail.split('@')[0] : '';
-    const portfolioUrl = usernameFromEmail ? `https://${usernameFromEmail}.devos.kontyra.name.ng` : undefined;
 
     if (existingSnap.exists()) {
-      // Existing profile found: link SSO, sync DevOS portfolio, and touch lastActive
+      // Existing profile found: link SSO, sync master profile, and touch lastActive
       const updatePayload: Record<string, any> = {
+        displayName: finalName,
+        photoURL: finalPhoto,
+        username: finalUsername,
+        professionalTitle: finalHeadline,
+        bio: finalBio,
+        websiteUrl: finalWebsite,
         lastActive: serverTimestamp(),
         kontyraSsoUid: resolvedUid || finalUid,
         isKontyraLinked: true,
       };
-      if (portfolioUrl && !existingSnap.data()?.websiteUrl) {
-        updatePayload.websiteUrl = portfolioUrl;
-      }
       await updateDoc(userDocRef, updatePayload);
     } else {
-      // Create new profile for first-time Kontyra user with automatic DevOS portfolio link
+      // Create new profile for first-time Kontyra user with master profile attributes
       const newProfile: Partial<UserProfile> = {
         uid: finalUid,
         email: normalizedEmail,
         displayName: finalName,
         photoURL: finalPhoto || undefined,
+        professionalTitle: finalHeadline,
+        bio: finalBio,
         role: 'freelancer',
         verificationStatus: 'verified',
-        websiteUrl: portfolioUrl,
+        websiteUrl: finalWebsite,
         rating: 5.0,
         completedJobs: 0,
         createdAt: serverTimestamp(),
