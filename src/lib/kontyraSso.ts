@@ -1,5 +1,6 @@
-import { signInWithCustomToken, signInAnonymously } from 'firebase/auth';
+import { signInWithCustomToken } from 'firebase/auth';
 import { auth, db } from './firebase';
+import firebaseConfig from '../../firebase-applet-config.json';
 import { 
   doc, 
   getDoc, 
@@ -68,25 +69,45 @@ export function clearStoredKontyraSession() {
 }
 
 /**
+ * Checks whether a token is a Firebase custom token meant specifically for this Firebase project.
+ * Firebase custom tokens issued by the Firebase Admin SDK for a project contain an audience targeting
+ * https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit
+ * and issuer corresponding to the service account or firebase project.
+ */
+function isProjectCustomToken(token: string): boolean {
+  if (!token) return false;
+  const decoded = decodeJwtPayload(token);
+  if (!decoded) return false;
+
+  // If the token has an aud or iss explicitly pointing to another project or non-identitytoolkit service, skip exchange
+  const targetAud = "https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit";
+  if (decoded.aud && decoded.aud !== targetAud) {
+    return false;
+  }
+  // If the issuer or claims explicitly reference another firebase project id, skip exchange
+  if (decoded.iss && typeof decoded.iss === 'string' && !decoded.iss.includes(firebaseConfig.projectId) && !decoded.iss.includes('securetoken.google.com')) {
+    // If issuer is a service account of another project, e.g. voltaic-space-...
+    if (decoded.iss.includes('gserviceaccount.com') && !decoded.iss.includes(firebaseConfig.projectId)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
  * Ensures Firebase Auth is actively authenticated if a stored token exists.
  */
 export async function ensureFirebaseAuth(): Promise<void> {
   if (auth.currentUser) return;
   try {
     const storedToken = localStorage.getItem(KONTYRA_TOKEN_KEY);
-    if (storedToken) {
-      // Validate token structure before calling signInWithCustomToken to prevent 400 errors with standard JWTs
+    if (storedToken && isProjectCustomToken(storedToken)) {
       try {
         await signInWithCustomToken(auth, storedToken);
       } catch (err: any) {
-        // If the custom token is rejected by identitytoolkit (e.g. invalid custom token or expired standard JWT),
-        // cleanly fall back to anonymous or clear token so console isn't flooded
+        // Silently capture invalid token without triggering repeated retries
         console.info("Stored custom token cannot be exchanged with this Firebase project; continuing with session:", err?.code || err?.message);
-        if (!auth.currentUser) {
-          try {
-            await signInAnonymously(auth);
-          } catch {}
-        }
       }
     }
   } catch (err) {
@@ -190,48 +211,40 @@ export async function handleKontyraSSOCallback(): Promise<KontyraSSOUser | null>
   let resolvedName = ssoNameParam || nameFromJwt || '';
   let resolvedPhoto = ssoPhotoParam || photoFromJwt || '';
 
-  // Attempt Firebase Custom Token sign-in first if a token is provided
+  // Attempt Firebase Custom Token sign-in if a project-compatible token is provided
   if (tokenParam) {
     try {
       localStorage.setItem(KONTYRA_TOKEN_KEY, tokenParam);
     } catch {}
-    try {
-      const cred = await signInWithCustomToken(auth, tokenParam);
-      if (cred.user) {
-        resolvedUid = cred.user.uid || resolvedUid;
-        resolvedEmail = cred.user.email || resolvedEmail;
-        resolvedName = cred.user.displayName || resolvedName;
-        resolvedPhoto = cred.user.photoURL || resolvedPhoto;
 
-        try {
-          const idTokenResult = await cred.user.getIdTokenResult();
-          const claimEmail = idTokenResult.claims.email as string;
-          if (claimEmail && !resolvedEmail) {
-            resolvedEmail = claimEmail;
-          }
-        } catch {}
-      }
-    } catch (fbErr) {
-      console.log('Firebase Custom Token exchange fallback:', fbErr);
-      if (!auth.currentUser) {
-        try {
-          await signInAnonymously(auth);
-        } catch {}
+    if (isProjectCustomToken(tokenParam)) {
+      try {
+        const cred = await signInWithCustomToken(auth, tokenParam);
+        if (cred.user) {
+          resolvedUid = cred.user.uid || resolvedUid;
+          resolvedEmail = cred.user.email || resolvedEmail;
+          resolvedName = cred.user.displayName || resolvedName;
+          resolvedPhoto = cred.user.photoURL || resolvedPhoto;
+
+          try {
+            const idTokenResult = await cred.user.getIdTokenResult();
+            const claimEmail = idTokenResult.claims.email as string;
+            if (claimEmail && !resolvedEmail) {
+              resolvedEmail = claimEmail;
+            }
+          } catch {}
+        }
+      } catch (fbErr) {
+        console.info('Firebase Custom Token exchange fallback:', fbErr);
       }
     }
   } else if (!auth.currentUser) {
     try {
       const storedToken = localStorage.getItem(KONTYRA_TOKEN_KEY);
-      if (storedToken) {
+      if (storedToken && isProjectCustomToken(storedToken)) {
         await signInWithCustomToken(auth, storedToken);
-      } else {
-        await signInAnonymously(auth);
       }
-    } catch {
-      try {
-        await signInAnonymously(auth);
-      } catch {}
-    }
+    } catch {}
   }
 
   if (!resolvedEmail && !resolvedUid) {
