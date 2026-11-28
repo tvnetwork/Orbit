@@ -502,6 +502,11 @@ const AnimatedRoutes = () => {
       <motion.div key={location.pathname} className="w-full">
         <Routes location={location}>
           <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+          {/* Replit-style /~ user home & workspace routing */}
+          <Route path="/~" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/~/:username" element={<PageTransition><PublicProfile /></PageTransition>} />
+          <Route path="/pricing" element={<PageTransition><Wallet /></PageTransition>} />
+          <Route path="/billing" element={<PageTransition><Wallet /></PageTransition>} />
           <Route path="/freelancers" element={<PageTransition><Freelancers /></PageTransition>} />
           <Route path="/freelancer/:id" element={<PageTransition><FreelancerProfile /></PageTransition>} />
           <Route path="/jobs" element={<PageTransition><Jobs /></PageTransition>} />
